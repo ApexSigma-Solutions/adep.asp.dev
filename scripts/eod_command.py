@@ -180,11 +180,18 @@ class EODCommand:
             lines = stdout.strip().split('\n')
             problematic_changes = []
             for line in lines:
-                # Skip submodule modifications (lines like ' M InGest-LLM.as')
-                # These are lines starting with ' M ' followed by directory names that are submodules
-                if line.startswith(' M ') and line.strip()[2:] in ['InGest-LLM.as', 'devenviro.as', 'memos.as', 'tools.as']:
-                    continue  # Skip submodule changes
-                problematic_changes.append(line)
+                # Skip submodule modifications (lines like ' M InGest-LLM.as' or 'M InGest-LLM.as')
+                # These indicate modified submodules which are acceptable
+                submodule_names = ['InGest-LLM.as', 'devenviro.as', 'memos.as', 'tools.as']
+                is_submodule_change = False
+                
+                for submodule in submodule_names:
+                    if line.endswith(submodule) and ('M ' in line or ' M ' in line):
+                        is_submodule_change = True
+                        break
+                
+                if not is_submodule_change:
+                    problematic_changes.append(line)
             
             if problematic_changes:
                 return False, f"Working directory is not clean. Uncommitted changes found:\n" + '\n'.join(problematic_changes)
