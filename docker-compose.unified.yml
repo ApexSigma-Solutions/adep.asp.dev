@@ -1,0 +1,472 @@
+# ApexSigma Ecosystem - Unified Docker Compose
+# This file orchestrates all four microservices: DevEnviro.as, memOS.as, InGest-LLM.as, tools.as
+# Each service remains decoupled while enabling cross-service communication
+
+services:
+  # ===========================================
+  # INFRASTRUCTURE SERVICES (from DevEnviro)
+  # ===========================================
+  
+  postgres:
+    image: postgres:14-alpine
+    container_name: apexsigma_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-apexsigma-memtank}
+      POSTGRES_USER: ${POSTGRES_USER:-apexsigma_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-your_secure_postgres_password_here}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-apexsigma_user} -d ${POSTGRES_DB:-apexsigma-memtank}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: apexsigma_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: apexsigma_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-apexsigma_user}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-apexsigma_pass}
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  qdrant:
+    image: qdrant/qdrant:v1.8.2
+    container_name: apexsigma_qdrant
+    ports:
+      - "6333:6333" # REST API
+      - "6334:6334" # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===========================================
+  # OBSERVABILITY STACK
+  # ===========================================
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.60
+    container_name: apexsigma_jaeger
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "14268:14268"  # Jaeger collector HTTP
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: apexsigma_prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./devenviro.as/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.4.1
+    container_name: apexsigma_grafana
+    ports:
+      - "8080:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=apexsigma123
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./devenviro.as/config/grafana.ini:/etc/grafana/grafana.ini
+      - ./devenviro.as/config/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: apexsigma_loki
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./devenviro.as/config/loki-config.yml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    ports:
+      - "9100:3100"
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: apexsigma_promtail
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./devenviro.as/config/promtail-config.yml:/etc/promtail/config.yml
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    depends_on:
+      - loki
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  # ===========================================
+  # DEVENVIRO.AS - AI SOCIETY ORCHESTRATOR
+  # ===========================================
+
+  devenviro-api:
+    build: 
+      context: ./devenviro.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_devenviro_api
+    working_dir: /app/app
+    command: ["dotenvx", "run", "--", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8090", "--reload"]
+    ports:
+      - "8090:8090"
+    env_file:
+      - ./devenviro.as/.env
+    environment:
+      - PYTHONPATH=/app/app
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@rabbitmq:5672/
+      # Agent tokens (use environment variables)
+      - AGENT_ORCHESTRATOR_TOKEN=${AGENT_ORCHESTRATOR_TOKEN:-supersecrettoken_orchestrator}
+      - AGENT_BACKEND_SPECIALIST_TOKEN=${AGENT_BACKEND_SPECIALIST_TOKEN:-supersecrettoken_backend}
+      - AGENT_CODE_REFACTORING_SPECIALIST_TOKEN=${AGENT_CODE_REFACTORING_SPECIALIST_TOKEN:-supersecrettoken_refactoring}
+      - AGENT_DEVOPS_ENGINEER_TOKEN=${AGENT_DEVOPS_ENGINEER_TOKEN:-supersecrettoken_devops}
+      - AGENT_ENGINEERING_MANAGER_TOKEN=${AGENT_ENGINEERING_MANAGER_TOKEN:-supersecrettoken_manager}
+      - AGENT_ENTERPRISE_CTO_TOKEN=${AGENT_ENTERPRISE_CTO_TOKEN:-supersecrettoken_cto}
+      - AGENT_FRONTEND_SPECIALIST_TOKEN=${AGENT_FRONTEND_SPECIALIST_TOKEN:-supersecrettoken_frontend}
+      - AGENT_PRODUCT_OWNER_TOKEN=${AGENT_PRODUCT_OWNER_TOKEN:-supersecrettoken_product}
+      - AGENT_PROJECT_MANAGER_TOKEN=${AGENT_PROJECT_MANAGER_TOKEN:-supersecrettoken_project}
+      - AGENT_QA_ENGINEER_TOKEN=${AGENT_QA_ENGINEER_TOKEN:-supersecrettoken_qa}
+      - AGENT_SECURITY_ENGINEER_TOKEN=${AGENT_SECURITY_ENGINEER_TOKEN:-supersecrettoken_security}
+      - AGENT_SENIOR_FULLSTACK_DEVELOPER_TOKEN=${AGENT_SENIOR_FULLSTACK_DEVELOPER_TOKEN:-supersecrettoken_fullstack}
+      - AGENT_SOFTWARE_ARCHITECT_TOKEN=${AGENT_SOFTWARE_ARCHITECT_TOKEN:-supersecrettoken_architect}
+      - AGENT_TECHNICAL_WRITER_TOKEN=${AGENT_TECHNICAL_WRITER_TOKEN:-supersecrettoken_writer}
+    depends_on:
+      - postgres
+      - redis  
+      - rabbitmq
+      - qdrant
+    volumes:
+      - ./devenviro.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===========================================
+  # DEVENVIRO AGENT SERVICES
+  # ===========================================
+
+  devenviro-gemini-cli-listener:
+    build:
+      context: ./devenviro.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_devenviro_gemini_cli_listener
+    working_dir: /app/app
+    command: ["python", "src/listeners/gemini_cli_listener.py"]
+    env_file:
+      - ./devenviro.as/.env
+    environment:
+      - PYTHONPATH=/app/app
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@apexsigma_rabbitmq:5672/
+      - AGENT_GEMINI_CLI_TOKEN=${AGENT_GEMINI_CLI_TOKEN:-supersecrettoken_gemini_cli}
+      - GEMINI_COMMAND=echo "Gemini CLI simulation:"
+      # In production, this would be the actual Gemini CLI command
+      # - GEMINI_COMMAND=gemini -p
+      # Database connection for agent registration
+      - POSTGRES_HOST=apexsigma_postgres
+      - POSTGRES_DB=${POSTGRES_DB:-apexsigma-memtank}
+      - POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-your_secure_postgres_password_here}
+    depends_on:
+      - postgres
+      - rabbitmq
+      - devenviro-api
+    volumes:
+      - ./devenviro.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; import os; sys.path.append('/app/app'); from src.listeners.gemini_cli_listener import GeminiCLIListener; sys.exit(0)"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+  # Optional: DevEnviro Documentation Server
+  devenviro-docs:
+    image: python:3.11-slim
+    container_name: apexsigma_devenviro_docs
+    working_dir: /app
+    command: >
+      sh -c "pip install mkdocs mkdocs-material &&
+      mkdocs serve --dev-addr 0.0.0.0:8000"
+    volumes:
+        - ./devenviro.as:/app
+    ports:
+        - "8001:8000"
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    profiles:
+      - docs
+
+  # DevEnviro A2A Bridge Service
+  devenviro-a2a-bridge:
+    build:
+      context: ./devenviro.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_devenviro_a2a_bridge
+    working_dir: /app/app
+    command: ["uvicorn", "bridge.bridge_service:app", "--host", "0.0.0.0", "--port", "8100", "--reload"]
+    ports:
+      - "8100:8100"
+    env_file:
+      - ./devenviro.as/.env
+    environment:
+      - PYTHONPATH=/app/app
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@apexsigma_rabbitmq:5672/
+      - RABBITMQ_EXCHANGE=agent_exchange
+    depends_on:
+      - rabbitmq
+      - devenviro-api
+    volumes:
+      - ./devenviro.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8100/api/v1/agents/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===========================================
+  # MEMOS.AS - PERSISTENT MEMORY SERVICE
+  # ===========================================
+
+  memos-api:
+    build:
+      context: ./memos.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_memos_api
+    ports:
+      - "8091:8090"
+    env_file:
+      - ./memos.as/.env
+    environment:
+      - PYTHONPATH=/code
+      # Override memOS .env hostnames to match our service names  
+      - POSTGRES_HOST=postgres
+      - QDRANT_HOST=qdrant
+      - REDIS_HOST=redis
+      # Connect to shared infrastructure
+      - DATABASE_URL=postgresql://apexsigma_user:your_secure_postgres_password_here@postgres:5432/apexsigma-memtank
+      - REDIS_URL=redis://redis:6379/1
+      - QDRANT_URL=http://qdrant:6333
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+    volumes:
+      - ./memos.as:/code
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ===========================================
+  # INGEST-LLM.AS - DATA INGESTION SERVICE
+  # ===========================================
+
+  ingest-llm-api:
+    build:
+      context: ./InGest-LLM.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_ingest_llm_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./InGest-LLM.as/.env
+    environment:
+      # CRITICAL: Do not override CMD - use Dockerfile's default "poetry run" command
+      # Observability integration
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-pk-lf-f58be3ee-e274-4bf1-8ffe-4df7e9fcf61e}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-sk-lf-1d26cfb7-fcaf-4fdf-830e-a9ae4d32d7fa}
+      - LANGFUSE_HOST=${LANGFUSE_HOST:-https://cloud.langfuse.com}
+      # Service integration
+      - INGEST_MEMOS_BASE_URL=http://memos-api:8090
+      - INGEST_MEMOS_TIMEOUT=30
+      # LM Studio integration (host networking)
+      - INGEST_LM_STUDIO_BASE_URL=http://host.docker.internal:1234/v1
+      - INGEST_LM_STUDIO_ENABLED=true
+      - INGEST_EMBEDDING_ENABLED=true
+      # Telemetry integration
+      - JAEGER_ENDPOINT=http://jaeger:14268/api/traces
+      - PROMETHEUS_GATEWAY=http://prometheus:9090
+      # Service configuration
+      - INGEST_APP_NAME=InGest-LLM.as
+      - INGEST_DEBUG=false
+      - LOG_LEVEL=INFO
+      - LOG_JSON=true
+      - ENVIRONMENT=docker
+    depends_on:
+      - memos-api
+      - jaeger
+    volumes:
+      - ./InGest-LLM.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ===========================================
+  # TOOLS.AS - TOOL REGISTRY SERVICE
+  # ===========================================
+
+  # Dedicated PostgreSQL for tools.as (isolation)
+  tools-postgres:
+    image: postgres:16-alpine
+    container_name: apexsigma_tools_postgres
+    environment:
+      - POSTGRES_DB=tools_db
+      - POSTGRES_USER=tools_user
+      - POSTGRES_PASSWORD=tools_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - tools_postgres_data:/var/lib/postgresql/data
+      - ./tools.as/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tools_user -d tools_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tools-api:
+    build:
+      context: ./tools.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_tools_api
+    ports:
+      - "8003:8000"  # Avoid conflict with InGest-LLM.as
+    environment:
+      - SERPER_API_KEY=${SERPER_API_KEY}
+      - DATABASE_URL=postgresql://tools_user:tools_pass@tools-postgres:5432/tools_db
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
+    depends_on:
+      - tools-postgres
+    volumes:
+      - ./tools.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+# ===========================================
+# VOLUMES
+# ===========================================
+
+volumes:
+  postgres_data:
+    name: apexsigma_postgres_data
+  tools_postgres_data:
+    name: apexsigma_tools_postgres_data
+  redis_data:
+    name: apexsigma_redis_data
+  rabbitmq_data:
+    name: apexsigma_rabbitmq_data
+  qdrant_data:
+    name: apexsigma_qdrant_data
+  prometheus_data:
+    name: apexsigma_prometheus_data
+  grafana_data:
+    name: apexsigma_grafana_data
+  loki_data:
+    name: apexsigma_loki_data
+
+# ===========================================
+# NETWORKS
+# ===========================================
+
+networks:
+  apexsigma_net:
+    external: true

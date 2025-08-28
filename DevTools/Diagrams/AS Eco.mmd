@@ -1,0 +1,79 @@
+
+graph TD
+    subgraph "External World"
+        User[/"<br><b>User /<br>External Agent</b><br><br> (Claude, Gemini, etc.)"/]
+    end
+
+    subgraph "ApexSigma Ecosystem"
+        direction LR
+        A2A_Bridge["<b>A2A Bridge</b><br>(FastAPI)<br><i>REST API to AMQP Translator</i>"]
+
+        subgraph "Core Services (Docker)"
+            direction TB
+            DevEnviro["<b>DevEnviro.as</b><br><i>Core Orchestrator</i><br>Manages Agent Society"]
+            InGest_LLM["<b>InGest-LLM.as</b><br><i>LLM Gateway &<br>POML Library Manager</i>"]
+            memOS["<b>memOS.as</b><br><i>Memory &<br>Knowledge Graph Manager</i>"]
+            Tools["<b>Tools.as</b><br><i>Shared Utilities</i>"]
+        end
+
+        subgraph "Message Bus"
+            RabbitMQ["<b>RabbitMQ</b><br><i>Agent Communications</i>"]
+        end
+
+        subgraph "Data & Knowledge Stores"
+            direction TB
+            Redis["<b>Redis</b><br><i>L1 Cache (LRU)<br>POML Components</i>"]
+            PostgreSQL["<b>PostgreSQL</b><br><i>L2 Library (POML)<br>Knowledge Graph<br>Agent Logs</i>"]
+            Neo4j["<b>Neo4j</b><br><i>(Future)<br>Advanced Graph<br>Relationships</i>"]
+        end
+
+        subgraph "Observability"
+            Observability["<b>Observability Stack</b><br>(Langfuse, OpenTelemetry,<br>Prometheus, Grafana)"]
+        end
+    end
+
+    subgraph "External AI"
+        LLM[("<b>Large Language Model</b><br>(LLM)")]
+    end
+
+    %% Data Flow & Interactions
+    User -- "1. REST API Request" --> A2A_Bridge
+    A2A_Bridge -- "2. Publishes Task" --> RabbitMQ
+    RabbitMQ -- "3. Consumes Task" --> DevEnviro
+    DevEnviro -- "4. Delegates to Agent" --> RabbitMQ
+    RabbitMQ -- "5. Consumes Prompt Task" --> InGest_LLM
+
+    InGest_LLM -- "6a. Check Cache" --> memOS
+    memOS -- " " --> Redis
+    InGest_LLM -- "6b. Check Library (on cache miss)" --> memOS
+    memOS -- " " --> PostgreSQL
+    InGest_LLM -- "7. RAG: Retrieve Context" --> memOS
+    InGest_LLM -- "8. Query LLM" --> LLM
+    LLM -- "9. LLM Response" --> InGest_LLM
+    InGest_LLM -- "10. Store/Update Knowledge" --> memOS
+    InGest_LLM -- "11. Publishes Result" --> RabbitMQ
+
+    RabbitMQ -- "12. Consumes Result" --> DevEnviro
+    DevEnviro -- "13. Forwards Response" --> RabbitMQ
+    RabbitMQ -- "14. Consumes Response" --> A2A_Bridge
+    A2A_Bridge -- "15. REST API Response" --> User
+
+    %% Observability Connections
+    DevEnviro -- "Metrics & Logs" --> Observability
+    InGest_LLM -- "Metrics & Logs" --> Observability
+    memOS -- "Metrics & Logs" --> Observability
+    Tools -- "Metrics & Logs" --> Observability
+    RabbitMQ -- "Metrics & Logs" --> Observability
+
+    %% Style Definitions
+    classDef service fill:#e3f2fd,stroke:#333,stroke-width:2px
+    classDef datastore fill:#e8f5e9,stroke:#333,stroke-width:2px
+    classDef bus fill:#fffde7,stroke:#333,stroke-width:2px
+    classDef external fill:#f3e5f5,stroke:#333,stroke-width:2px
+    classDef observability fill:#fbe9e7,stroke:#333,stroke-width:2px
+
+    class DevEnviro,InGest_LLM,memOS,Tools,A2A_Bridge service
+    class Redis,PostgreSQL,Neo4j datastore
+    class RabbitMQ bus
+    class User,LLM external
+    class Observability observability

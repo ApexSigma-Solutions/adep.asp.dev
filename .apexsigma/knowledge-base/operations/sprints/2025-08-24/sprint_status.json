@@ -1,0 +1,114 @@
+{
+  "sprintId": "phase_2_cognitive_expansion",
+  "sprintName": "Phase 2: Cognitive Expansion Sprint Plan",
+  "status": "Active",
+  "lastUpdated": "2025-08-24T21:25:00Z",
+  "objectives": [
+    "Harden ecosystem reliability.",
+    "Expand Agent Society with Sigma Coder integration.",
+    "Close critical technical debt.",
+    "Strengthen cross-service testing & observability."
+  ],
+  "tasks": [
+    {
+      "taskId": "P2-CRIT-01",
+      "priority": "Critical",
+      "description": "Harden TASK-IG-20: Create dedicated integration test suite (tests/test_repository_ingestion.py).",
+      "project": "InGest-LLM.as",
+      "status": "Completed",
+      "assignedAgent": "Gemini CLI",
+      "dependencies": [],
+      "completedAt": "2025-08-24T21:20:00Z",
+      "notes": "Comprehensive 188-line integration test suite already implemented with health checks, repository ingestion, error handling, and concurrent testing."
+    },
+    {
+      "taskId": "P2-CRIT-02",
+      "priority": "Critical",
+      "description": "Harden TASK-IG-20: Write formal API documentation (api_ingestion_endpoints.md).",
+      "project": "InGest-LLM.as",
+      "status": "Completed",
+      "assignedAgent": "Claude Code",
+      "dependencies": ["P2-CRIT-01"],
+      "completedAt": "2025-08-24T21:20:00Z",
+      "notes": "Formal API documentation exists (333 lines) covering health endpoints, repository ingestion, authentication, and response schemas."
+    },
+    {
+      "taskId": "P2-CRIT-03",
+      "priority": "Critical",
+      "description": "Execute end-to-end integration tests between InGest-LLM.as and memOS.as.",
+      "project": "Ecosystem-Wide",
+      "status": "Completed",
+      "assignedAgent": "Gemini CLI",
+      "dependencies": ["P2-CRIT-02"],
+      "startedAt": "2025-08-24T21:25:00Z",
+      "completedAt": "2025-08-24T22:30:00Z",
+      "notes": "EXECUTED: Integration tests validate operational service communication. Core objectives achieved with comprehensive execution report."
+    },
+    {
+      "taskId": "P2-CRIT-04",
+      "priority": "Critical",
+      "description": "Integrate Sigma Coder (Qwen3-6B GGUF) into DevEnviro.as and develop parsing logic for '<tool_call>' output.",
+      "project": "DevEnviro.as",
+      "status": "Completed",
+      "assignedAgent": "Sigma Coder",
+      "dependencies": [],
+      "startedAt": "2025-08-24T22:35:00Z",
+      "completedAt": "2025-08-24T23:15:00Z",
+      "notes": "COMPLETE: Sigma Coder agent integrated with Qwen3-Esper3-Reasoning-Coder model at http://192.168.68.104:12345. All critical tasks finished."
+    },
+    {
+      "taskId": "P2-HIGH-01",
+      "priority": "High",
+      "description": "Create a high-priority bug ticket for the sqlalchemy.exc.OperationalError to track technical debt and design a long-term schema fix.",
+      "project": "InGest-LLM.as",
+      "status": "Pending",
+      "assignedAgent": "Claude Code",
+      "dependencies": []
+    },
+    {
+      "taskId": "P2-HIGH-02",
+      "priority": "High",
+      "description": "Address Pydantic warnings in DevEnviro.as test suite.",
+      "project": "DevEnviro.as",
+      "status": "Pending",
+      "assignedAgent": "Gemini CLI",
+      "dependencies": []
+    },
+    {
+      "taskId": "P2-HIGH-03",
+      "priority": "High",
+      "description": "Formally define and document Agent Society Roles and update Sentinel protocols based on Phase 1 outcomes.",
+      "project": "DevEnviro.as",
+      "status": "Pending",
+      "assignedAgent": "The Sentinel",
+      "dependencies": ["P2-CRIT-04"]
+    },
+    {
+      "taskId": "P2-STRETCH-01",
+      "priority": "Stretch",
+      "description": "Extend .apexsigma Knowledge Base with POML templates for structured task orchestration.",
+      "project": "Ecosystem-Wide",
+      "status": "Pending",
+      "assignedAgent": "Claude Code",
+      "dependencies": []
+    },
+    {
+      "taskId": "P2-STRETCH-02",
+      "priority": "Stretch",
+      "description": "Verify and document Langfuse + GitHub Actions observability and CI/CD workflows.",
+      "project": "Ecosystem-Wide",
+      "status": "Pending",
+      "assignedAgent": "Gemini CLI",
+      "dependencies": []
+    }
+  ],
+  "metrics": {
+    "totalTasks": 9,
+    "completedTasks": 2,
+    "inProgressTasks": 1,
+    "pendingTasks": 6,
+    "criticalTasksCompleted": 2,
+    "criticalTasksTotal": 4,
+    "completionPercentage": 22.2
+  }
+}

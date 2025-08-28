@@ -1,0 +1,29 @@
+{
+  "projects": [
+    {
+      "name": "DevEnviro.as",
+      "path": "C:\\Users\\steyn\\ApexSigmaProjects.Dev\\devenviro.as",
+      "description": "AI Society of Agents platform - orchestrator and agent coordination"
+    },
+    {
+      "name": "InGest-LLM.as",
+      "path": "C:\\Users\\steyn\\ApexSigmaProjects.Dev\\InGest-LLM.as",
+      "description": "Data ingestion and processing microservice with LLM integration"
+    },
+    {
+      "name": "memos.as",
+      "path": "C:\\Users\\steyn\\ApexSigmaProjects.Dev\\memos.as",
+      "description": "Memory management and tiered storage system"
+    },
+    {
+      "name": "tools.as",
+      "path": "C:\\Users\\steyn\\ApexSigmaProjects.Dev\\tools.as",
+      "description": "Tool server and utilities for the ApexSigma ecosystem"
+    }
+  ],
+  "analysis_request": {
+    "timestamp": "2025-08-27T03:50:00Z",
+    "requested_by": "user",
+    "analysis_type": "comprehensive_ecosystem_summary"
+  }
+}
