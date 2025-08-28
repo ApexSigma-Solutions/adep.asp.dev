@@ -30,8 +30,8 @@ try {
     if ($DryRun) { $args += "--dry-run" }
     if ($Help) { $args += "--help" }
     
-    # Run the EOD command script
-    $result = & python eod.py @args
+    # Run the EOD command script (let output pass through directly)
+    & python eod.py @args
     $exitCode = $LASTEXITCODE
     
     Write-Host ""
