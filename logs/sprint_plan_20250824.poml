@@ -1,0 +1,31 @@
+<POML>
+    <sprint_context>
+        <sprint_id>phase_2_cognitive_expansion</sprint_id>
+        <sprint_name>Phase 2: Cognitive Expansion Sprint Plan</sprint_name>
+        <timestamp>2025-08-24T21:13:00Z</timestamp>
+        <status>Active</status>
+
+        <objectives>
+            <objective>Harden ecosystem reliability.</objective>
+            <objective>Expand Agent Society with Sigma Coder integration.</objective>
+            <objective>Close critical technical debt.</objective>
+            <objective>Strengthen cross-service testing & observability.</objective>
+        </objectives>
+
+        <critical_tasks>
+            <task id="P2-CRIT-01" project="InGest-LLM.as" agent="Gemini CLI">
+                <description>Harden TASK-IG-20: Create dedicated integration test suite (tests/test_repository_ingestion.py).</description>
+            </task>
+            <task id="P2-CRIT-02" project="InGest-LLM.as" agent="Claude Code">
+                <description>Harden TASK-IG-20: Write formal API documentation (api_ingestion_endpoints.md).</description>
+            </task>
+            <task id="P2-CRIT-03" project="Ecosystem-Wide" agent="Gemini CLI">
+                <description>Execute end-to-end integration tests between InGest-LLM.as and memOS.as.</description>
+            </task>
+            <task id="P2-CRIT-04" project="DevEnviro.as" agent="Sigma Coder">
+                <description>Integrate Sigma Coder (Qwen3-6B GGUF) into DevEnviro.as and develop parsing logic for 'tool_call' output.</description>
+            </task>
+        </critical_tasks>
+
+    </sprint_context>
+</POML>

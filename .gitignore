@@ -1,0 +1,42 @@
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.mypy_cache/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project specific temporary files
+session_log_*.json
+commit_*.sh
+langfuse_*.py
+agent_system_*.py
+commit_preparation.py
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md
