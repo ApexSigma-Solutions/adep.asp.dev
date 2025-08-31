@@ -74,11 +74,6 @@ services:
     networks:
       - apexsigma_net
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   # ===========================================
   # OBSERVABILITY STACK
@@ -278,7 +273,7 @@ services:
     working_dir: /app/app
     command: ["uvicorn", "bridge.bridge_service:app", "--host", "0.0.0.0", "--port", "8100", "--reload"]
     ports:
-      - "8100:8100"
+      - "8101:8100"
     env_file:
       - ./devenviro.as/.env
     environment:
@@ -310,7 +305,7 @@ services:
       dockerfile: Dockerfile
     container_name: apexsigma_memos_api
     ports:
-      - "8091:8090"
+      - "8092:8090"
     env_file:
       - ./memos.as/.env
     environment:
@@ -349,14 +344,14 @@ services:
       dockerfile: Dockerfile
     container_name: apexsigma_ingest_llm_api
     ports:
-      - "8000:8000"
+      - "18000:8000"
     env_file:
       - ./InGest-LLM.as/.env
     environment:
       # CRITICAL: Do not override CMD - use Dockerfile's default "poetry run" command
       # Observability integration
-      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-pk-lf-f58be3ee-e274-4bf1-8ffe-4df7e9fcf61e}
-      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-sk-lf-1d26cfb7-fcaf-4fdf-830e-a9ae4d32d7fa}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-pk-lf-bba97616-6c46-4d0d-b3a1-2b3cb9e03ee5}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-sk-lf-ad7e9785-fb81-4340-aa6a-4cc265aec073}
       - LANGFUSE_HOST=${LANGFUSE_HOST:-https://cloud.langfuse.com}
       # Service integration
       - INGEST_MEMOS_BASE_URL=http://memos-api:8090
