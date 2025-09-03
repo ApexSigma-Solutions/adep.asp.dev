@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ **MANDATORY: OMEGA INGEST CONTEXT RETRIEVAL PROTOCOL**
+
+**BEFORE MAKING ANY CODE CHANGES**, you MUST:
+
+1. **Query InGest-LLM API** for relevant context: `http://172.26.0.12:8000/query_context`
+2. **Retrieve from memOS Omega Ingest**: `http://172.26.0.13:8090/memory/query` 
+3. **Validate against immutable truth**: Ensure changes don't conflict with verified infrastructure
+4. **Obtain dual verification**: For Tier 1 infrastructure changes, require verification from another AI assistant
+
+**Protected Services (DO NOT MODIFY WITHOUT VERIFICATION)**:
+- memOS API (172.26.0.13) - Omega Ingest Guardian
+- Neo4j Knowledge Graph (172.26.0.14) - Immutable concept relationships  
+- PostgreSQL Main (172.26.0.2) - Procedural memory
+- InGest-LLM API (172.26.0.12) - Data ingestion gateway
+
+**Reference**: `/project_support/secure_verified_docs/OMEGA_INGEST_LAWS.md` for complete protocols.
+
 ## Project Overview
 
 ApexSigmaProjects.Dev is a unified development environment for the **ApexSigma "Society of Agents" Ecosystem** - a multi-agent AI collaboration platform. The workspace contains four interconnected microservices that form a complete agentic development environment where specialized AI agents collaborate on complex development tasks.

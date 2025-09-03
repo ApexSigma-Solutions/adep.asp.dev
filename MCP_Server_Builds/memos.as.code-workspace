@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "memos.as"
+		},
+		{
+			"name": "InGest-LLM.as",
+			"path": "InGest-LLM.as"
+		},
+		{
+			"path": "../project_support"
+		}
+	],
+	"settings": {}
+}

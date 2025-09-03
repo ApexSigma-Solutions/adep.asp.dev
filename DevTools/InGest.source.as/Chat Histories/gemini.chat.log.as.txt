@@ -1,0 +1,384 @@
+            
+            
+            
+            
+        │   
+ │     Container devenviro_prometheus  Creating             
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_docs  Creating                   
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_loki  Creating                   
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_jaeger  Creating                 
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_rabbitmq  Running                
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_neo4j  Running                   
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_langfuse  Creating               
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_api  Recreate                    
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_docs  Created                    
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_langfuse  Created                
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_loki  Created                    
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_promtail  Creating               
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_prometheus  Created              
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_grafana  Creating                
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_jaeger  Created                  
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_promtail  Created                
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_grafana  Created                 
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_api  Recreated                   
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_gemini_cli_listener  Creating                
+            
+            
+            
+            
+        │   
+ │     Container devenviro_qwen_cli_listener  Creating                  
+            
+            
+            
+            
+        │   
+ │     Container devenviro_a2a_bridge  Creating             
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_gemini_cli_listener  Created                 
+            
+            
+            
+            
+        │   
+ │     Container devenviro_qwen_cli_listener  Created                   
+            
+            
+            
+            
+        │   
+ │     Container devenviro_a2a_bridge  Created              
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_jaeger  Starting                 
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_redis  Starting                  
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_docs  Starting                   
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_prometheus  Starting             
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_qdrant  Starting                 
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_postgres  Starting               
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_loki  Starting                   
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_jaeger  Started                  
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_loki  Started                    
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_loki  Waiting                    
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_prometheus  Started              
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_docs  Started                    
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_loki  Healthy                    
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_promtail  Starting               
+            
+            
+            
+            
+            
+        │   
+ │     Container devenviro_promtail  Started                
+            
+            
+            
+            
+            
+        │   
+ │    Error response from daemon: failed to set up container networking: driver failed programming external             
+        │   
+ │    connectivity on endpoint devenviro_redis (ac761c2838ac13398546e8087dc18e005011d825355a438b9a586c782f6e1c18):      
+        │   
+ │    Bind for 0.0.0.0:6379 failed: port is already allocated           
+            
+            
+            
+            
+        │   
+ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯   
+✦ docker-compose failed again, this time with a Redis port conflict on 6379. I'll remap the Redis port to 16379:6379 in the
+  docker-compose.yml file to resolve this.      
+ ╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮   
+ │ ✔ Edit devenviro.as\docker-compose.yml:       - "6379:6379" =>       - "16379:6379"          
+            
+            
+       │    
+ │          
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        │   
+ │    55   image: redis:7-alpine                
+            
+            
+            
+            
+            
+            
+        │   
+ │    56   container_name: devenviro_redis                  
+            
+            
+            
+            
+            
+        │   
+ │    57   ports:                   
+            
+            
+            
+            
+            
+            
+            
+        │   
+ │    58 -   - "6379:6379"          
+            
+            
+            
+            
+            
+            
+            
+        │   
+ │    58 +   - "16379:6379"         
+            
+            
+            
+            
+            
+            
+            
+        │   
+ │    59   volumes:                 
+            
+            
+            
+            
+            
+            
+            
+        │   
+ │    60     - redis_data:/data                 
+            
+            
+            
+            
+            
+            
+        │   
+ │    61   networks:                
+            
+            
+            
+            
+            
+            
+            
+        │   
+ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯   
+✦ Redis port updated. Retrying docker-compose up.
+ ╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮   
+ │ -  Shell docker-compose -f C:\Users\steyn\ApexSigmaProjects.Dev\devenviro.as\docker-compose.yml up -d --build (I have updat… │   
+ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯   
+
+
+
+
+
+╭─────────────────╮     
+│  > did it run?  │     
+╰─────────────────╯     

@@ -1,0 +1,35 @@
+# Configuration for the ApexSigma Ecosystem Boot Sequence Script
+
+[docker]
+# Path is relative to the project root (e.g., ApexSigmaProjects.Dev/)
+compose_file = "docker-compose.standardized.yml"
+
+[[services]]
+name = "api_ingest_llm"
+type = "api"
+port = 8000
+health_endpoint = "/health"
+
+[[services]]
+name = "api_memos"
+type = "api"
+port = 8090
+health_endpoint = "/health"
+
+[[services]]
+name = "api_tools"
+type = "api"
+port = 8003
+health_endpoint = "/docs" # This service uses /docs for its health check
+
+[[services]]
+name = "api_devenviro_bridge"
+type = "api"
+port = 8100
+health_endpoint = "/" # Root endpoint serves as a basic health check
+
+[[services]]
+name = "obs_grafana"
+type = "observability"
+port = 3001
+health_endpoint = "/api/health"
