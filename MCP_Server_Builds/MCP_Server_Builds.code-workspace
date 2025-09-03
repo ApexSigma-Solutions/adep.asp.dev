@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../project_support"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "MCP_Server_Builds"
+	}
+}

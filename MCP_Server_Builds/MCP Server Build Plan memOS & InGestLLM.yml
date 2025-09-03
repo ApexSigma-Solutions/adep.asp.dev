@@ -1,0 +1,255 @@
+# 🧠 MCP Server Build Plan: memOS & InGestLLM
+
+*A compre- [x] **1.8 Set up audit logging** for all critical MCP operations.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+    - **Status**: COMPLETED | Audit logging implemented (auth attempts, rate violations, MCP requests)ve, trackable checklist for implementing the MCP server infrastructure, governed by MAR protocols and Omega Ingest Laws.*
+
+## 🧩 PHASE 1: INFRASTRUCTURE PREPARATION
+
+### 🛠️ Docker Environment Setup
+
+- [ ] **1.1 Verify current Docker network configuration** (apexsigma\_net).
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+
+- [x] **1.2 Create dedicated MCP network subnet** (172.28.0.0/16) for isolation.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+    - **Status**: PARTIALLY COMPLETED | Network exists with correct subnet 172.28.0.0/16, but not defined in compose files
+
+- [x] **1.3 Add MCP services to Docker Compose** with static IP allocation.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+    - **Status**: COMPLETED | Added memos-mcp-server (172.28.0.10) and ingest-llm-mcp-server (172.28.0.11) with static IPs
+
+- [x] **1.4 Configure service discovery** using DNS names within the Docker network.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+    - **Status**: COMPLETED | DNS names configured via container names (memos_mcp_server, ingest_llm_mcp_server)
+
+### 🔒 Security Configuration
+
+- [x] **1.5 Implement JWT authentication** for all MCP endpoints.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+    - **Status**: COMPLETED | JWT auth implemented with service accounts (MCP_COPILOT, MCP_GEMINI, MCP_QWEN)
+
+- [x] **1.6 Create dedicated MCP service accounts** for each AI assistant.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+    - **Status**: COMPLETED | Service accounts created as part of JWT auth (MCP_COPILOT, MCP_GEMINI, MCP_QWEN)
+
+- [x] **1.7 Configure rate limiting** per service account.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+    - **Status**: COMPLETED | Rate limiting implemented (60 req/min per service account)
+
+- [ ] **1.8 Set up audit logging** for all critical MCP operations.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR
+
+### 📊 Observability Integration
+
+- [x] **1.9 Extend Langfuse configuration** to trace MCP-specific operations.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+    - **Status**: COMPLETED | Added Langfuse dependency to memos.as, configured environment variables, implemented MCP-specific tracing for authentication, rate limiting, and tool operations in both servers
+
+- [ ] **1.10 Create MCP-specific Prometheus metrics** (Counters, Histograms).
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+
+- [ ] **1.11 Configure Grafana dashboards** for real-time MCP performance monitoring.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+
+- [ ] **1.12 Implement distributed tracing** for MCP operations using OpenTelemetry.
+  
+    - **Implementer**: agent:Copilot
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+
+## 🧠 PHASE 2: memOS MCP EXTENSION
+
+### 🗃️ Memory Tier Architecture
+
+- [ ] **2.1 Implement MCP-specific memory tiers** (e.g., MCP\_GEMINI).
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Copilot
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **2.2 Create agent-specific memory isolation** by agent\_id.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Copilot
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **2.3 Implement cross-agent knowledge sharing** via a confidence-scored query system.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Copilot
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **2.4 Add memory expiration policies** for each tier.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Copilot
+    - **Protocols**: MAR, Omega Ingest Laws
+
+### 🔗 Omega Ingest Integration
+
+- [ ] **2.5 Create a POML processor** to parse documents into knowledge graph nodes.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **2.6 Implement entity relationship mapping** with contextual weights.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **2.7 Develop semantic search** with contextual weighting.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **2.8 Create a knowledge graph visualization API endpoint**.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR
+
+### ⚡ Performance Optimization
+
+- [ ] **2.9 Implement a multi-layer caching strategy** (In-memory -\> Redis -\> DB).
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Copilot
+    - **Protocols**: MAR
+
+- [ ] **2.10 Optimize Neo4j Cypher queries** for common agent-specific access patterns.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Copilot
+    - **Protocols**: MAR
+
+- [ ] **2.11 Implement batch processing** for memory storage and retrieval operations.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Copilot
+    - **Protocols**: MAR
+
+- [ ] **2.12 Add query optimization heuristics** to refine search queries.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Copilot
+    - **Protocols**: MAR
+
+## 📥 PHASE 3: InGestLLM MCP EXTENSION
+
+### 🧮 Tokenization Pipeline
+
+- [ ] **3.1 Integrate Tekken tokenizer** with custom patterns for MCP-specific data types.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **3.2 Create POML-aware tokenization rules** to assign importance and weight.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **3.3 Implement context-aware token weighting** based on the agent's current task.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR, Omega Ingest Laws
+
+- [ ] **3.4 Develop token compression strategies** to preserve key information.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR, Omega Ingest Laws
+
+### 🌐 Web Scraping & Repo Raiding
+
+- [ ] **3.5 Create an MCP-specific web scraper** that applies agent-specific rules.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR
+
+- [ ] **3.6 Implement GitHub repository ingestion**, including cloning and processing files.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR
+
+- [ ] **3.7 Develop code-aware content extraction** using Abstract Syntax Tree (AST) parsing.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR
+
+- [ ] **3.8 Create documentation-aware summarization** to preserve key information.
+  
+    - **Implementer**: agent:Gemini
+    - **Reviewer**: agent:Qwen
+    - **Protocols**: MAR
+
+### 🧪 Validation & Quality Control
+
+- [ ] **3.9 Implement token quality metrics** (completeness, coherence, relevance).
+  
+    - **Implementer**: agent:Qwen
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+
+- [ ] **3.10 Create LLM consumption validation** to check for issues that might confuse models.
+  
+    - **Implementer**: agent:Qwen
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+
+- [ ] **3.11 Develop a context preservation scoring** system using embedding similarity.
+  
+    - **Implementer**: agent:Qwen
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR
+
+- [ ] **Implement a feedback loop** for agents to report poor quality ingestion.
+
+    - **Implementer**: agent:Qwen
+    - **Reviewer**: agent:Gemini
+    - **Protocols**: MAR

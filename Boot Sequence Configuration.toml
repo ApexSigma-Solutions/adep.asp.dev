@@ -1,0 +1,25 @@
+# Configuration for the ApexSigma Ecosystem Boot Sequence Script
+
+[docker]
+compose_file = "docker-compose.standardized.yml"
+
+[[services]]
+name = "memOS.as (Omega Ingest Guardian)"
+container_name = "apexsigma_memos_api"
+critical = true
+# No port or health_endpoint means we use the internal Docker health check.
+
+[[services]]
+name = "InGest-LLM.as (Ingestion Gateway)"
+container_name = "apexsigma_ingest_llm_api"
+port = 18000
+health_endpoint = "/health"
+critical = true
+
+[[services]]
+name = "Grafana (Observability)"
+container_name = "apexsigma_grafana"
+port = 8080
+health_endpoint = "/api/health"
+critical = false
+
