@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../OneDrive/Apps/Omega Vault/ApexSigma"
+		}
+	],
+	"settings": {
+	},
+	"extensions": {
+		"recommendations": [
+			"google.gemini-cli-vscode-ide-companion"
+		]
+	}
+}

@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Install apexsigma-core dependencies
+        run: |
+          cd libs/apexsigma-core
+          poetry install
+
+      - name: Run apexsigma-core tests
+        run: |
+          cd libs/apexsigma-core
+          poetry run pytest
+
+      - name: Install memos.as dependencies
+        run: |
+          cd services/memos.as
+          poetry install

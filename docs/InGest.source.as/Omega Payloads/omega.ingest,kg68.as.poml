@@ -1,0 +1,161 @@
+<poml>
+<Record>
+<Metadata>
+<ID>APEXSIGMA_KG_V68_0_OMEGA</ID>
+<Version>68.0</Version>
+<Name>ApexSigma & DevEnro Ecosystems - VERIFIED Historical Knowledge</Name>
+<CreationDate>2025-08-31T23:50:00Z</CreationDate>
+<LastUpdated>2025-09-13T01:20:00Z</LastUpdated>
+<Curator>Ingest-LLM</Curator>
+<Description>The definitive, VERIFIED master knowledge graph. This version marks a major strategic overhaul, codifying the 'Monorepo Genesis' operation to resolve organizational chaos and establishing a full suite of governance protocols (TPGP, MAR, Safe-Delete) to guide all future development.</Description>
+</Metadata>
+<EcosystemState>
+<Description>Current VERIFIED operational state based on the codebase baseline summary and verification reports. All statuses are confirmed through direct system testing and reflect the starting point for Operation Asgard Rebirth.</Description>
+<Projects>
+<Project id="project_devenviro">
+<Name>DevEnviro.as</Name>
+<Status>Partially Operational (30%)</Status>
+<Description>The orchestrator project. A critical architectural flaw was identified where AgentPersona objects are incorrectly reconstructed from the database. The Gemini CLI Listener container is also in a restart loop.</Description>
+</Project>
+<Project id="project_ingest_llm">
+<Name>InGest-LLM.as</Name>
+<Status>Partially Operational (70%)</Status>
+<Description>Microservice for data ingestion. The API is accessible and Langfuse client is implemented. A root-cause PYTHONPATH issue preventing container startup has been identified.</Description>
+</Project>
+<Project id="project_memos">
+<Name>memOS.as</Name>
+<Status>Operational</Status>
+<Description>The primary project for this service is 'Operation: memOS Upgrade', a detailed, three-phase implementation plan focused on solidifying the core service (FastMCP), then integrating an orchestrator (Dagster) and an intelligence layer (Agent Swarm).</Description>
+</Project>
+<Project id="project_tools">
+<Name>tools.as</Name>
+<Status>Partially Operational (40%)</Status>
+<Description>Tool registry microservice. The container and database are running, but the API service is offline and requires deployment.</Description>
+</Project>
+<Project id="project_poml_processor">
+<Name>poml-processor</Name>
+<Status>In Development (Phase 0 Complete)</Status>
+<Description>A project to build a Python runtime/engine for Microsoft's 'Prompt Orchestration Markup Language' (POML). Phase 0 (Dev Environment Setup) is complete and Phase 1 (Core Engine Development) is the next step.</Description>
+</Project>
+</Projects>
+<Concepts>
+<Concept id="Monorepo_Architecture" label="Monorepo Architecture" description="A single, unified repository (ApexSigmaProjects.Dev) containing distinct directories for services/, agents/, libs/, docs/, _archive/, and scripts/. This centralizes development, simplifies dependency management, and enables automated dogfooding."/>
+<Concept id="Three_Layer_Architecture" label="Three-Layer Architecture (Tools, Workers, Orchestrator)" description="The strategic architectural model for the evolved memOS.as ecosystem. It consists of a 'Tools' layer (the core memOS API), a 'Workers' layer (a new agent swarm for intelligence), and an 'Orchestrator' layer (Dagster) to manage the data assets and workflows between them."/>
+<Concept id="Dogfooding_Principle" label="Dogfooding Principle" description="A development methodology established for the memOS.as project, mandating that the core implementation team must be the first and primary users of the service to ensure its real-world viability and quality."/>
+</Concepts>
+<Tasks>
+<Task id="Monorepo_Genesis" project="Ecosystem-Wide" priority="Critical" description="Operation: Monorepo Genesis. A protocol-driven operation to restructure the chaotic project directory into a structured monorepo. Key tasks include creating the core directory structure, relocating all existing service projects, and creating workspace configuration files."/>
+<Task id="memOS_Upgrade" project="memOS.as" priority="Critical" description="Operation: memOS Upgrade. A protocol-driven, three-phase operation to upgrade the service with the fastMCP Framework, integrate Dagster as an orchestrator, and deploy an agent swarm as the intelligence layer."/>
+<Task id="AgentRegistry_Refactor" project="DevEnviro.as" priority="Critical" description="Refactor the AgentRegistry to be the single source of truth for live agent objects. Remove the reconstruction of AgentPersona from DB records and implement an in-memory registry with persistence hooks."/>
+<Task id="POML_Engine_Phase1_Dev" project="poml-processor" priority="Critical" description="Begin POML Engine Phase 1: create Python package scaffold, add Dagster repository files, and implement the core parser pipeline using Tree-sitter and AST-grep for POML translation."/>
+<Task id="Ingest_LLM_Path_Fix" project="InGest-LLM.as" priority="High" description="Modify the Dockerfile CMD/entrypoint to execute within the Poetry virtual environment (e.g., 'poetry run python -m ingest_llm.main') to resolve the container startup failure."/>
+<Task id="tools_as_API_Deploy" project="tools.as" priority="High" description="Deploy the tools.as API service to enable the tool registry endpoints, allowing agents to discover and call memOS-backed tools."/>
+</Tasks>
+<Incidents>
+<Incident id="incident_Implementation_Discrepancy">
+<Timestamp>2025-09-12T21:00:00Z</Timestamp>
+<Summary>A comprehensive audit revealed a critical 43% discrepancy between documented achievements and the actual implementation state.</Summary>
+<Priority>CRITICAL</Priority>
+<Status>Resolved</Status>
+<Resolution>The "Operation Asgard Rebirth" umbrella initiative was created to address all identified gaps.</Resolution>
+</Incident>
+<Incident id="incident_Chaotic_Directory_Structure">
+<Timestamp>2025-09-12T22:15:00Z</Timestamp>
+<Summary>A messy, unstructured project directory was identified as a key organizational blocker, preventing efficient development, dependency management, and CI/CD automation.</Summary>
+<Priority>CRITICAL</Priority>
+<Status>Resolved</Status>
+<Resolution>The "Operation: Monorepo Genesis" task plan was created to execute a full restructure into a clean monorepo architecture, governed by a "Safe-Delete" protocol to prevent data loss.</Resolution>
+</Incident>
+<Incident id="incident_AgentPersona_Flaw">
+<Timestamp>2025-08-20T21:12:00Z</Timestamp>
+<Summary>A critical architectural flaw in DevEnviro.as was identified: AgentPersona objects are inefficiently and incorrectly reconstructed from database records instead of using live, in-memory instances, leading to runtime inconsistency.</Summary>
+<Priority>CRITICAL</Priority>
+<Status>Active</Status>
+<Resolution>A critical-priority task (AgentRegistry_Refactor) has been created to refactor the AgentRegistry to be the single source of truth for live agent objects and implement in-memory management with persistence hooks.</Resolution>
+</Incident>
+<Incident id="incident_Gemini_CLI_Listener_Restart_Loop">
+<Timestamp>2025-09-12T23:45:00Z</Timestamp>
+<Summary>The DevEnviro Gemini CLI Listener container is stuck in a restart loop, preventing any agent-based interactions with the core orchestrator.</Summary>
+<Priority>High</Priority>
+<Status>Active</Status>
+<Resolution>No resolution has been planned yet. The issue needs to be investigated by analyzing container logs.</Resolution>
+</Incident>
+</Incidents>
+<KnowledgeBase>
+<Topic label="Strategic Operations">
+<Description>High-level strategic plans governing the evolution of the ApexSigma ecosystem.</Description>
+<Node id="Operation_Asgard_Rebirth" label="Operation Asgard Rebirth: Implementation & Correction">
+<Detail>
+<Summary>An umbrella operation focused on closing the critical implementation gaps identified in the verification report. It encompasses all corrective actions, including the 'Monorepo Genesis' and 'memOS Upgrade' operations.</Summary>
+</Detail>
+</Node>
+<Node id="Operation_Monorepo_Genesis" label="Operation: Monorepo Genesis">
+<Detail>
+<Summary>A focused operation to resolve the chaotic project directory structure by migrating all code and artifacts into a structured monorepo. It is governed by the TPGP and MAR protocols and includes a "Safe-Delete" workflow to prevent data loss during the transition.</Summary>
+</Detail>
+</Node>
+<Node id="Operation_memOS_Upgrade" label="Operation: memOS Upgrade">
+<Detail>
+<Summary>A focused, three-phase operation to upgrade the memOS.as service. It is governed by the TPGP and MAR protocols and aims to solidify the core service, integrate an orchestrator, and deploy an intelligence layer.</Summary>
+</Detail>
+</Node>
+</Topic>
+<Topic label="Governance & Protocols">
+<Description>The immutable laws and protocols that govern the ecosystem's development and operation.</Description>
+<Node id="TPGP" label="TaskMaster Generation Protocol (TPGP)">
+<Detail>
+<Summary>The standard for creating all task plans. It mandates dual-output (Markdown for humans, POML for machines), per-task MAR roles (Implementer, Reviewer), explicit 'Done means Done' criteria, and a sequential workflow handoff protocol where the Reviewer's sign-off is the trigger for continuation.</Summary>
+</Detail>
+</Node>
+<Node id="MAR_Protocol" label="MAR (Mandatory Agent Review) Protocol">
+<Detail>
+<Summary>A formal, mandatory quality gatekeeper workflow where a designated Reviewer agent must formally approve an Implementer agent's work on a task before the project can proceed. It is a core component of our multi-agent collaboration framework, designed to catch errors and strategic misalignments early.</Summary>
+</Detail>
+</Node>
+<Node id="Omega_Ingest_Laws" label="Omega Ingest Laws">
+<Detail>
+<Summary>A set of binding laws governing all interactions with the Omega Ingest master knowledge graph. Key tenets include the principles of a Single Source of Truth (the KG is the definitive record), Immutability of Verified Data (no alteration of verified facts), and a mandatory Dual Verification Requirement for all new entries to ensure accuracy and prevent drift.</Summary>
+</Detail>
+</Node>
+<Node id="Safe_Delete_Protocol" label="Safe-Delete Protocol">
+<Detail>
+<Summary>A workflow to prevent accidental data loss, primarily during the monorepo restructure. Instead of permanent deletion, the `rm` and `del` commands are overridden by shell functions to move files to a temporary `_archive/trash` directory, from which they can be recovered or permanently deleted later.</Summary>
+<CodeSnippet language="bash">
+<![CDATA[
+# Overrides the 'rm' command to move files to the workspace archive.
+rm() {
+    local TRASH_DIR="/path/to/your/ApexSigmaProjects.Dev/_archive/trash"
+    mkdir -p "$TRASH_DIR"
+    if [ "$#" -eq 0 ]; then
+        # If no arguments, call the original rm (e.g., for 'rm -i')
+        command rm
+        return
+    fi
+    for target in "$@"; do
+        mv -v "$target" "$TRASH_DIR"
+    done
+}
+]]>
+</CodeSnippet>
+</Detail>
+</Node>
+</Topic>
+</KnowledgeBase>
+<Chronology>
+<Description>A chronological record of significant events, decisions, and outcomes in the ApexSigma ecosystem.</Description>
+<Event timestamp="2025-09-12T13:18:00Z" type="Architecture_Evolution" description="A key insight from external research led to the evolution of the memOS architecture into a three-layer model: Tools (API), Workers (Agent Swarm), and Orchestrator (Dagster)."/>
+<Event timestamp="2025-09-12T21:00:00Z" type="Initial_State_Analysis" description="The state of the ecosystem was established by ingesting APEXSIGMA_KG_V67_0_OMEGA, confirming the 43% implementation gap and initiating a full system overhaul."/>
+<Event timestamp="2025-09-12T22:00:00Z" type="Governance_Establishment" description="The 'TaskMaster Generation Protocol' (TPGP) was formally defined and established to standardize all future planning documents."/>
+<Event timestamp="2025-09-12T22:15:00Z" type="Blocker_Identification" description="A messy project directory structure was identified as a key organizational blocker via screenshot analysis."/>
+<Event timestamp="2025-09-12T22:30:00Z" type="Architecture_Decision" description="A monorepo architecture was proposed and accepted as the solution to the chaotic directory structure, including an _archive directory and a 'Safe-Delete' protocol."/>
+<Event timestamp="2025-09-12T23:00:00Z" type="Strategic_Planning" description="'Operation: Monorepo Genesis' task plan was created to execute the directory restructure."/>
+<Event timestamp="2025-09-12T23:45:00Z" type="Strategic_Decision" description="The decision was made to defer Dagster integration until after Phase 1 of the memOS upgrade (Core Service Solidification) is complete."/>
+</Chronology>
+<RelationalGraph>
+<Description>Connects high-level concepts from the Ecosystem State to their detailed definitions in the Knowledge Base.</Description>
+<Edge source="Operation_Asgard_Rebirth" target="incident_Implementation_Discrepancy" label="resolves" description="Operation Asgard Rebirth was created specifically to resolve the critical implementation gaps discovered during the system audit."/>
+<Edge source="Operation_Monorepo_Genesis" target="incident_Chaotic_Directory_Structure" label="resolves" description="The Monorepo Genesis operation is the designated solution for the unstructured project directory, which was a critical organizational blocker."/>
+<Edge source="AgentRegistry_Refactor" target="incident_AgentPersona_Flaw" label="resolves" description="The refactoring task for the AgentRegistry is the designated solution for the critical AgentPersona reconstruction flaw."/>
+</RelationalGraph>
+</Record>
+</poml>

@@ -1,42 +1,46 @@
-
-.env*
-.flaskenv*
-!.env.project
-!.env.vault
-
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# C extensions
+*.so
+
+# Distribution / packaging
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environments
+.env
+.venv
 env/
 venv/
-.venv/
-.mypy_cache/
+ENV/
+env.bak/
+venv.bak/
 
-# Logs and temporary files
-*.log
-*.tmp
-*.temp
-
-# IDE and editor files
+# IDE / Editor specific
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# Project specific temporary files
-session_log_*.json
-commit_*.sh
-langfuse_*.py
-agent_system_*.py
-commit_preparation.py
-
-#Ignore vscode AI rules
-.github\instructions\codacy.instructions.md
+# Docker
+docker-compose.override.yml
+node_modules

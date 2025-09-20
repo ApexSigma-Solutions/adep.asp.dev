@@ -1,0 +1,140 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Initialize `apexsigma-core` Library and Define Core Models",
+        "description": "Initialize the `apexsigma-core` shared library as a formal Python package using Poetry and define the core Pydantic data models for inter-service communication. This corresponds to PRD tasks MEMOS-P0-T1.1 and MEMOS-P0-T1.2.",
+        "details": "Create the directory `libs/apexsigma-core/` with a valid `pyproject.toml`. Inside this library, create a `models` module containing base Pydantic models such as `AgentPersona` and `Task`. Basic unit tests for these models should be included.",
+        "testStrategy": "Verify that the `libs/apexsigma-core/` directory and `pyproject.toml` exist. Run the unit tests for the Pydantic models to ensure they pass. The package should have a basic, installable structure.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Define Storage Interfaces and Shared Utilities in `apexsigma-core`",
+        "description": "Define abstract base classes (ABCs) for storage interfaces and implement initial shared utilities for configuration and logging within the `apexsigma-core` library. This covers PRD tasks MEMOS-P0-T1.3 and MEMOS-P0-T1.4.",
+        "details": "Create a `storage` module with ABCs for Cache, Persistent, Vector, and Graph storage using Python's `abc` module. Also, create a `utils` module with helpers for configuration loading and standardized logging. Both modules must include unit tests.",
+        "testStrategy": "Review the `storage` and `utils` modules to confirm the presence of the specified components. Execute the unit tests for both modules to ensure they pass and function as expected.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "review",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Configure CI Pipeline for `apexsigma-core`",
+        "description": "Create and configure a Continuous Integration (CI) pipeline for the `apexsigma-core` library to automate testing and verify its installability. This corresponds to PRD task MEMOS-P0-T1.5.",
+        "details": "The CI pipeline should be configured (e.g., using GitHub Actions) to run on every push/PR to the `libs/apexsigma-core` directory. The pipeline must execute the library's unit tests. A separate step should verify that the library can be installed in a clean environment using `pip install -e .`.",
+        "testStrategy": "Trigger the CI pipeline by making a small commit. Verify that all steps, including tests and the installability check, pass successfully.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2
+        ],
+        "status": "review",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Create Root Docker Compose with Data & Observability Stacks",
+        "description": "Define the base data infrastructure and the complete observability stack in a new root `docker-compose.yml` file, based on the official network map. This combines PRD tasks MEMOS-P0-T2.1 and MEMOS-P0-T2.1.1.",
+        "details": "Create a `docker-compose.yml` at the project root. Add services for PostgreSQL, Redis, Qdrant, and Neo4j with persistent data volumes. Also add the observability stack: Jaeger, Prometheus, Loki, Grafana, and Langfuse. All configurations must strictly adhere to `docs/Config Files/Infrastructure/Docker Network/VERIFIED_DOCKER_NETWORK_MAP.md`.",
+        "testStrategy": "Run `docker-compose up -d` from the project root. Verify that all specified containers start without errors. Access the Grafana UI and other relevant service endpoints to confirm they are operational.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Integrate Application Services into Root Docker Compose",
+        "description": "Add the existing application services (`memos.as`, `tools.as`, etc.) to the root `docker-compose.yml` to run as part of the unified monorepo stack. This corresponds to PRD task MEMOS-P0-T2.2.",
+        "details": "Define service entries for each application in the root `docker-compose.yml`. Ensure their Dockerfiles are correctly referenced and that they connect to the networks defined for the data and observability stacks.",
+        "testStrategy": "Run `docker-compose up -d`. Verify that all application service containers start successfully alongside the infrastructure services. Check container logs for any connectivity errors to databases or other services.",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Refactor Monorepo for Compatibility and Cleanup",
+        "description": "Audit and refactor all Python imports, standardize service-level configurations (`Dockerfile`, `pyproject.toml`), and remove legacy orchestration files to ensure monorepo compatibility. This covers PRD tasks MEMOS-P0-T2.4 and MEMOS-P0-T2.5.",
+        "details": "Go through each service and update Python import statements to be compatible with the monorepo structure (e.g., using editable installs of `apexsigma-core`). Standardize the `Dockerfile` and `pyproject.toml` in each service. Delete all legacy, service-level `docker-compose.yml` files.",
+        "testStrategy": "After refactoring, start the entire stack with `docker-compose up`. Verify that no service fails to start due to `ModuleNotFoundError` or configuration issues. Confirm that all legacy `docker-compose.yml` files have been removed.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "review",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement Hierarchical Environment Variable Strategy",
+        "description": "Implement and verify the hierarchical environment variable strategy using a root `.env` file and service-specific `.env` files. This corresponds to PRD task MEMOS-P0-T2.3.",
+        "details": "Create a root `.env` file for shared variables. For any service that needs specific overrides or additional variables, create a corresponding `.env` file (e.g., `services/memos.as/.env`). Ensure the `docker-compose.yml` is configured to load these files correctly.",
+        "testStrategy": "Start the services and `exec` into a running container. Use `printenv` to verify that variables from both the root and service-specific `.env` files are loaded correctly, with service-specific values overriding root values where applicable.",
+        "priority": "medium",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Integrate Dagster Services and Workspace Configuration",
+        "description": "Add Dagster services to the root `docker-compose.yml` and create the root `workspace.yaml` to configure the Dagster instance for the monorepo. This combines PRD tasks MEMOS-P0-T3.1 and MEMOS-P0-T3.2.",
+        "details": "Add the `dagster-daemon` and `dagster-webserver` services to the root `docker-compose.yml`. Create a `workspace.yaml` file at the project root. This file should be configured to load code locations from the services within the monorepo.",
+        "testStrategy": "Run `docker-compose up -d`. Verify the Dagster containers start successfully. Access the Dagster UI in a web browser and confirm that it loads without errors, showing an empty workspace.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Define `memos.as` as a Dagster Code Location & Verify Library Import",
+        "description": "Define the `memos.as` service as the first Dagster code location and create a test asset that successfully imports from the `apexsigma-core` library. This covers PRD tasks MEMOS-P0-T3.3 and MEMOS-P0-T3.4.",
+        "details": "Update `workspace.yaml` to point to the Dagster definitions within the `memos.as` service. Create a sample Dagster asset inside `memos.as`. This asset must import a Pydantic model from `apexsigma_core` and use it in its definition.",
+        "testStrategy": "Refresh the Dagster UI. Verify that the `memos.as` code location appears. Find the sample asset and materialize it from the UI. The materialization should complete successfully without any `ModuleNotFoundError` or other import-related errors.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          6,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Produce and Verify New Monorepo Docker Network Map",
+        "description": "Produce the new, official `VERIFIED_DOCKER_NETWORK_MAP_V2.md` document that reflects the final state of the monorepo's docker-compose stack. This is the capstone task MEMOS-P0-OMEGA.",
+        "details": "Create a new markdown document named `VERIFIED_DOCKER_NETWORK_MAP_V2.md`. This document must accurately list all service names, images, ports, and volumes from the running root `docker-compose.yml` stack. It must include a 'Verified By' section for sign-offs. The old network map should be moved to an `_archive` directory.",
+        "testStrategy": "Compare the generated markdown document against the output of `docker-compose config` and the live state from `docker ps`. Ensure every service, port, and volume is accurately documented. The task is complete only after the document is created and the old one is archived.",
+        "priority": "medium",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-12T23:54:30.257Z",
+      "updated": "2025-09-19T03:58:04.863Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
