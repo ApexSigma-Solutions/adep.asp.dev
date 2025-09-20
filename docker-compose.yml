@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  # API Gateway Service
+  api-gateway:
+    build: ./services/api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - pipeline-orchestrator
+      - code-analyzer
+      - deployment-manager
+    networks:
+      - adep-network
+
+  # Pipeline Orchestrator Service
+  pipeline-orchestrator:
+    build: ./services/pipeline-orchestrator
+    ports:
+      - "8081:8081"
+    environment:
+      - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - adep-network
+
+  # Code Analyzer Service
+  code-analyzer:
+    build: ./services/code-analyzer
+    ports:
+      - "8082:8082"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - adep-network
+
+  # Deployment Manager Service
+  deployment-manager:
+    build: ./services/deployment-manager
+    ports:
+      - "8083:8083"
+    environment:
+      - NODE_ENV=development
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - adep-network
+
+  # Agent Coordinator Service
+  agent-coordinator:
+    build: ./services/agent-coordinator
+    ports:
+      - "8084:8084"
+    environment:
+      - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - adep-network
+
+  # Redis for caching and message queuing
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - adep-network
+
+  # PostgreSQL for persistent data storage
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=adep
+      - POSTGRES_USER=adep_user
+      - POSTGRES_PASSWORD=adep_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - adep-network
+
+  # Monitoring and Logging
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - adep-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - adep-network
+
+volumes:
+  postgres_data:
+
+networks:
+  adep-network:
+    driver: bridge
