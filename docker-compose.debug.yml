@@ -1,0 +1,16 @@
+services:
+  devenviro-api:
+    build: 
+      context: ./devenviro.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_devenviro_api
+    working_dir: /app/app
+    command: ["dotenvx", "run", "--", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8090", "--reload"]
+    ports:
+      - "8090:8090"
+    env_file:
+      - ./services/devenviro.as/.env
+    environment:
+      - PYTHONPATH=/app/app
+    volumes:
+      - ./devenviro.as:/app

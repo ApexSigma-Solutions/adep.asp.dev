@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "services"
+		},
+		{
+			"path": "agents"
+		},
+		{
+			"path": "libs"
+		},
+		{
+			"path": "docs"
+		},
+		{
+			"path": "scripts"
+		}
+	],
+	"settings": {}
+}

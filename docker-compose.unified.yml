@@ -86,9 +86,6 @@ services:
       - NEO4J_dbms_memory_heap_initial__size=512m
       - NEO4J_dbms_memory_heap_max__size=2g
       - NEO4J_dbms_memory_pagecache_size=1g
-    # ports:
-      # - "7474:7474"   # Neo4j Browser - Disabled due to Windows port restrictions
-      # - "7688:7687"   # Bolt protocol - Use internal network only
     volumes:
       - neo4j_data:/data
       - neo4j_logs:/logs
@@ -129,7 +126,7 @@ services:
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
     volumes:
-      - ./devenviro.as/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./services/devenviro.as/config/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
@@ -146,8 +143,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=apexsigma123
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./devenviro.as/config/grafana.ini:/etc/grafana/grafana.ini
-      - ./devenviro.as/config/grafana/provisioning:/etc/grafana/provisioning
+      - ./services/devenviro.as/config/grafana.ini:/etc/grafana/grafana.ini
+      - ./services/devenviro.as/config/grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
       - loki
@@ -160,7 +157,7 @@ services:
     container_name: apexsigma_loki
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - ./devenviro.as/config/loki-config.yml:/etc/loki/local-config.yaml
+      - ./services/devenviro.as/config/loki-config.yml:/etc/loki/local-config.yaml
       - loki_data:/loki
     ports:
       - "9100:3100"
@@ -173,7 +170,7 @@ services:
     container_name: apexsigma_promtail
     command: -config.file=/etc/promtail/config.yml
     volumes:
-      - ./devenviro.as/config/promtail-config.yml:/etc/promtail/config.yml
+      - ./services/devenviro.as/config/promtail-config.yml:/etc/promtail/config.yml
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
     depends_on:
@@ -188,19 +185,18 @@ services:
 
   devenviro-api:
     build: 
-      context: ./devenviro.as
+      context: ./services/devenviro.as
       dockerfile: Dockerfile
     container_name: apexsigma_devenviro_api
     working_dir: /app/app
-    command: ["dotenvx", "run", "--", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8090", "--reload"]
+    command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8090", "--reload"]
     ports:
       - "8090:8090"
     env_file:
-      - ./devenviro.as/.env
+      - ./services/devenviro.as/.env
     environment:
       - PYTHONPATH=/app/app
       - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@rabbitmq:5672/
-      # Agent tokens (use environment variables)
       - AGENT_ORCHESTRATOR_TOKEN=${AGENT_ORCHESTRATOR_TOKEN:-supersecrettoken_orchestrator}
       - AGENT_BACKEND_SPECIALIST_TOKEN=${AGENT_BACKEND_SPECIALIST_TOKEN:-supersecrettoken_backend}
       - AGENT_CODE_REFACTORING_SPECIALIST_TOKEN=${AGENT_CODE_REFACTORING_SPECIALIST_TOKEN:-supersecrettoken_refactoring}
@@ -221,7 +217,7 @@ services:
       - rabbitmq
       - qdrant
     volumes:
-      - ./devenviro.as:/app
+      - ./services/devenviro.as:/app
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -238,21 +234,18 @@ services:
 
   devenviro-gemini-cli-listener:
     build:
-      context: ./devenviro.as
+      context: ./services/devenviro.as
       dockerfile: Dockerfile
     container_name: apexsigma_devenviro_gemini_cli_listener
     working_dir: /app/app
     command: ["python", "src/listeners/gemini_cli_listener.py"]
     env_file:
-      - ./devenviro.as/.env
+      - ./services/devenviro.as/.env
     environment:
       - PYTHONPATH=/app/app
       - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@apexsigma_rabbitmq:5672/
       - AGENT_GEMINI_CLI_TOKEN=${AGENT_GEMINI_CLI_TOKEN:-supersecrettoken_gemini_cli}
       - GEMINI_COMMAND=echo "Gemini CLI simulation:"
-      # In production, this would be the actual Gemini CLI command
-      # - GEMINI_COMMAND=gemini -p
-      # Database connection for agent registration
       - POSTGRES_HOST=apexsigma_postgres
       - POSTGRES_DB=${POSTGRES_DB:-apexsigma-memtank}
       - POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
@@ -262,7 +255,7 @@ services:
       - rabbitmq
       - devenviro-api
     volumes:
-      - ./devenviro.as:/app
+      - ./services/devenviro.as:/app
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -273,7 +266,6 @@ services:
       retries: 3
       start_period: 120s
 
-  # Optional: DevEnviro Documentation Server
   devenviro-docs:
     image: python:3.11-slim
     container_name: apexsigma_devenviro_docs
@@ -282,7 +274,7 @@ services:
       sh -c "pip install mkdocs mkdocs-material &&
       mkdocs serve --dev-addr 0.0.0.0:8000"
     volumes:
-        - ./devenviro.as:/app
+        - ./services/devenviro.as:/app
     ports:
         - "8001:8000"
     networks:
@@ -291,10 +283,9 @@ services:
     profiles:
       - docs
 
-  # DevEnviro A2A Bridge Service
   devenviro-a2a-bridge:
     build:
-      context: ./devenviro.as
+      context: ./services/devenviro.as
       dockerfile: Dockerfile
     container_name: apexsigma_devenviro_a2a_bridge
     working_dir: /app/app
@@ -302,7 +293,7 @@ services:
     ports:
       - "8101:8100"
     env_file:
-      - ./devenviro.as/.env
+      - ./services/devenviro.as/.env
     environment:
       - PYTHONPATH=/app/app
       - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@apexsigma_rabbitmq:5672/
@@ -311,7 +302,7 @@ services:
       - rabbitmq
       - devenviro-api
     volumes:
-      - ./devenviro.as:/app
+      - ./services/devenviro.as:/app
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -328,27 +319,22 @@ services:
 
   memos-api:
     build:
-      context: ./memos.as
+      context: ./services/memos.as
       dockerfile: Dockerfile
     container_name: apexsigma_memos_api
-    # ports:
-      # - "8095:8090"  # Disabled due to Windows port restrictions
     env_file:
-      - ./memos.as/.env
+      - ./services/memos.as/.env
     environment:
       - PYTHONPATH=/code
-      # Override memOS .env to match shared infrastructure credentials
       - POSTGRES_HOST=postgres
       - POSTGRES_USER=apexsigma_user
       - POSTGRES_PASSWORD=your_secure_postgres_password_here
       - POSTGRES_DB=memos
       - QDRANT_HOST=qdrant
       - REDIS_HOST=redis
-      # Connect to shared infrastructure with correct memOS database  
       - DATABASE_URL=postgresql://apexsigma_user:your_secure_postgres_password_here@postgres:5432/memos
       - REDIS_URL=redis://redis:6379/1
       - QDRANT_URL=http://qdrant:6333
-      # Neo4j connection for knowledge graph
       - NEO4J_URI=bolt://neo4j:7687
       - NEO4J_USER=neo4j
       - NEO4J_PASSWORD=apexsigma_neo4j_password
@@ -358,7 +344,7 @@ services:
       - qdrant
       - neo4j
     volumes:
-      - ./memos.as:/code
+      - ./services/memos.as:/code
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -375,30 +361,24 @@ services:
 
   ingest-llm-api:
     build:
-      context: ./InGest-LLM.as
+      context: ./services/InGest-LLM.as
       dockerfile: Dockerfile
     container_name: apexsigma_ingest_llm_api
     ports:
       - "18000:8000"
     env_file:
-      - ./InGest-LLM.as/.env
+      - ./services/InGest-LLM.as/.env
     environment:
-      # CRITICAL: Do not override CMD - use Dockerfile's default "poetry run" command
-      # Observability integration
       - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-pk-lf-bba97616-6c46-4d0d-b3a1-2b3cb9e03ee5}
       - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-sk-lf-ad7e9785-fb81-4340-aa6a-4cc265aec073}
       - LANGFUSE_HOST=${LANGFUSE_HOST:-https://cloud.langfuse.com}
-      # Service integration
       - INGEST_MEMOS_BASE_URL=http://memos-api:8090
       - INGEST_MEMOS_TIMEOUT=30
-      # LM Studio integration (host networking)
       - INGEST_LM_STUDIO_BASE_URL=http://host.docker.internal:1234/v1
       - INGEST_LM_STUDIO_ENABLED=true
       - INGEST_EMBEDDING_ENABLED=true
-      # Telemetry integration
       - JAEGER_ENDPOINT=http://jaeger:14268/api/traces
       - PROMETHEUS_GATEWAY=http://prometheus:9090
-      # Service configuration
       - INGEST_APP_NAME=InGest-LLM.as
       - INGEST_DEBUG=false
       - LOG_LEVEL=INFO
@@ -408,7 +388,7 @@ services:
       - memos-api
       - jaeger
     volumes:
-      - ./InGest-LLM.as:/app
+      - ./services/InGest-LLM.as:/app
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -423,7 +403,6 @@ services:
   # TOOLS.AS - TOOL REGISTRY SERVICE
   # ===========================================
 
-  # Dedicated PostgreSQL for tools.as (isolation)
   tools-postgres:
     image: postgres:16-alpine
     container_name: apexsigma_tools_postgres
@@ -435,7 +414,7 @@ services:
       - "5433:5432"
     volumes:
       - tools_postgres_data:/var/lib/postgresql/data
-      - ./tools.as/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./services/tools.as/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -447,11 +426,11 @@ services:
 
   tools-api:
     build:
-      context: ./tools.as
+      context: ./services/tools.as
       dockerfile: Dockerfile
     container_name: apexsigma_tools_api
     ports:
-      - "8003:8000"  # Avoid conflict with InGest-LLM.as
+      - "8003:8000"
     environment:
       - SERPER_API_KEY=${SERPER_API_KEY}
       - DATABASE_URL=postgresql://tools_user:tools_pass@tools-postgres:5432/tools_db
@@ -460,7 +439,7 @@ services:
     depends_on:
       - tools-postgres
     volumes:
-      - ./tools.as:/app
+      - ./services/tools.as:/app
     networks:
       - apexsigma_net
     restart: unless-stopped

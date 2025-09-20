@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "apexsigma-monorepo"
+version = "0.1.0"
+description = "Monorepo for ApexSigma"
+authors = ["SigmaDev11 <your-email@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+apexsigma-core = {path = "libs/apexsigma-core", develop = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

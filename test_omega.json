@@ -1,6 +1,0 @@
-{
-  "scope": "comprehensive", 
-  "preserve_historical": true,
-  "generate_poml": true,
-  "poml_dataset": "<Project>ApexSigma Core</Project><Agent>InGest-LLM Guardian</Agent><Concept>Master Knowledge Store</Concept><Edge>depends_on</Edge>"
-}

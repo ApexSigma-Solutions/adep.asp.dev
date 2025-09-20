@@ -1,0 +1,176 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: apexsigma_postgres
+    environment:
+      POSTGRES_USER: apexsigma_user
+      POSTGRES_PASSWORD: apexsigma_password
+      POSTGRES_DB: apexsigma_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - apexsigma_network
+
+  redis:
+    image: redis:7
+    container_name: apexsigma_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - apexsigma_network
+
+  qdrant:
+    image: qdrant/qdrant:v1.1.0
+    container_name: apexsigma_qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - apexsigma_network
+
+  neo4j:
+    image: neo4j:4.4
+    container_name: apexsigma_neo4j
+    environment:
+      NEO4J_AUTH: neo4j/apexsigma_neo4j_password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - apexsigma_network
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.87.0
+    container_name: apexsigma_otel-collector
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./monitoring/otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+    networks:
+      - apexsigma_network
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.38
+    container_name: apexsigma_jaeger
+    ports:
+      - "16686:16686"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - apexsigma_network
+
+  prometheus:
+    image: prom/prometheus:v2.40.1
+    container_name: apexsigma_prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - apexsigma_network
+
+  grafana:
+    image: grafana/grafana:9.2.3
+    container_name: apexsigma_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - apexsigma_network
+
+  langfuse:
+    image: langfuse/langfuse:latest
+    container_name: apexsigma_langfuse
+    ports:
+      - "3001:3000"
+    environment:
+      - DATABASE_URL=postgresql://apexsigma_user:apexsigma_password@postgres:5432/apexsigma_db
+      - NEXTAUTH_SECRET=mysecret
+      - SALT=mysalt
+    depends_on:
+      - postgres
+    networks:
+      - apexsigma_network
+
+  memos-as:
+    build:
+      context: ./services/memos.as
+    container_name: apexsigma_memos-as
+    env_file:
+      - ./.env
+      - ./services/memos.as/.env
+    ports:
+      - "8090:8090"
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+      - neo4j
+    networks:
+      - apexsigma_network
+
+  tools-as:
+    build:
+      context: ./services/tools.as
+    container_name: apexsigma_tools-as
+    env_file:
+      - ./.env
+      - ./services/tools.as/.env
+    ports:
+      - "8081:8081"
+    networks:
+      - apexsigma_network
+
+  ingest-llm-as:
+    build:
+      context: ./services/InGest-LLM.as
+    container_name: apexsigma_ingest-llm-as
+    env_file:
+      - ./.env
+      - ./services/InGest-LLM.as/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - memos-as
+    networks:
+      - apexsigma_network
+
+  devenviro-as:
+    build:
+      context: ./services/devenviro.as
+    container_name: apexsigma_devenviro-as
+    env_file:
+      - ./.env
+      - ./services/devenviro.as/.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - memos-as
+      - tools-as
+      - ingest-llm-as
+    networks:
+      - apexsigma_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  qdrant_data:
+  neo4j_data:
+  grafana_data:
+
+networks:
+  apexsigma_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.26.0.0/16
