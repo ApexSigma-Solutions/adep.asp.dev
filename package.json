@@ -1,0 +1,35 @@
+{
+  "name": "adep-autonomous-devex-pipeline",
+  "version": "1.0.0",
+  "description": "Autonomous DevEx Pipeline : ApexSigma EcoSystem of agentic development services within a self contained docker composed network",
+  "main": "index.js",
+  "scripts": {
+    "start": "./scripts/start.sh",
+    "dev": "docker-compose -f docker-compose.dev.yml up",
+    "build": "docker-compose build",
+    "test": "npm run test:services",
+    "test:services": "cd services && npm test",
+    "lint": "eslint services/*/index.js",
+    "clean": "docker system prune -f && docker volume prune -f"
+  },
+  "keywords": [
+    "devops",
+    "autonomous",
+    "pipeline",
+    "microservices",
+    "docker",
+    "development-experience"
+  ],
+  "author": "ApexSigma Solutions",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.44.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ApexSigma-Solutions/adep.asp.dev.git"
+  }
+}
