@@ -1,4 +1,16 @@
-"""Initial schema."""
+"""
+Initial Alembic migration for the database schema.
+
+This migration creates the initial set of tables for the ApexSigma ecosystem,
+including tables for managing active context, product context, decisions,
+progress entries, and system patterns. It also sets up FTS5 virtual tables
+for full-text search capabilities on the 'decisions' and 'custom_data' tables.
+
+Revision ID: 20250617
+Revises:
+Create Date: 2025-06-17 00:00:00.000000
+
+"""
 
 # pylint: disable=invalid-name
 

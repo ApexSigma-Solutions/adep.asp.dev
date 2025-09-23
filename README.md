@@ -1,135 +1,89 @@
 # ApexSigma Projects Development Environment
 
 ## Overview
-This is the unified development environment for the ApexSigma ecosystem, featuring a Society of Agents architecture for intelligent automation and content management.
+This is the unified development environment for the ApexSigma ecosystem, featuring a Society of Agents architecture for intelligent automation and content management. This monorepo contains all the services, libraries, and scripts necessary to run the ecosystem.
 
-## Active Projects
+## Projects
 
-### 🤖 devenviro.as
-**DevEnviro Society of Agents**
-- Agent orchestration and management platform
-- Multi-agent collaboration with Claude, Gemini, and Gemma agents
-- RabbitMQ-based messaging and communication
-- Real-time observability with Langfuse integration
-- **Status**: ✅ Agent foundation operational, CLI integration pending
+### `libs/apexsigma-core`
+The core library for the ApexSigma ecosystem. It contains the data models and interfaces used by all services.
 
-### 📥 InGest-LLM.as  
-**Intelligent Content Ingestion Engine**
-- Automated repository analysis and documentation
-- Ecosystem-wide content processing and vectorization
-- Integration with Memos knowledge management
-- Multi-model LLM analysis and summarization
-- **Status**: ✅ Core ingestion pipeline operational
-
-### 📝 memos.as
-**Knowledge Management System**
-- Centralized content storage and retrieval
-- Progress tracking and session management
-- Integration hub for ecosystem components
-- Enhanced search and analysis capabilities
-- **Status**: ✅ Production-ready with progress logging
-
-### 🔧 tools.as
-**Development Utilities and APIs**
-- Shared tooling and utilities across projects
-- API endpoints for cross-project integration
-- Development and testing frameworks
-- **Status**: ✅ Core functionality operational
-
-## Infrastructure
-
-### 🐳 Unified Docker Stack
-- **File**: `docker-compose.unified.yml`
-- **Services**: 17+ integrated services
-- **Uptime**: 17+ hours stable deployment
-- **Monitoring**: Grafana, Prometheus, Jaeger, Loki
-
-### 🔍 Observability
-- **Langfuse**: 347+ traces active
-- **Health Monitoring**: Service status tracking
-- **Logging**: Centralized log aggregation
-- **Metrics**: Performance and usage analytics
-
-### 🎯 Agent Infrastructure
-- **DevEnviro API**: Agent orchestration
-- **Gemini CLI Listener**: HEALTHY
-- **RabbitMQ**: Message bus operational
-- **Database Layer**: PostgreSQL, Redis, Qdrant
-
-## Directory Structure
-
-```
-ApexSigmaProjects.Dev/
-├── devenviro.as/          # Agent orchestration platform
-├── InGest-LLM.as/         # Content ingestion engine
-├── memos.as/              # Knowledge management
-├── tools.as/              # Development utilities
-├── archive/               # Archived/legacy projects
-├── docs/                  # Project documentation
-├── logs/                  # Session and progress logs
-├── scripts/               # Utility scripts
-├── tests/                 # Integration tests
-├── DevTools/              # Development tools and diagrams
-└── docker-compose.unified.yml  # Infrastructure definition
-```
+### `services/memos.as`
+The main application for knowledge management. It provides a memory and tool discovery hub for the AI agents in the ecosystem.
 
 ## Getting Started
 
 ### Prerequisites
 - Docker and Docker Compose
 - Python 3.11+
+- Poetry
 - Git
 
-### Quick Start
+### Setup
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd <repository-name>
+    ```
+2.  **Install dependencies:**
+    This project uses Poetry for dependency management. To install the dependencies for all projects, you can run the following command from the root of the repository:
+    ```bash
+    # For apexsigma-core
+    poetry install --with docs -C libs/apexsigma-core
+
+    # For memos.as
+    pip install -r services/memos.as.bak/requirements.txt
+    pip install -r services/memos.as.bak/requirements-observability.txt
+    ```
+3.  **Start the services:**
+    The entire ecosystem can be started with a single Docker Compose command:
+    ```bash
+    docker-compose -f docker-compose.unified.yml up -d
+    ```
+    This will start all the services, including the databases, messaging queues, and the main applications.
+
+### Usage
+Once the services are running, you can interact with them through their respective APIs. The main entry point for the ecosystem is the `devenviro.as` service, which orchestrates the other services.
+
+## Documentation
+This repository contains comprehensive documentation for all its projects, built with MkDocs.
+
+### Building the Documentation
+To build the documentation for all projects, run the following command from the root of the repository:
 ```bash
-# Start the unified infrastructure
-docker-compose -f docker-compose.unified.yml up -d
+python scripts/build_ecosystem_docs.py build
+```
+This will generate the static documentation sites in the `site` directory of each project.
 
-# Check service health
-docker-compose -f docker-compose.unified.yml ps
+### Viewing the Documentation
+After building the documentation, you can view it by opening the `index.html` file in the `site` directory of each project. For example:
+-   **apexsigma-core:** `libs/apexsigma-core/site/index.html`
+-   **memos.as:** `services/memos.as.bak/site/index.html`
 
-# View Langfuse observability
-# Open http://localhost:3000
+You can also serve the documentation locally using the following command:
+```bash
+# For apexsigma-core
+mkdocs serve -f libs/apexsigma-core/mkdocs.yml
+
+# For memos.as
+mkdocs serve -f services/memos.as.bak/mkdocs.yml
 ```
 
-### Development Workflow
-1. **Infrastructure**: All services run in unified Docker stack
-2. **Agents**: DevEnviro orchestrates Claude/Gemini agents
-3. **Content**: InGest-LLM processes and analyzes code/docs
-4. **Knowledge**: Memos stores and manages insights
-5. **Tools**: Shared utilities support all projects
+## Directory Structure
 
-## Recent Achievements (Aug 25, 2025)
-
-### ✅ Completed
-- **Agent Foundation**: DevEnviro agent infrastructure operational
-- **Infrastructure**: Unified Docker stack with 17+ services
-- **Database**: Fixed psycopg2.pool import errors
-- **Observability**: Langfuse active with 347+ traces
-- **Documentation**: Comprehensive reference docs across all projects
-- **Cache Cleanup**: Removed all Python cache files from repositories
-
-### 🔄 In Progress  
-- **A2A Bridge**: Import error fixes for external agent communication
-- **CLI Integration**: Replace simulation commands with real Claude/Gemini CLI
-- **Health Checks**: Fix DevEnviro API health status
-- **Qdrant Service**: Resolve unhealthy status
-
-### 🎯 Next Steps
-1. Enable production Claude/Gemini CLI integration
-2. Complete A2A bridge for external agent APIs
-3. Implement advanced agent collaboration patterns
-4. Scale ecosystem for production deployment
-
-## Support & Documentation
-
-- **Project Docs**: Each project has comprehensive MkDocs documentation
-- **API Reference**: Available in each project's `docs/reference/` directory
-- **Session Logs**: Progress tracking in `logs/` directory
-- **Health Status**: Monitor via unified Docker stack
+```
+.
+├── libs/
+│   └── apexsigma-core/  # Core library with data models and interfaces
+├── services/
+│   └── memos.as.bak/    # The main knowledge management service
+├── scripts/             # Utility and automation scripts
+├── docs/                # General documentation for the ecosystem
+├── tests/               # Integration and end-to-end tests
+└── docker-compose.unified.yml
+```
 
 ---
 
-**Last Updated**: August 25, 2025  
-**Ecosystem Status**: ✅ Operational - Ready for agent CLI integration  
-**Infrastructure**: 17+ services, 17+ hour stable uptime
+**Last Updated**: September 22, 2025
+**Ecosystem Status**: ✅ Operational

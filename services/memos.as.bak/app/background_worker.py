@@ -1,3 +1,8 @@
+"""
+Background worker for performing periodic maintenance tasks, such as deleting
+expired memories.
+"""
+
 import time
 import asyncio
 from datetime import datetime
@@ -62,11 +67,22 @@ except ValueError:
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 def delete_embedding_with_retry(qdrant_client, embedding_id):
+    """Deletes an embedding from Qdrant with retry logic.
+
+    Args:
+        qdrant_client: The Qdrant client instance.
+        embedding_id: The ID of the embedding to delete.
+    """
     qdrant_client.delete_embedding(embedding_id)
 
 
 def process_expired_memories_once():
-    """Processes and deletes expired memories in a single run."""
+    """Processes and deletes expired memories in a single run.
+
+    This function acquires a Redis lock to ensure that only one instance of the
+    job is running at a time. It then queries the database for expired memories,
+    deletes them, and also deletes their corresponding embeddings from Qdrant.
+    """
     postgres_client = get_postgres_client()
     qdrant_client = get_qdrant_client()
     redis_client = get_redis_client()
@@ -153,7 +169,11 @@ def process_expired_memories_once():
 
 
 async def run_expiration_loop():
-    """Runs the memory expiration job in a loop with proper error handling."""
+    """Runs the memory expiration job in a loop.
+
+    This function runs indefinitely, calling `process_expired_memories_once`
+    at a regular interval defined in the configuration.
+    """
     logger = config.get_logger(__name__)
     interval_seconds = config.get(
         "MEMORY_EXPIRATION_INTERVAL_SECONDS", 300
