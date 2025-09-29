@@ -6,7 +6,8 @@ across the ApexSigma microservices ecosystem. It loads from .env files and
 provides type-safe access to environment variables.
 """
 
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 from dotenv import load_dotenv, find_dotenv
 from typing import Optional
 
