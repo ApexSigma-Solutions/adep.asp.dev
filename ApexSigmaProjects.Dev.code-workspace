@@ -36,7 +36,20 @@
 			"apexsigma.glossary.as.md",
 			"Valhalla Shield Engineering Standard v1.2.md"
 		],
-		"editor.fontSize": 14
+		"editor.fontSize": 14,
+		"mcp": {
+			"servers": {
+				"Trunk-MCP": {
+					"url": "https://mcp.trunk.io/mcp",
+					"type": "http"
+				},
+				"Semgrep-MCP": {
+					"url": "https://mcp.semgrep.ai/mcp",
+					"type": "http"
+				}
+			},
+			"inputs": []
+		}
 	},
 	"extensions": {
 		"recommendations": [

@@ -250,32 +250,45 @@ services:
       start_period: 30s
 
   langfuse:
-    image: langfuse/langfuse:latest
+    image: langfuse/langfuse:2.56.1  # Use stable version with native ClickHouse support
     container_name: apexsigma_langfuse
+    hostname: langfuse
     environment:
-      - NEXTAUTH_SECRET=${LANGFUSE_SECRET_KEY:-your-langfuse-secret-here}
-      - NEXTAUTH_URL=http://localhost:3001
+      # Primary PostgreSQL storage
       - DATABASE_URL=postgresql://${POSTGRES_USER:-apexsigma_user}:${POSTGRES_PASSWORD:-your_secure_postgres_password_here}@postgres:5432/${POSTGRES_DB:-apexsigma_db}
-      - NEXT_PUBLIC_LANGFUSE_TRACING_URL=http://localhost:3001
-      - CLICKHOUSE_URL=http://clickhouse:8123
-      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
-      - CLICKHOUSE_DATABASE=apexsigma_observability
-      - LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES=true
+      
+      # ClickHouse analytics (native protocol - REQUIRED for v3)
+      - CLICKHOUSE_URL=clickhouse://${CLICKHOUSE_USER:-clickhouse_user}:${CLICKHOUSE_PASSWORD:-change_me_securely}@clickhouse:9000/${CLICKHOUSE_DB:-apexsigma_observability}
+      - LANGFUSE_CLICKHOUSE_ENABLED=true
       - LANGFUSE_CLICKHOUSE_MIGRATION_TARGET=latest
+      
+      # Feature flags
+      - LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES=true
+      - NEXTAUTH_URL=http://localhost:3001
+      - NEXTAUTH_SECRET=${LANGFUSE_SECRET_KEY:-sk-lf-ad7e9785-fb81-4340-aa6a-4cc265aec073}
+      
+      # API keys
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-pk-lf-bba97616-6c46-4d0d-b3a1-2b3cb9e03ee5}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-sk-lf-ad7e9785-fb81-4340-aa6a-4cc265aec073}
+      - SALT=${LANGFUSE_SALT:-your-secure-salt-here-change-this-in-production}
     ports:
-      - "3001:3000"  # Langfuse web UI
-    depends_on:
-      - postgres
-      - clickhouse
+      - "3001:3000"
+    volumes:
+      - langfuse_data:/app/data
     networks:
-      - apexsigma_net
+      apexsigma_net:
+        ipv4_address: 172.26.0.52
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://langfuse:3000/api/public/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
       start_period: 60s
 
   promtail:
@@ -582,56 +595,61 @@ services:
       context: .
       dockerfile: ./services/dagster/Dockerfile
     container_name: apexsigma_dagster_webserver
-    env_file:
-      - .env
+    hostname: dagster-webserver
     environment:
-      - SERVICE_NAME=dagster
-      - DAGSTER_CURRENT_IMAGE=apexsigma/dagster-webserver:latest
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+      - DAGSTER_POSTGRES_HOST=postgres
+      - DAGSTER_POSTGRES_PORT=5432
+      - DAGSTER_POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
+      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-your_secure_postgres_password_here}
+      - DAGSTER_POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
     ports:
-      - "8081:8080"  # Dagster web UI (avoid host port 8080 conflicts)
+      - "3080:3000"  # Changed from 8080 to avoid Grafana conflict
     volumes:
-      - .:/app/dagster_home
-    depends_on:
-      - postgres
+      - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro
+      - ./services/dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
+      - dagster_home:/opt/dagster/dagster_home
     networks:
-      - apexsigma_net
+      apexsigma_net:
+        ipv4_address: 172.26.0.51
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
-    command:
-      [
-        "dagster-webserver",
-        "-h",
-        "0.0.0.0",
-        "-p",
-        "8080",
-        "-w",
-        "/app/dagster_home/dagster_workspace.yaml",
-      ]
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   dagster-daemon:
     build:
       context: .
       dockerfile: ./services/dagster/Dockerfile
     container_name: apexsigma_dagster_daemon
-    env_file:
-      - .env
+    hostname: dagster-daemon
     environment:
-      - SERVICE_NAME=dagster
-      - DAGSTER_CURRENT_IMAGE=apexsigma/dagster-daemon:latest
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+      - DAGSTER_POSTGRES_HOST=postgres
+      - DAGSTER_POSTGRES_PORT=5432
+      - DAGSTER_POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
+      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-your_secure_postgres_password_here}
+      - DAGSTER_POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
     volumes:
-      - .:/app/dagster_home
-    depends_on:
-      - postgres
-      - dagster-webserver
+      - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro
+      - ./services/dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
+      - dagster_home:/opt/dagster/dagster_home
     networks:
-      - apexsigma_net
+      apexsigma_net:
+        ipv4_address: 172.26.0.53
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dagster-webserver:
+        condition: service_started
     restart: unless-stopped
-    command:
-      [
-        "dagster-daemon",
-        "run",
-        "-w",
-        "/app/dagster_home/dagster_workspace.yaml",
-      ]
+    command: ["dagster-daemon", "run", "-w", "/opt/dagster/dagster_home/workspace.yaml"]
 
 # ===========================================
 # VOLUMES
@@ -660,6 +678,10 @@ volumes:
     name: apexsigma_loki_data
   clickhouse_data:
     name: apexsigma_clickhouse_data
+  dagster_home:
+    driver: local
+  langfuse_data:
+    driver: local
   clickhouse_logs:
     name: apexsigma_clickhouse_logs
   vector_data:
