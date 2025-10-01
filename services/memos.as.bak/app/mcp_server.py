@@ -5,21 +5,21 @@ Provides MCP tools for storing, retrieving, and managing
 memories in the memOS system.
 """
 
+import json
 import logging
 import os
-import json
+from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
-from collections import defaultdict
-import jwt
-import httpx
-from mcp.server import Server
-import uvicorn
-from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel
 
+import httpx
+import jwt
+import uvicorn
 from app.services.observability import get_observability
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from mcp.server import Server
+from pydantic import BaseModel
 
 # Try to import Langfuse
 try:
@@ -473,9 +473,7 @@ async def query_memory_by_mcp_tier_tool(query: str, top_k: int = 5) -> str:
         query_request = {
             #             "query": query,
             #             "top_k": top_k,
-            "filters": {
-                "tier": mcp_tier  # Filter by MCP-specific tier
-            }
+            "filters": {"tier": mcp_tier}  # Filter by MCP-specific tier
         }
 
         async with httpx.AsyncClient() as client:
@@ -779,9 +777,7 @@ Query Time: {stats["query_timestamp"]}"""
         query_request = {
             #             "query": query,
             #             "top_k": top_k,
-            "filters": {
-                "tier": mcp_tier  # Filter by MCP-specific tier
-            }
+            "filters": {"tier": mcp_tier}  # Filter by MCP-specific tier
         }
 
         async with httpx.AsyncClient() as client:

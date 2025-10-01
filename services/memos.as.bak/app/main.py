@@ -2,9 +2,6 @@ import logging
 import os
 from typing import Optional
 
-from fastapi import Depends, FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-
 from app.models import (
     GraphQueryRequest,
     LLMCacheRequest,
@@ -29,6 +26,8 @@ from app.services.observability import (
 from app.services.postgres_client import PostgresClient, get_postgres_client
 from app.services.qdrant_client import QdrantMemoryClient, get_qdrant_client
 from app.services.redis_client import RedisClient, get_redis_client
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -194,9 +193,11 @@ async def health_check(
             "services": services_status,
             "integration_ready": integration_ready,
             "qdrant_collection": qdrant_info if "qdrant_info" in locals() else None,
-            "operational_mode": "full"
-            if all("connected" in status for status in services_status.values())
-            else "degraded",
+            "operational_mode": (
+                "full"
+                if all("connected" in status for status in services_status.values())
+                else "degraded"
+            ),
         }
     )
 

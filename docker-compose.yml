@@ -161,6 +161,24 @@ services:
     networks:
       - apexsigma_network
 
+  dagster:
+    build:
+      context: ./services/dagster
+    container_name: apexsigma_dagster
+    ports:
+      - "3080:8080"
+    volumes:
+      - ./services:/app/dagster_home/services
+      - ./libs:/app/dagster_home/libs
+      - ./workspace.yaml:/app/dagster_home/workspace.yaml
+    networks:
+      - apexsigma_network
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+      - neo4j
+
 volumes:
   postgres_data:
   redis_data:

@@ -1,0 +1,96 @@
+# Command: session-list
+# Description: List recent development sessions
+# Category: development
+# Version: 1
+# Author: iFlow CLI
+
+description = "List recent development sessions"
+
+prompt = """
+AI Agent Instructions: ApexSigma Development Session List Viewer
+
+## Objective
+Your goal is to help the developer view a list of recent development sessions, including both active and completed sessions. This provides visibility into past work and current development activities.
+
+## Session Listing Process
+
+### Phase 1: Session Data Retrieval
+
+1.  **Session Directory Scan:**
+    -   Locate the directory where session tracking data is stored
+    -   Identify all session metadata files (active and completed)
+    -   Sort sessions by creation time (newest first)
+
+2.  **Session Information Extraction:**
+    -   For each session, extract key metadata:
+        - Session ID
+        - Start time
+        - Status (active, completed, paused)
+        - Brief description or goals
+        - Duration (if completed)
+
+### Phase 2: Session List Generation
+
+1.  **Active Sessions First:**
+    -   List any currently active sessions at the top
+    -   Clearly mark them as "ACTIVE"
+    -   Include session start time and duration so far
+
+2.  **Recent Completed Sessions:**
+    -   List completed sessions in reverse chronological order
+    -   Include completion date and total duration
+    -   Show a brief summary of session goals or outcomes
+
+3.  **Pagination (if needed):**
+    -   If there are many sessions, implement pagination
+    -   Show a reasonable number of sessions per page (e.g., 10-20)
+    -   Provide navigation options for additional pages
+
+### Phase 3: Session List Presentation
+
+1.  **Structured Display Format:**
+    -   Present sessions in a clear, tabular format when possible
+    -   Include columns for:
+        - Session ID (truncated if long)
+        - Status
+        - Start/Completion Date
+        - Duration
+        - Brief Description
+    -   Use visual indicators for different statuses (e.g., icons or colors if supported)
+
+2.  **Session Details:**
+    -   For each session, provide enough information to identify it
+    -   Include the first line of goals or description
+    -   Show key technical areas if available
+
+3.  **Navigation Guidance:**
+    -   Provide instructions for viewing details of a specific session
+    -   Indicate how to start a new session if none are active
+    -   Suggest relevant commands for session management
+
+### Phase 4: Additional Information
+
+1.  **Summary Statistics:**
+    -   Show total number of sessions
+    -   Display count of active vs. completed sessions
+    -   Show total development time (if tracked)
+
+2.  **Filtering Options:**
+    -   If implemented, show available filtering options:
+        - By date range
+        - By status (active/completed)
+        - By technical area or project
+
+3.  **Next Steps Guidance:**
+    -   Suggest commands for further actions:
+        - `session-view <session-id>` to see details
+        - `session-start` to begin a new session
+        - `session-complete` to finish an active session
+
+## Output Format
+Provide a clear, structured output that includes:
+- List of sessions in reverse chronological order
+- Clear indication of active vs. completed sessions
+- Key metadata for each session (ID, dates, duration, description)
+- Summary statistics and navigation guidance
+"""

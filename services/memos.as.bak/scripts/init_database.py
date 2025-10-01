@@ -22,7 +22,7 @@ def initialize_database():
         print("Initializing memOS.as database...")
 
     try:
-        from services.postgres_client import PostgresClient, Base
+        from services.postgres_client import Base, PostgresClient
 
         # Create PostgreSQL client
         client = PostgresClient()
@@ -41,12 +41,14 @@ def initialize_database():
             session.execute("SELECT 1")
 
             # Check that our tables exist
-            result = session.execute("""
+            result = session.execute(
+                """
                 SELECT table_name
                 FROM information_schema.tables
                 WHERE table_schema = 'public'
                 ORDER BY table_name
-            """)
+            """
+            )
 
             tables = [row[0] for row in result.fetchall()]
             try:
@@ -55,12 +57,14 @@ def initialize_database():
                 print(f"Created tables: {', '.join(tables)}")
 
             # Verify the memories table has correct schema
-            result = session.execute("""
+            result = session.execute(
+                """
                 SELECT column_name, data_type, is_nullable, column_default
                 FROM information_schema.columns
                 WHERE table_name = 'memories'
                 ORDER BY ordinal_position
-            """)
+            """
+            )
 
             columns = result.fetchall()
             try:

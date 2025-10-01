@@ -1,0 +1,1592 @@
+# ApexSigma Projects.Dev Driectory Structure20092025
+
+## File Tree
+
+```plaintext
+
+ApexSigmaProjects.Dev
+├── ${workspaceFolder}
+│   └── context_portal
+│       └── logs
+├── .apexsigma
+├── .claude
+│   ├── TM_COMMANDS_GUIDE.md
+│   ├── agents
+│   │   ├── task-checker.md
+│   │   ├── task-executor.md
+│   │   └── task-orchestrator.md
+│   └── commands
+│       └── tm
+│           ├── add-dependency
+│           │   └── add-dependency.md
+│           ├── add-subtask
+│           │   ├── add-subtask.md
+│           │   └── convert-task-to-subtask.md
+│           ├── add-task
+│           │   └── add-task.md
+│           ├── analyze-complexity
+│           │   └── analyze-complexity.md
+│           ├── clear-subtasks
+│           │   ├── clear-all-subtasks.md
+│           │   └── clear-subtasks.md
+│           ├── complexity-report
+│           │   └── complexity-report.md
+│           ├── expand
+│           │   ├── expand-all-tasks.md
+│           │   └── expand-task.md
+│           ├── fix-dependencies
+│           │   └── fix-dependencies.md
+│           ├── generate
+│           │   └── generate-tasks.md
+│           ├── help.md
+│           ├── init
+│           │   ├── init-project-quick.md
+│           │   └── init-project.md
+│           ├── learn.md
+│           ├── list
+│           │   ├── list-tasks-by-status.md
+│           │   ├── list-tasks-with-subtasks.md
+│           │   └── list-tasks.md
+│           ├── models
+│           │   ├── setup-models.md
+│           │   └── view-models.md
+│           ├── next
+│           │   └── next-task.md
+│           ├── parse-prd
+│           │   ├── parse-prd-with-research.md
+│           │   └── parse-prd.md
+│           ├── remove-dependency
+│           │   └── remove-dependency.md
+│           ├── remove-subtask
+│           │   └── remove-subtask.md
+│           ├── remove-subtasks
+│           │   ├── remove-all-subtasks.md
+│           │   └── remove-subtasks.md
+│           ├── remove-task
+│           │   └── remove-task.md
+│           ├── set-status
+│           │   ├── to-cancelled.md
+│           │   ├── to-deferred.md
+│           │   ├── to-done.md
+│           │   ├── to-in-progress.md
+│           │   ├── to-pending.md
+│           │   └── to-review.md
+│           ├── setup
+│           │   ├── install-taskmaster.md
+│           │   └── quick-install-taskmaster.md
+│           ├── show
+│           │   └── show-task.md
+│           ├── status
+│           │   └── project-status.md
+│           ├── sync-readme
+│           │   └── sync-readme.md
+│           ├── tm-main.md
+│           ├── update
+│           │   ├── update-single-task.md
+│           │   ├── update-task.md
+│           │   └── update-tasks-from-id.md
+│           ├── utils
+│           │   └── analyze-project.md
+│           ├── validate-dependencies
+│           │   └── validate-dependencies.md
+│           └── workflows
+│               ├── auto-implement-tasks.md
+│               ├── command-pipeline.md
+│               └── smart-workflow.md
+├── .codacy
+│   ├── .gitignore
+│   ├── cli-config.yaml
+│   ├── cli.sh
+│   ├── codacy.yaml
+│   ├── logs
+│   └── tools-configs
+│       ├── analysis_options.yaml
+│       ├── eslint.config.mjs
+│       ├── languages-config.yaml
+│       ├── lizard.yaml
+│       ├── pylint.rc
+│       ├── revive.toml
+│       ├── ruleset.xml
+│       ├── semgrep.yaml
+│       └── trivy.yaml
+├── .coverage
+├── .env
+├── .env.example
+├── .gemini
+│   └── settings.json
+├── .git
+├── .github
+│   ├── architect.chatmode.md
+│   ├── ask.chatmode.md
+│   ├── code.chatmode.md
+│   ├── debug.chatmode.md
+│   ├── instructions
+│   │   ├── codacy.instructions.md
+│   │   └── snyk_rules.instructions.md
+│   └── workflows
+│       ├── README.md
+│       └── ci.yml
+├── .gitignore
+├── .mcp.json
+├── .pytest_cache
+├── .ruff_cache
+├── .taskmaster
+│   ├── CLAUDE.md
+│   ├── config.json
+│   ├── docs
+│   ├── reports
+│   │   └── task-complexity-report.json
+│   ├── state.json
+│   ├── tasks
+│   │   └── tasks.json
+│   └── templates
+│       └── example_prd.txt
+├── .venv
+├── .vscode
+├── AGENTS.md
+├── ApexSigmaProjects.Dev.code-temp-workspace.code-workspace
+├── ApexSigmaProjects.Dev.code-workspace
+├── Boot Sequence Configuration.toml
+├── DevTools
+│   └── CommandRepo
+│       └── commandrepository.json
+├── Directory_Structure.ini
+├── GIT_STATUS_REPORT.md
+├── README.md
+├── __pycache__
+├── _archive
+│   ├── sandbox
+│   └── trash
+├── agents
+├── analyze_projects_request.json
+├── apexsigma.code-workspace
+├── ast-grep
+│   └── python.toml
+├── changelog.md
+├── coverage.xml
+├── devenviro_baseline_bundle.md
+├── docker-compose.debug.yml
+├── docker-compose.standardized.yml
+├── docker-compose.unified.yml
+├── docker-compose.yml
+├── docs
+│   ├── AI Collabs
+│   │   ├── ChatGPT_-_Blunt_but_Insightful_-_Life_with_Persisted_memory.md
+│   │   ├── ChatGPT_-_FastMCP_Upgrade_Strategy.md
+│   │   ├── ChatGPT_-_Post_MonoGenisis_Re-Think.md
+│   │   ├── Claude_-_MonoGenisis_Re-Think.md
+│   │   ├── Claude_Code_-_Advice_from_an_old_friend_and_Co-Contibutor.md
+│   │   ├── Deepthink_-_Post_MonoGenisis_Re-Think.md
+│   │   ├── Gemini_-_Get_it_Fucking_Done_-_MCP_birth_of_the_new_Age.md
+│   │   ├── Gemini_-_Post_MonoGenesis_Re-think.md
+│   │   ├── Integrating memOS MCP Server with AI Tools for Enh.md
+│   │   ├── Mistral_-_Post_MonoGenisis_Re-Think.md
+│   │   ├── Mistral_=_FastMCP_Upgrade_Strategy.md
+│   │   ├── Mistral_Collab_-_Post_MCP_Implantation_(Base)_-_The_Way_Forward.md
+│   │   ├── Operation_ Asgard Rebirth - memOS MCP Upgrade Plan.docx
+│   │   ├── Operation_ Asgard Rebirth - memOS MCP Upgrade Plan.md
+│   │   ├── Operation_Asgard_Rebirth_-_memOS_MCP_Upgrade_Plan_(v6) Final .md
+│   │   ├── Operation_Asgard_Rebirth_-_memOS_MCP_Upgrade_Plan_(v6)_(Claude).md
+│   │   ├── Operation_Asgard_Rebirth_-_memOS_MCP_Upgrade_Plan_(v6)_(Deepseek).md
+│   │   ├── Operation_Asgard_Rebirth_-_memOS_MCP_Upgrade_Plan_(v6)_(Mistral).md
+│   │   ├── Operation_Asgard_Rebirth_-_memOS_MCP_Upgrade_Plan_(v6)_(Perp).md
+│   │   ├── Operation_Asgard_Rebirth_-_memOS_MCP_Upgrade_Plan_(v6)_(Qwen).md
+│   │   ├── Project_memOS_Strategic_Upgrade_Brief.md
+│   │   ├── Qwen_-_🧠_Strategic_Analysis_Operation_Asgard_Rebirth_with_Monorepo_Genesis_Context.md
+│   │   ├── Week_1_memOS_Plugin_Architecture_&_Context_Management.md
+│   │   ├── memOS Strategic Upgrade Brief_ Technical Analysis.md
+│   │   ├── memOS Strategic Upgrade Implementation Plan_ Produ.docx
+│   │   ├── memOS Strategic Upgrade Implementation Plan_ Produ.md
+│   │   ├── memOS_Evolution_A_Strategic_Implementation_Plan.md
+│   │   ├── memOS_MCP_Plugin_Architecture_&_Implementation_Plan.md
+│   │   ├── 🧠_Leveraging_memOS_to_Enhance_Gemini_CLI_&_Qwen_Coder_Plus.md
+│   │   ├── 🧠_Qwen_-_Leveraging_memOS_to_Enhance_Gemini_CLI_&_Qwen_Coder_Plus.md
+│   │   └── 🧠_Strategic_Implementation_Plan_memOS_Integration_with_Gemini_CLI_&_Qwen_Coder_Plus.md
+│   ├── Config Files
+│   │   ├── AI Assistants
+│   │   │   ├── AGENT_OPERATIONAL_CONTEXT.md
+│   │   │   ├── CLAUDE.md
+│   │   │   ├── CLAUDE_OPERATIONAL_CONTEXT.md
+│   │   │   ├── COPILOT.md
+│   │   │   ├── CUSTOM_GEMINI_SYSTEM_PROMPT.md
+│   │   │   ├── GEMINI.md
+│   │   │   ├── GEMINI_OPERATIONAL_CONTEXT.md
+│   │   │   ├── QWEN.md
+│   │   │   └── QWEN_OPERATIONAL_CONTEXT.md
+│   │   ├── Agent Commands
+│   │   │   ├── create_readme_node.command.as.toml
+│   │   │   ├── create_readme_python.command.as.toml
+│   │   │   ├── eod.command.as.toml
+│   │   │   ├── outline.command.as.toml
+│   │   │   ├── scaffold.command.as.toml
+│   │   │   └── sod.command.as.toml
+│   │   ├── Agents Profiles
+│   │   │   ├── master_conductor.agent.md
+│   │   │   └── senior_implementor.agent.md
+│   │   ├── DYNAMIC_CONFIG_STRATEGY.md
+│   │   ├── Infrastructure
+│   │   │   ├── APEXSIGMA_ECOSYSTEM_COMPREHENSIVE_SUMMARY.md
+│   │   │   ├── ApexSigmaProjects.Dev_Directory_&_File_Structure.md
+│   │   │   ├── Baseline Bundles
+│   │   │   │   ├── CODEBASE_BASELINE_SUMMARY.md
+│   │   │   │   ├── DEVENVIRO_BASELINE_BUNDLE.md
+│   │   │   │   ├── INGEST_LLM_BASELINE_BUNDLE.md
+│   │   │   │   ├── MEMOS_BASELINE_BUNDLE.md
+│   │   │   │   └── TOOLS_BASELINE_BUNDLE.md
+│   │   │   ├── Docker Network
+│   │   │   │   └── VERIFIED_DOCKER_NETWORK_MAP.md
+│   │   │   ├── FileStructure.ini
+│   │   │   ├── FileStructureVerbose.txt
+│   │   │   ├── FileStructure_verbose.ini
+│   │   │   ├── Github
+│   │   │   │   └── ## Git Initialization Protocol.md
+│   │   │   └── Observability
+│   │   │       ├── E2E_TRACING_IMPLEMENTATION.md
+│   │   │       ├── LANGFUSE_SESSIONS_INTEGRATION.md
+│   │   │       └── langfuse_keys.md
+│   │   ├── Setup
+│   │   │   ├── EOD_COMMAND_SETUP.md
+│   │   │   ├── SETUP_SOD_COMMAND.md
+│   │   │   ├── SOD_DEPLOYMENT_GUIDE.md
+│   │   │   ├── langfuse_setup.md
+│   │   │   ├── setup-safe-delete-ps.md
+│   │   │   └── setup-safe-delete.md
+│   │   └── tools
+│   │       ├── commands
+│   │       │   ├── create_readme_node.command.as.toml
+│   │       │   ├── create_readme_python.command.as.toml
+│   │       │   ├── eod.command.as.toml
+│   │       │   ├── eod.ecosystem.command.as.toml
+│   │       │   ├── outline.command.as.toml
+│   │       │   ├── scaffold.command.as.toml
+│   │       │   └── sod.command.as.toml
+│   │       └── mcp
+│   │           └── mcp.configurations.md
+│   ├── Development Docs
+│   │   └── LM Studio
+│   │       ├── CLI Referance.txt
+│   │       └── Python SDK.txt
+│   ├── Diagrams
+│   │   ├── AS Eco.mmd
+│   │   └── memOS.mmd
+│   ├── InGest.source.as
+│   │   ├── 20250823_critical_path_progress.md
+│   │   ├── COMMIT_SUMMARY_20250825.md
+│   │   ├── Chat Histories
+│   │   │   ├── 01092025.Claude.ingest.as.md
+│   │   │   ├── 01092025.Qwen.ingest.as.md
+│   │   │   ├── 02092025.Claude.ingest.as.md
+│   │   │   ├── 02092025.Copilot.ingest.as.md
+│   │   │   ├── 02092025.Gemini.ingest.as.md
+│   │   │   ├── 02092025.Qwen.ingest.as.md
+│   │   │   ├── 03092025.Copilot.ingest.as.md
+│   │   │   ├── 03092025.Gemini.ingest.as.md
+│   │   │   ├── 03092025.Qwen.ingest.as.md
+│   │   │   ├── 04092025.Copilot.ingest.as.md
+│   │   │   ├── 04092025.Gemini.ingest.as.md
+│   │   │   ├── 05092025.Copilot.ingest.as.md
+│   │   │   ├── 05092025.Gemini.ingest.as.md
+│   │   │   ├── 05092025.Qwen.ingest.as.md
+│   │   │   ├── 09092025.Copilot.ingest.as.md
+│   │   │   ├── 13092025.Claude.ingest.as.md
+│   │   │   ├── 13092025.Qwen.ingest.as.md
+│   │   │   ├── 2+04092025.Copilot.ingest.as.md
+│   │   │   ├── 2+05092025.Copilot.ingest.as.md
+│   │   │   ├── 2+05092025.Gemini.ingest.as.md
+│   │   │   ├── 31082025.Copilot.ingest.as.md
+│   │   │   ├── 31082025.Gemini.ingest.as.md
+│   │   │   ├── 31082025.Qwen.ingest.as.md
+│   │   │   ├── 31082025.claude.ingest.as.md
+│   │   │   ├── ChatSession_ContainerStandardization_20250826.md
+│   │   │   ├── EOD_PROGRESS_LOG_20250825.md
+│   │   │   ├── POML Horse.txt
+│   │   │   ├── Untitled.txt
+│   │   │   ├── alpha_branch_overwrite_20250821.md
+│   │   │   ├── chat_10_25082025.ingest.as.txt
+│   │   │   ├── chat_11_25082025.ingest.as.txt
+│   │   │   ├── chat_1_16082025.ingest.as.txt
+│   │   │   ├── chat_1_18082025.ingest.as.txt
+│   │   │   ├── chat_1_19082025.ingest.as.txt
+│   │   │   ├── chat_1_20082025.ingest.as.txt
+│   │   │   ├── chat_1_21082025.ingest.as.txt
+│   │   │   ├── chat_1_23082025.ingest.as.txt
+│   │   │   ├── chat_1_24082025.ingest.as.txt
+│   │   │   ├── chat_1_25082025.ingest.as.txt
+│   │   │   ├── chat_1_26082025.ingest.as.txt
+│   │   │   ├── chat_2_16082025.ingest.as.txt
+│   │   │   ├── chat_2_18082025.ingest.as.txt
+│   │   │   ├── chat_2_19082025.ingest.as.txt
+│   │   │   ├── chat_2_20082025.ingest.as.txt
+│   │   │   ├── chat_2_21082025.ingest.as.txt
+│   │   │   ├── chat_2_23082025.ingest.as.txt
+│   │   │   ├── chat_2_24082025.ingest.as.txt
+│   │   │   ├── chat_2_25082025.ingest.as.txt
+│   │   │   ├── chat_2_26082025.ingest.as.txt
+│   │   │   ├── chat_3_16082025.ingest.as.txt
+│   │   │   ├── chat_3_18082025.ingest.as.txt
+│   │   │   ├── chat_3_19082025.ingest.as.txt
+│   │   │   ├── chat_3_21082025.ingest.as.txt
+│   │   │   ├── chat_3_23082025.ingest.as.txt
+│   │   │   ├── chat_3_24082025.ingest.as.txt
+│   │   │   ├── chat_3_25082025.ingest.as.txt
+│   │   │   ├── chat_3_26082025.ingest.as.txt
+│   │   │   ├── chat_4_16082025.ingest.as.txt
+│   │   │   ├── chat_4_23082025.ingest.as.txt
+│   │   │   ├── chat_4_24082025.ingest.as.txt
+│   │   │   ├── chat_4_25082025.ingest.as.txt
+│   │   │   ├── chat_4_26082025.ingest.as.txt
+│   │   │   ├── chat_5_16082025.ingest.as.txt
+│   │   │   ├── chat_5_23082025.ingest.as.txt
+│   │   │   ├── chat_5_25082025.ingest.as.txt
+│   │   │   ├── chat_6_16082025.ingest.as.txt
+│   │   │   ├── chat_6_23082025.ingest.as.txt
+│   │   │   ├── chat_6_25082025.ingest.as.txt
+│   │   │   ├── chat_7_16082025.ingest.as.txt
+│   │   │   ├── chat_7_23082025.ingest.as.txt
+│   │   │   ├── chat_7_25082025.ingest.as.txt
+│   │   │   ├── chat_8_25082025.ingest.as.txt
+│   │   │   ├── chat_9_25082025.ingest.as.txt
+│   │   │   ├── claude.chat.log.as.txt
+│   │   │   ├── claude_ingestllm.ingest.as.md
+│   │   │   ├── claude_ingestllm.ingest.as.txt
+│   │   │   ├── copilot.chat.log.as.txt
+│   │   │   ├── copilot.persist.as.md
+│   │   │   ├── gemini.chat.log.as.txt
+│   │   │   ├── geminichat.txt
+│   │   │   ├── master notebook extract.txt
+│   │   │   ├── omega.ingest.as.xml
+│   │   │   ├── phase2_mkdocs_integration_chat_20250824.md
+│   │   │   ├── qwen.chat.log.as.txt
+│   │   │   └── session_log_20250825_devenviro_agents.json
+│   │   ├── EOD_PROGRESS_LOG_20250825.md
+│   │   ├── Omega Payloads
+│   │   │   ├── CORRECTED_OMEGA_INGEST.md
+│   │   │   ├── Omega_Ingest_Payload_MONO-P4-OMEGA.md
+│   │   │   ├── beta.ingest.as.json
+│   │   │   ├── devenviro,.omega.ingest.as.json
+│   │   │   ├── echo.omega.ingest.as.json
+│   │   │   ├── gemini_ingestllm.ingest.as.md
+│   │   │   ├── gemini_memos.ingest.as.txt
+│   │   │   ├── omega.ingest,kg68.as.poml
+│   │   │   ├── omega.ingest,kg70.as.poml
+│   │   │   ├── omega.twin.ingest.as.json.txt
+│   │   │   ├── omega.twins.ingest.as.json.txt
+│   │   │   ├── omegaquad.txt
+│   │   │   └── omegatip.txt
+│   │   ├── POML
+│   │   │   ├── beta.ingest.as.poml
+│   │   │   ├── omema.ingest.as.poml
+│   │   │   └── sigma.ingest.as.poml
+│   │   ├── PROGRESS_SNAPSHOT_20250824.md
+│   │   ├── Prompting-deepdive.txt
+│   │   ├── Repomix
+│   │   │   ├── 20250122_memos_bundle.md
+│   │   │   ├── 20250122_tools_bundle.md
+│   │   │   ├── 20250822_devenviro_bundle.md
+│   │   │   └── 20250822_ingest-llm_bundle.md
+│   │   ├── alembic.ini
+│   │   ├── gemini.config.json
+│   │   ├── instruct_kg.ingest.as.json
+│   │   ├── local models.txt
+│   │   ├── research.ingest.as.json
+│   │   └── templates
+│   │       └── poml
+│   │           ├── README.md
+│   │           ├── agent_delegation.poml
+│   │           ├── critical_path_analysis.poml
+│   │           ├── progress_tracking.poml
+│   │           └── sprint_task_orchestration.poml
+│   ├── Operations
+│   │   ├── CONSOLIDATION_STATUS.md
+│   │   ├── INDEX.md
+│   │   ├── MIGRATION_LOG.md
+│   │   ├── README.md
+│   │   └── bugs
+│   │       └── P2-HIGH-01-sqlalchemy-operational-error.md
+│   ├── Plans
+│   │   ├── Completed
+│   │   │   ├── Operation_Asgard_Rebirth_-_memOS_MCP_Upgrade_Plan_(v6p0).md
+│   │   │   └── Operation_Monorepo_Genesis_-_Directory_Restructure_Plan_(v2).md
+│   │   ├── Current
+│   │   │   ├── Operation_Asgard_Rebirth_-_memOS_MCP_Upgrade_Plan_(v6p0.5).md
+│   │   │   └── Sprint_1_Plan_ADEP_Foundation_(Hardened_Protocol_v2.1).md
+│   │   ├── Depracated
+│   │   ├── Future Planned
+│   │   │   ├── OPERATION_ASGARD_REBIRTH.md
+│   │   │   ├── Proposal_Webhook-Driven_MAR_Protocol_Automation.md
+│   │   │   └── 🌐_ApexSigma_Docker_Network_Topology_-_TARGET_STATE_FOR_MONOREPO.md
+│   │   ├── Review_Report
+│   │   │   ├── COMMIT_SUMMARY_20250825.md
+│   │   │   ├── COMPLETE_SYSTEM_AUDIT_SUMMARY.md
+│   │   │   ├── EOD_IMPLEMENTATION_COMPLETE.md
+│   │   │   ├── MAR
+│   │   │   │   ├── Implementation Redo Reports
+│   │   │   │   ├── Implementation_Report.md
+│   │   │   │   ├── Implentation Reports
+│   │   │   │   │   ├── MEMOS-P0-T1.1_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.2_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.3_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.3_and_T1.4_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.4_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.5_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.1.1_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.1_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.2_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.3_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.4_Implementation_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.4_Implementation_Report_v2.md
+│   │   │   │   │   ├── MEMOS-P0-T2.4_Implementation_Report_v3.md
+│   │   │   │   │   └── S1-01_Implementation_Report.md
+│   │   │   │   ├── MAR_(Mandatory_Agent_Review)_Report.md
+│   │   │   │   ├── MAR_Template.md
+│   │   │   │   ├── Mandatory Agent Review (MAR).md
+│   │   │   │   ├── Review Reports
+│   │   │   │   │   ├── MEMOS-P0-T1.1_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.2_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.2_Review_Report_v2.md
+│   │   │   │   │   ├── MEMOS-P0-T1.3_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.4_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.4_Review_Report_v2.md
+│   │   │   │   │   ├── MEMOS-P0-T1.5_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T1.5_Review_Report_v2.md
+│   │   │   │   │   ├── MEMOS-P0-T2.1.1_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.1.1_Review_Report_v2.md
+│   │   │   │   │   ├── MEMOS-P0-T2.1_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.2_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.3_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.4_Review_Report.md
+│   │   │   │   │   ├── MEMOS-P0-T2.4_Review_Report_v2.md
+│   │   │   │   │   ├── MEMOS-P0-T2.4_Review_Report_v3.md
+│   │   │   │   │   └── S1-01_Review_Report.md
+│   │   │   │   └── Work_Orders
+│   │   │   │       ├── MAR_(Mandatory_Agent_Review)_Sign-Off_Report.md
+│   │   │   │       └── MAR_-_MEMO-P1-OMEGA_-_WS_Sign-Off_Report.md
+│   │   │   ├── OBSERVABILITY_AUDIT_REPORT.md
+│   │   │   ├── Omega_Ingest_Summary_Monorepo_Genesis.md
+│   │   │   ├── Omega_Ingest_Synthesis_Report.md
+│   │   │   ├── SINGLE_SOURCE_TRUTH.md
+│   │   │   ├── SOD_IMPLEMENTATION_SUMMARY.md
+│   │   │   └── VERIFICATION_REPORT.md
+│   │   └── WORK ORDERS
+│   │       ├── MAR - MEMOS-P0-T2 - WO Sign-Off Report.md
+│   │       ├── MAR - MEMOS-P0-T3 - WO Sign-Off Report.md
+│   │       ├── MAR - MEMOS-P1-T1 - WO Sign-Off Report.md
+│   │       ├── MAR - MEMOS-P1-T2 - WO Sign-Off Report.md
+│   │       ├── MAR - MEMOS-P1-T3 - WO Sign-Off Report.md
+│   │       └── MAR -MEMOS-P1-OM - WO Sign-Off Report.md
+│   ├── Research
+│   │   ├── Context & Prompt Engineerng
+│   │   │   ├── Dynamic Knowledge Graph_ Data Loading, Transformat (1).md
+│   │   │   ├── Instructional_JSON_Prompting_Technique.md
+│   │   │   ├── LLM_Rapid_Knowledge_Assimilation_Research.md
+│   │   │   ├── LLMs_capabilities_&_lifecycle_(Extensive).md
+│   │   │   ├── POML_(Prompt_Orchestration_Markup_Language).md
+│   │   │   ├── Prompt_Engineering_(NotebookLM).md
+│   │   │   ├── Prompt_Engineering_Basics.md
+│   │   │   ├── Tokenization for Natural Language Processing in La.md
+│   │   │   ├── What models excel at summarizing legal or technica.md
+│   │   │   ├── summarizing tool for llms.md
+│   │   │   └── tokenization.md
+│   │   ├── ETL Research
+│   │   │   ├── data preparation, ingestion, compression techniques.txt
+│   │   │   ├── instruct_kg.ingest.as.json.txt
+│   │   │   ├── prompt.engineering.ingest.as.txt
+│   │   │   └── research.ingest.as.json.txt
+│   │   └── Memory MCP Build
+│   │       ├── 4a85d9e1-23c7-4f2b-bf9b-8147dd041631.tmp
+│   │       ├── API Registration Failure Notification System for F.md
+│   │       ├── API Registration Verification Scripts for FastMCP.md
+│   │       ├── API-Based Tool Registration in FastMCP_ Complete I.md
+│   │       ├── AX_MCP_Server_Tracing_Assistant.md
+│   │       ├── Creating and Registering Tools in FastMCP.md
+│   │       ├── FastMCP 2.0_ A Comprehensive Guide.md
+│   │       ├── FastMCP Tool Registration Best Practices.md
+│   │       ├── Mem0 Introduction Overview.md
+│   │       ├── Python_SDK.md
+│   │       ├── Research Report_ Advanced Concepts and Ideas for I.docx
+│   │       ├── Research Report_ Advanced Concepts and Ideas for I.md
+│   │       ├── [https___docs.mem0.ai_introduction](https___docs.m.md
+│   │       ├── api_design_patterns_ai.csv
+│   │       ├── markdown-documents-2025-09-11.json
+│   │       ├── memory_optimization_techniques.csv
+│   │       └── memos_architecture.png
+│   ├── Review_Report
+│   │   ├── Git_Reports
+│   │   └── MAR
+│   │       ├── Implentation Reports
+│   │       │   └── MEMOS-P0-T2.5_Implementation_Report.md
+│   │       ├── MAR_(Mandatory_Agent_Review)_Report.md
+│   │       └── Review Reports
+│   │           ├── MEMOS-P0-T2.4_Review_Report.md
+│   │           └── MEMOS-P0-T2.5_Review_Report.md
+│   ├── projects
+│   │   ├── devenviro.as
+│   │   │   ├── architecture.project.md
+│   │   │   ├── brand.project.md
+│   │   │   ├── brief.project.md
+│   │   │   ├── plan..project.md
+│   │   │   ├── roadmap.project.md
+│   │   │   ├── security.project.md
+│   │   │   ├── task.project.md
+│   │   │   ├── techstack.project.md
+│   │   │   └── workflow.project.md
+│   │   ├── ingest-llm.as
+│   │   │   ├── architecture.project.as.md
+│   │   │   ├── brand.project.as.md
+│   │   │   ├── brief.project.as.md
+│   │   │   ├── plan.project.as.md
+│   │   │   ├── task.project.as.md
+│   │   │   └── techstack.project.as.md
+│   │   ├── memos.as
+│   │   │   ├── architecture.project.as.md
+│   │   │   ├── brand.project.as.md
+│   │   │   ├── brief.project.as.md
+│   │   │   ├── observability.completed.md
+│   │   │   ├── plan.project.as.md
+│   │   │   ├── plan.project.asV1.archived..md
+│   │   │   ├── security.project.as.md
+│   │   │   ├── task.project.as.md
+│   │   │   ├── task.project.asV1.archived.md
+│   │   │   └── techstsack.project.as.md
+│   │   └── tools.as
+│   │       ├── architecture.project.as.md
+│   │       ├── brand.project.as.md
+│   │       ├── brief.project.as.md
+│   │       ├── plan.project.as.md
+│   │       ├── security.project.as.md
+│   │       ├── tasks.project.as.md
+│   │       ├── techstack.project.as.md
+│   │       └── workflow.project.as.md
+│   └── protocols
+│       ├── ApexSigma_SOP_The_TaskMaster_Generation_Protocol.md
+│       ├── OMEGA_INGEST_LAWS.md
+│       ├── Operation_Truth_Unification.md
+│       ├── Parallel Task Delegation for ApexSigma Agents.md
+│       ├── The_ApexSigma_Glossary_(v1.0).md
+│       └── The_Laws_of_Asgard_A_Primer_for_Agents_of_the_ApexSigma_Ecosystem.md
+├── eod.bat
+├── eod.ps1
+├── htmlcov
+│   ├── .gitignore
+│   ├── class_index.html
+│   ├── coverage_html_cb_497bf287.js
+│   ├── favicon_32_cb_58284776.png
+│   ├── function_index.html
+│   ├── index.html
+│   ├── keybd_closed_cb_ce680311.png
+│   ├── status.json
+│   ├── style_cb_db813965.css
+│   ├── z_32d57405605c8f6f___init___py.html
+│   ├── z_32d57405605c8f6f_poml_py.html
+│   ├── z_4a74a0930e470276___init___py.html
+│   ├── z_4a74a0930e470276_database_migration_py.html
+│   ├── z_77a24d1a03fdd43c___init___py.html
+│   ├── z_77a24d1a03fdd43c_agent_proxy_py.html
+│   ├── z_77a24d1a03fdd43c_config_py.html
+│   ├── z_8a98f68f7454e3cb___init___py.html
+│   ├── z_8a98f68f7454e3cb_library_py.html
+│   ├── z_8a98f68f7454e3cb_test_poml_py.html
+│   ├── z_8f112a8bc86364d6___init___py.html
+│   ├── z_8f112a8bc86364d6_config_py.html
+│   ├── z_909c7519dab2e0f1___init___py.html
+│   ├── z_909c7519dab2e0f1_agent_database_py.html
+│   ├── z_909c7519dab2e0f1_database_py.html
+│   ├── z_909c7519dab2e0f1_enhanced_initialization_manager_py.html
+│   ├── z_909c7519dab2e0f1_migrations_runner_py.html
+│   ├── z_909c7519dab2e0f1_observability_py.html
+│   ├── z_909c7519dab2e0f1_orchestrator_py.html
+│   ├── z_b4c03a51561f6d6c___init___py.html
+│   ├── z_b4c03a51561f6d6c_main_py.html
+│   ├── z_b4c03a51561f6d6c_seed_knowledge_py.html
+│   ├── z_b4c03a51561f6d6c_test_poml_api_py.html
+│   ├── z_b8b1993974be08af___init___py.html
+│   └── z_bf3ec64cce1738db___init___py.html
+├── libs
+│   └── apexsigma-core
+│       ├── .pytest_cache
+│       ├── README.md
+│       ├── apexsigma_core
+│       │   ├── __pycache__
+│       │   ├── models.py
+│       │   ├── storage
+│       │   │   └── interfaces.py
+│       │   └── utils
+│       │       ├── __pycache__
+│       │       ├── config.py
+│       │       └── logging.py
+│       ├── poetry.lock
+│       ├── pyproject.toml
+│       └── tests
+│           ├── __init__.py
+│           ├── __pycache__
+│           ├── test_models.py
+│           └── test_utils.py
+├── logs
+├── monitoring
+│   ├── otel-collector-config.yml
+│   └── prometheus.yml
+├── node_modules
+├── package-lock.json
+├── package.json
+├── poetry.lock
+├── pyproject.toml
+├── run-sod.bat
+├── scripts
+│   ├── 2025_06_17_initial_schema.py
+│   ├── GEMINI.md
+│   ├── __pycache__
+│   ├── agent_system_monitor.py
+│   ├── build_ecosystem_docs.py
+│   ├── chart_script.py
+│   ├── commit_agent_infrastructure.sh
+│   ├── commit_preparation.py
+│   ├── e2e_tracing_setup.py
+│   ├── eod.py
+│   ├── eod_command.py
+│   ├── install_poetry.sh
+│   ├── langfuse_live_explorer.py
+│   ├── langfuse_trace_explorer.py
+│   ├── log_progress_to_ingest.py
+│   ├── network-debug.sh
+│   ├── script.py
+│   ├── session_integration_example.py
+│   ├── sod.py
+│   ├── sod_deploy.py
+│   ├── start-dev.sh
+│   ├── start_integration_services.py
+│   ├── start_neo4j_service.py
+│   ├── test_e2e_tracing.py
+│   └── utils
+│       ├── Boot Sequence Configuration.toml
+│       ├── Systems Boot Sequence Script.py
+│       ├── boot command.md
+│       ├── cleanup.sh
+│       ├── remove_context_portal.sh
+│       ├── safe-delete.ps1
+│       ├── safe-delete.sh
+│       └── trash.sh
+├── services
+│   ├── InGest-LLM.as
+│   │   ├── # COPILOT.md
+│   │   ├── # QWEN.md
+│   │   ├── ${workspaceFolder}
+│   │   │   └── context_portal
+│   │   │       └── logs
+│   │   ├── .dockerignore
+│   │   ├── .env
+│   │   ├── .env.example
+│   │   ├── .git
+│   │   ├── .github
+│   │   │   └── workflows
+│   │   │       └── pull_request_check.yml
+│   │   ├── .gitignore
+│   │   ├── .ingest
+│   │   │   ├── .ingest_config
+│   │   │   ├── OPERATIONS_SUMMARY.md
+│   │   │   ├── PROCESSING_STATUS_REPORT.md
+│   │   │   ├── process_and_cleanup.ps1
+│   │   │   └── raw_documents
+│   │   │       ├── code
+│   │   │       │   ├── Omega Ingest Guardian.poml
+│   │   │       │   ├── Omega Ingest Update V26.poml.xml
+│   │   │       │   ├── beta.ingest.as.json
+│   │   │       │   ├── carchat27082025.ingest.as.json
+│   │   │       │   ├── omega.ingest.as.v17.json
+│   │   │       │   └── session.ingest.as.poml
+│   │   │       └── text
+│   │   │           ├── 1_chat26082025.ingest.as.md
+│   │   │           ├── 1_chat27082025.ingest.as.md
+│   │   │           ├── 1_chat28082025.ingest.as.md
+│   │   │           ├── 20250830-Omega.ingest.as.md
+│   │   │           ├── 2_chat26082025.ingest.as.md
+│   │   │           ├── 2_chat28082025.ingest.as.md
+│   │   │           ├── 3_chat26082025.ingest.as.md
+│   │   │           ├── Agent Tasks .md
+│   │   │           ├── High Tasks .md
+│   │   │           ├── High-Level Agent Task List 20082025.md
+│   │   │           ├── High-Level Task List 18082025.md
+│   │   │           ├── High-Level Task List 19082025.md
+│   │   │           ├── High-Level Task List 20082025.md
+│   │   │           ├── chat26082025.ingest.as.md
+│   │   │           └── constrat.poml.ingest.as.md
+│   │   ├── .largefiles
+│   │   ├── .md
+│   │   │   ├── .project
+│   │   │   │   ├── architecture.project.as.md
+│   │   │   │   ├── brand.project.as.md
+│   │   │   │   ├── brief.project.as.md
+│   │   │   │   ├── plan.project.as.md
+│   │   │   │   ├── task.project.as.md
+│   │   │   │   └── techstack.project.as.md
+│   │   │   └── .projects
+│   │   │       ├── ECOSYSTEM_CONSOLIDATION_PLAN.md
+│   │   │       ├── KNOWLEDGE_BASE_MIGRATION.md
+│   │   │       ├── SPRINT_EXECUTION_LOG_20250824.md
+│   │   │       ├── SPRINT_PLAN_20250824.md
+│   │   │       ├── current_context.md
+│   │   │       ├── integration_progress_20250819.md
+│   │   │       ├── integration_progress_20250819_010446.md
+│   │   │       └── pypi.plan.project.as.md
+│   │   ├── .pre-commit-config.yaml
+│   │   ├── 20250822_ingest-llm_bundle.md
+│   │   ├── CLAUDE.md
+│   │   ├── Dockerfile
+│   │   ├── GEMINI.md
+│   │   ├── OPERATION_ASGARD_BASELINE_BUNDLE.md
+│   │   ├── QWEN.md
+│   │   ├── README.md
+│   │   ├── __pycache__
+│   │   ├── api_ingestion_endpoints.md
+│   │   ├── app
+│   │   │   └── services
+│   │   │       └── e2e_tracing.py
+│   │   ├── debug_test.py
+│   │   ├── docs
+│   │   │   ├── ECOSYSTEM_INGESTION_COMPLETE.md
+│   │   │   ├── EMBEDDING_AGENT_ARCHITECTURE.md
+│   │   │   ├── EMBEDDING_AGENT_IMPLEMENTATION.md
+│   │   │   ├── EMBEDDING_INTEGRATION_COMPLETE.md
+│   │   │   ├── File_Processing_Operations_Manual.md
+│   │   │   ├── INTEGRATION_TESTING.md
+│   │   │   ├── PROGRESS.md
+│   │   │   ├── PROGRESS_TRANSFER_SUMMARY.md
+│   │   │   ├── QWEN_PROJECT_ANALYSIS.md
+│   │   │   ├── REPOSITORY_PROGRESS_TRACKING.md
+│   │   │   ├── STATUS.md
+│   │   │   ├── Training_Guide.md
+│   │   │   ├── api_ingestion_endpoints.md
+│   │   │   ├── docker-compose.README.md
+│   │   │   ├── nomic_system_prompt.md
+│   │   │   ├── observability-dashboard.md
+│   │   │   ├── observability-implementation-summary.md
+│   │   │   └── reference
+│   │   │       ├── analysis.md
+│   │   │       ├── index.md
+│   │   │       ├── ingestion.md
+│   │   │       ├── observability.md
+│   │   │       └── services.md
+│   │   ├── integration
+│   │   │   └── tools_as_integration.py
+│   │   ├── mkdocs.yml
+│   │   ├── poetry.lock
+│   │   ├── prompts
+│   │   │   ├── agent_context_bullet_20250819.poml
+│   │   │   ├── agent_context_template.poml
+│   │   │   ├── critical_blocker.poml
+│   │   │   ├── mission_brief.poml
+│   │   │   ├── priority_tasks.poml
+│   │   │   └── project_status.poml
+│   │   ├── pyproject.toml
+│   │   ├── pytest.ini
+│   │   ├── scripts
+│   │   │   ├── __pycache__
+│   │   │   ├── analyze_embedding_efficiency.py
+│   │   │   ├── analyze_repository.py
+│   │   │   ├── build_docs.py
+│   │   │   ├── chat_thread_summarizer.py
+│   │   │   ├── eod_ecosystem_update.py
+│   │   │   ├── generate_context_bullet.py
+│   │   │   ├── generate_embedding_docs.py
+│   │   │   ├── generate_project_docs.py
+│   │   │   ├── qwen_demo_success.py
+│   │   │   ├── qwen_project_analysis.py
+│   │   │   ├── run_core_integration_tests.py
+│   │   │   ├── simple_ecosystem_test.py
+│   │   │   ├── simple_qwen_test.py
+│   │   │   └── simple_repo_analysis.py
+│   │   ├── src
+│   │   │   └── ingest_llm_as
+│   │   │       ├── __init__.py
+│   │   │       ├── __pycache__
+│   │   │       ├── api
+│   │   │       │   ├── __init__.py
+│   │   │       │   ├── __pycache__
+│   │   │       │   ├── analysis.py
+│   │   │       │   ├── ecosystem.py
+│   │   │       │   ├── ingestion.py
+│   │   │       │   ├── omega_ingest.py
+│   │   │       │   ├── omega_ingest_simple.py
+│   │   │       │   └── repository.py
+│   │   │       ├── config.py
+│   │   │       ├── main.py
+│   │   │       ├── models.py
+│   │   │       ├── observability
+│   │   │       │   ├── __init__.py
+│   │   │       │   ├── __pycache__
+│   │   │       │   ├── langfuse_client.py
+│   │   │       │   ├── logging.py
+│   │   │       │   ├── metrics.py
+│   │   │       │   ├── setup.py
+│   │   │       │   └── tracing.py
+│   │   │       ├── parsers
+│   │   │       │   ├── __init__.py
+│   │   │       │   ├── __pycache__
+│   │   │       │   └── python_ast_parser.py
+│   │   │       ├── routers
+│   │   │       │   └── eod_logs.py
+│   │   │       ├── services
+│   │   │       │   ├── __init__.py
+│   │   │       │   ├── __pycache__
+│   │   │       │   ├── ecosystem_ingestion.py
+│   │   │       │   ├── llm_cache.py
+│   │   │       │   ├── memos_client.py
+│   │   │       │   ├── nomic_code_analyzer.py
+│   │   │       │   ├── omega_ingest_guardian.py
+│   │   │       │   ├── progress_logger.py
+│   │   │       │   ├── project_analyzer.py
+│   │   │       │   ├── project_documentation_generator.py
+│   │   │       │   ├── repository_processor.py
+│   │   │       │   └── vectorizer.py
+│   │   │       └── utils
+│   │   │           ├── __init__.py
+│   │   │           ├── __pycache__
+│   │   │           └── content_processor.py
+│   │   ├── test_output
+│   │   │   ├── chat_summary_20250819_031314.json
+│   │   │   ├── chat_summary_20250819_031314.md
+│   │   │   ├── chat_summary_20250819_060853.json
+│   │   │   ├── chat_summary_20250819_060853.md
+│   │   │   ├── chat_summary_20250819_061008.json
+│   │   │   └── chat_summary_20250819_061008.md
+│   │   └── tests
+│   │       ├── __init__.py
+│   │       ├── __pycache__
+│   │       ├── context_bullet_test.md
+│   │       ├── embedding_integration_demo.py
+│   │       ├── pytest.ini
+│   │       ├── test_chat_sample.txt
+│   │       ├── test_chat_summarizer.py
+│   │       ├── test_ecosystem_ingestion.py
+│   │       ├── test_ingestion_e2e.py
+│   │       ├── test_langfuse_connection.py
+│   │       ├── test_langfuse_decorator.py
+│   │       ├── test_llm_trace.py
+│   │       ├── test_memos_integration_core.py
+│   │       ├── test_nomic_embeddings.py
+│   │       ├── test_qwen_integration.py
+│   │       └── test_repository_ingestion.py
+│   ├── devenviro.as
+│   │   ├── ${workspaceFolder}
+│   │   │   └── context_portal
+│   │   │       └── .md
+│   │   │           └── .persist
+│   │   │               └── logs
+│   │   ├── .codacy
+│   │   │   ├── .gitignore
+│   │   │   ├── cli-config.yaml
+│   │   │   ├── logs
+│   │   │   └── tools-configs
+│   │   │       ├── analysis_options.yaml
+│   │   │       ├── eslint.config.mjs
+│   │   │       ├── languages-config.yaml
+│   │   │       ├── lizard.yaml
+│   │   │       ├── pylint.rc
+│   │   │       ├── revive.toml
+│   │   │       ├── ruleset.xml
+│   │   │       ├── semgrep.yaml
+│   │   │       └── trivy.yaml
+│   │   ├── .coverage
+│   │   ├── .env
+│   │   ├── .env.vault
+│   │   ├── .git
+│   │   ├── .gitignore
+│   │   ├── .md
+│   │   │   └── .persist
+│   │   │       └── logs
+│   │   ├── .pre-commit-config.yaml
+│   │   ├── .pytest_cache
+│   │   ├── .ruff_cache
+│   │   ├── CLAUDE.md
+│   │   ├── COPILOT.md
+│   │   ├── Dockerfile
+│   │   ├── GEMINI.md
+│   │   ├── LICENSE
+│   │   ├── QWEN.md
+│   │   ├── README.md
+│   │   ├── TESTING.md
+│   │   ├── agentsmith
+│   │   │   ├── agentsmith.types.ts
+│   │   │   └── globals.json
+│   │   ├── app
+│   │   │   ├── .env
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   ├── agents
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── __pycache__
+│   │   │   │   └── personas
+│   │   │   │       ├── __init__.py
+│   │   │   │       └── __pycache__
+│   │   │   ├── bridge
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── __pycache__
+│   │   │   │   ├── agent_proxy.py
+│   │   │   │   └── config.py
+│   │   │   ├── config.py
+│   │   │   ├── listeners
+│   │   │   │   └── github_copilot_listener.py
+│   │   │   ├── migrations
+│   │   │   │   ├── 006_1_add_missing_columns.sql
+│   │   │   │   ├── 006_create_agent_registry.sql
+│   │   │   │   └── 006_create_session_prompts.sql
+│   │   │   ├── src
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── __pycache__
+│   │   │   │   ├── api
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── __pycache__
+│   │   │   │   │   └── poml.py
+│   │   │   │   ├── core
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── __pycache__
+│   │   │   │   │   ├── agent_database.py
+│   │   │   │   │   ├── database.py
+│   │   │   │   │   ├── enhanced_initialization_manager.py
+│   │   │   │   │   ├── migrations_runner.py
+│   │   │   │   │   ├── observability.py
+│   │   │   │   │   └── orchestrator.py
+│   │   │   │   ├── main.py
+│   │   │   │   ├── seed_knowledge.py
+│   │   │   │   ├── services
+│   │   │   │   │   ├── __init__.py
+│   │   │   │   │   ├── __pycache__
+│   │   │   │   │   ├── database_migration.py
+│   │   │   │   │   └── poml
+│   │   │   │   │       ├── __init__.py
+│   │   │   │   │       ├── __pycache__
+│   │   │   │   │       ├── library.py
+│   │   │   │   │       ├── templates
+│   │   │   │   │       │   ├── agent_communication.poml
+│   │   │   │   │       │   ├── observability_report.poml
+│   │   │   │   │       │   └── task_orchestration.poml
+│   │   │   │   │       └── test_poml.py
+│   │   │   │   └── test_poml_api.py
+│   │   │   └── tests
+│   │   │       ├── __pycache__
+│   │   │       ├── conftest.py
+│   │   │       ├── core
+│   │   │       │   ├── __pycache__
+│   │   │       │   └── test_database.py
+│   │   │       ├── services
+│   │   │       │   ├── __pycache__
+│   │   │       │   └── test_database_migration.py
+│   │   │       ├── test_agent_database.py
+│   │   │       ├── test_coverage_verification.py
+│   │   │       └── test_main.py
+│   │   ├── config
+│   │   │   ├── env-templates
+│   │   │   │   └── .env.standardized
+│   │   │   ├── grafana
+│   │   │   │   └── provisioning
+│   │   │   ├── grafana.ini
+│   │   │   ├── loki-config.yml
+│   │   │   ├── prometheus.yml
+│   │   │   └── promtail-config.yml
+│   │   ├── coverage.xml
+│   │   ├── enhanced_boot_sequence.log
+│   │   ├── htmlcov
+│   │   │   ├── .gitignore
+│   │   │   ├── class_index.html
+│   │   │   ├── coverage_html_cb_497bf287.js
+│   │   │   ├── favicon_32_cb_58284776.png
+│   │   │   ├── function_index.html
+│   │   │   ├── index.html
+│   │   │   ├── keybd_closed_cb_ce680311.png
+│   │   │   ├── status.json
+│   │   │   ├── style_cb_db813965.css
+│   │   │   ├── style_cb_dca529e9.css
+│   │   │   ├── z_433a83539034b5b7___init___py.html
+│   │   │   ├── z_433a83539034b5b7_agent_database_py.html
+│   │   │   ├── z_433a83539034b5b7_database_py.html
+│   │   │   ├── z_433a83539034b5b7_enhanced_initialization_manager_py.html
+│   │   │   ├── z_433a83539034b5b7_migrations_runner_py.html
+│   │   │   ├── z_433a83539034b5b7_observability_py.html
+│   │   │   ├── z_433a83539034b5b7_orchestrator_py.html
+│   │   │   ├── z_433a83539034b5b7_schemas_py.html
+│   │   │   ├── z_433a83539034b5b7_workflow_definitions_py.html
+│   │   │   ├── z_5f5a17c013354698___init___py.html
+│   │   │   ├── z_5f5a17c013354698_config_py.html
+│   │   │   ├── z_5f5a17c013354698_preview_agent_prompts_py.html
+│   │   │   ├── z_5f5a17c013354698_simple_preview_py.html
+│   │   │   ├── z_5f5a17c013354698_verify_session_system_py.html
+│   │   │   ├── z_5f5a17c013354698_view_session_prompt_py.html
+│   │   │   ├── z_94b527febd41478e___init___py.html
+│   │   │   ├── z_94b527febd41478e_agent_proxy_py.html
+│   │   │   ├── z_94b527febd41478e_bridge_service_py.html
+│   │   │   ├── z_94b527febd41478e_config_py.html
+│   │   │   ├── z_94b527febd41478e_message_queue_py.html
+│   │   │   ├── z_94b527febd41478e_message_translator_py.html
+│   │   │   ├── z_99341595ca33bbb9___init___py.html
+│   │   │   ├── z_99341595ca33bbb9_library_py.html
+│   │   │   ├── z_a5f97c19545c67dd___init___py.html
+│   │   │   ├── z_a5f97c19545c67dd_base_py.html
+│   │   │   ├── z_bc7d147b618d637c___init___py.html
+│   │   │   ├── z_bc7d147b618d637c_database_migration_py.html
+│   │   │   ├── z_d4af0f8dfd9531a7___init___py.html
+│   │   │   ├── z_d4af0f8dfd9531a7_main_py.html
+│   │   │   ├── z_d4af0f8dfd9531a7_seed_knowledge_py.html
+│   │   │   ├── z_e3d6a78aa8e3ed60___init___py.html
+│   │   │   ├── z_e3d6a78aa8e3ed60_poml_py.html
+│   │   │   ├── z_f287d2bb3a433f3d___init___py.html
+│   │   │   └── z_f287d2bb3a433f3d_sigma_coder_py.html
+│   │   ├── poetry.lock
+│   │   ├── pyproject.toml
+│   │   ├── run_pytest.bat
+│   │   ├── run_pytest.py
+│   │   ├── run_tests.bat
+│   │   ├── run_tests.sh
+│   │   └── scripts
+│   │       ├── ApexSigma Session Start Sequence.md
+│   │       ├── Boot Command Guide.md
+│   │       ├── Boot Sequence Configuration.toml
+│   │       ├── CLAUDE.local.md
+│   │       └── Systems_Boot_Sequence_Script.py
+│   ├── memos.as
+│   │   ├── ${workspaceFolder}
+│   │   │   └── context_portal
+│   │   │       └── logs
+│   │   ├── .cursor
+│   │   │   ├── mcp.json
+│   │   │   └── rules
+│   │   │       ├── cursor_rules.mdc
+│   │   │       ├── self_improve.mdc
+│   │   │       └── taskmaster
+│   │   │           ├── dev_workflow.mdc
+│   │   │           └── taskmaster.mdc
+│   │   ├── .env
+│   │   ├── .gemini
+│   │   │   └── settings.json
+│   │   ├── .git
+│   │   ├── .github
+│   │   │   ├── architect.chatmode.md
+│   │   │   ├── ask.chatmode.md
+│   │   │   ├── code.chatmode.md
+│   │   │   ├── copilot-instructions.md
+│   │   │   ├── debug.chatmode.md
+│   │   │   └── workflows
+│   │   │       ├── pull_request_check.yml
+│   │   │       └── python-app.yml
+│   │   ├── .gitignore
+│   │   ├── .ingest
+│   │   │   ├── app.ini
+│   │   │   ├── beta.ingest.as.json
+│   │   │   └── omega.ingest.as
+│   │   │       ├── Copilot.ingest.as.yml
+│   │   │       ├── Qwen.ingest.as.yml
+│   │   │       └── omega.ingest.as.json
+│   │   ├── .md
+│   │   │   ├── .instruct
+│   │   │   │   ├── ettiquette.instruct.md
+│   │   │   │   ├── mar_protocol.instruct.md
+│   │   │   │   ├── mkdocs.instruct.as.md
+│   │   │   │   └── mkdocs.instruct.md
+│   │   │   ├── .persist
+│   │   │   │   ├── .mcp.json
+│   │   │   │   ├── PROGRESS_LOG.md
+│   │   │   │   ├── log_import_error_troubleshooting.py
+│   │   │   │   ├── log_progress.py
+│   │   │   │   └── session_2025-08-17.poml
+│   │   │   ├── .project
+│   │   │   │   ├── 20250813_memos.project.ingest.as.json
+│   │   │   │   ├── architecture.project.as.md
+│   │   │   │   ├── brand.project.as.md
+│   │   │   │   ├── brief.project.as.md
+│   │   │   │   ├── mcp.task.project.as.md
+│   │   │   │   ├── observability.completed.md
+│   │   │   │   ├── pip_freeze.ini
+│   │   │   │   ├── plan.project.as.md
+│   │   │   │   ├── plan.project.asV1.archived..md
+│   │   │   │   ├── security.project.as.md
+│   │   │   │   ├── task.project.as.md
+│   │   │   │   ├── task.project.asV1.archived.md
+│   │   │   │   └── techstsack.project.as.md
+│   │   │   ├── 20250122_memos_as_production_bundle.md
+│   │   │   ├── CLAUDE.md
+│   │   │   ├── COPILOT.md
+│   │   │   ├── DEPLOYMENT_SUCCESS.md
+│   │   │   ├── GEMINI.md
+│   │   │   ├── LICENSE
+│   │   │   ├── MEMOS_PROGRESS_UPDATE.md
+│   │   │   ├── OBSERVABILITY.md
+│   │   │   ├── OBSERVABILITY_COMPLETE.md
+│   │   │   ├── OBSERVABILITY_STATUS.md
+│   │   │   ├── OPERATION_ASGARD_REBIRTH_BASELINE.md
+│   │   │   ├── QWEN.md
+│   │   │   └── README.md
+│   │   ├── .pre-commit-config.yaml
+│   │   ├── .taskmaster
+│   │   │   ├── config.json
+│   │   │   ├── docs
+│   │   │   │   ├── Creating and Registering Tools in FastMCP.md
+│   │   │   │   ├── FINAL Sprint Plan MCP HTTP Client Implementation.md
+│   │   │   │   ├── prd.txt
+│   │   │   │   └── tools_verbose.yml
+│   │   │   ├── state.json
+│   │   │   ├── tasks
+│   │   │   │   └── tasks.json
+│   │   │   └── templates
+│   │   │       └── example_prd.txt
+│   │   ├── .vscode
+│   │   ├── Dockerfile
+│   │   ├── GEMINI.md
+│   │   ├── README.md
+│   │   ├── VERIFIED_DOCKER_NETWORK_MAP.md
+│   │   ├── app
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   ├── background_worker.py
+│   │   │   ├── config.py
+│   │   │   ├── log_progress.md
+│   │   │   ├── log_progress.py
+│   │   │   ├── main.py
+│   │   │   ├── main_observability.py
+│   │   │   ├── mcp_server.py
+│   │   │   ├── models.py
+│   │   │   ├── progress_logs
+│   │   │   ├── schemas.py
+│   │   │   ├── services
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── database_health.py
+│   │   │   │   ├── e2e_tracing.py
+│   │   │   │   ├── neo4j_client.py
+│   │   │   │   ├── observability.py
+│   │   │   │   ├── observability_decorators.py
+│   │   │   │   ├── postgres_client.py
+│   │   │   │   ├── qdrant_client.py
+│   │   │   │   ├── redis_client.py
+│   │   │   │   ├── redis_lock.py
+│   │   │   │   └── redis_utils.py
+│   │   │   ├── tests
+│   │   │   │   ├── test_api.py
+│   │   │   │   ├── test_graph_api.py
+│   │   │   │   ├── test_ingest_integration.py
+│   │   │   │   ├── test_integration.py
+│   │   │   │   ├── test_neo4j_client.py
+│   │   │   │   ├── test_simple.py
+│   │   │   │   └── test_tiered_storage.py
+│   │   │   └── tools.py
+│   │   ├── config
+│   │   │   ├── alert_rules.yml
+│   │   │   ├── grafana
+│   │   │   │   ├── dashboards
+│   │   │   │   │   ├── memos-logs.json
+│   │   │   │   │   └── memos-observability.json
+│   │   │   │   └── provisioning
+│   │   │   │       ├── dashboards
+│   │   │   │       │   └── dashboards.yml
+│   │   │   │       └── datasources
+│   │   │   │           └── datasources.yml
+│   │   │   ├── loki-config.yaml
+│   │   │   ├── otel-collector-config.yaml
+│   │   │   ├── prometheus.yml
+│   │   │   └── promtail-config.yaml
+│   │   ├── docker-compose.unified.yml
+│   │   ├── docs
+│   │   │   ├── AGENT.md
+│   │   │   ├── ECOSYSTEM_STATUS_REPORT.md
+│   │   │   ├── GEMINI.md
+│   │   │   ├── how-to
+│   │   │   │   └── index.md
+│   │   │   ├── index.md
+│   │   │   ├── reference
+│   │   │   │   ├── index.md
+│   │   │   │   ├── omega-ingest-knowledge-graph-prompt.md
+│   │   │   │   └── services.md
+│   │   │   ├── summaries
+│   │   │   │   ├── memos_chat_summary_20250819_061434.json
+│   │   │   │   └── memos_chat_summary_20250819_061434.md
+│   │   │   └── tutorials
+│   │   │       └── index.md
+│   │   ├── mcp.memos.as.code-workspace
+│   │   ├── memory-bank
+│   │   │   ├── activeContext.md
+│   │   │   ├── architect.md
+│   │   │   ├── decisionLog.md
+│   │   │   ├── productContext.md
+│   │   │   ├── progress.md
+│   │   │   ├── projectBrief.md
+│   │   │   └── systemPatterns.md
+│   │   ├── memos
+│   │   │   └── __init__.py
+│   │   ├── mkdocs.yml
+│   │   ├── poetry.lock
+│   │   ├── progress_logs
+│   │   ├── pyproject.toml
+│   │   ├── requirements-observability.txt
+│   │   └── scripts
+│   │       ├── chat_thread_summarizer.py
+│   │       ├── init_database.py
+│   │       ├── instrumentation_example.py
+│   │       ├── integrate_observability.py
+│   │       ├── log_orchestrator_fix_progress.py
+│   │       ├── log_phase2_progress.py
+│   │       ├── log_progress.py
+│   │       ├── log_tiered_storage_progress.py
+│   │       ├── log_troubleshooting.py
+│   │       ├── seed_tools.py
+│   │       ├── setup_observability.py
+│   │       └── setup_test_databases.py
+│   ├── memos.as.bak
+│   │   ├── ${workspaceFolder}
+│   │   │   └── context_portal
+│   │   │       └── logs
+│   │   ├── .cursor
+│   │   │   ├── mcp.json
+│   │   │   └── rules
+│   │   │       ├── cursor_rules.mdc
+│   │   │       ├── self_improve.mdc
+│   │   │       └── taskmaster
+│   │   │           ├── dev_workflow.mdc
+│   │   │           └── taskmaster.mdc
+│   │   ├── .env
+│   │   ├── .env.docker
+│   │   ├── .env.example
+│   │   ├── .gemini
+│   │   │   └── settings.json
+│   │   ├── .github
+│   │   │   ├── architect.chatmode.md
+│   │   │   ├── ask.chatmode.md
+│   │   │   ├── code.chatmode.md
+│   │   │   ├── copilot-instructions.md
+│   │   │   ├── debug.chatmode.md
+│   │   │   └── workflows
+│   │   │       ├── pull_request_check.yml
+│   │   │       └── python-app.yml
+│   │   ├── .gitignore
+│   │   ├── .ingest
+│   │   │   ├── app.ini
+│   │   │   ├── beta.ingest.as.json
+│   │   │   └── omega.ingest.as
+│   │   │       ├── Copilot.ingest.as.yml
+│   │   │       ├── Qwen.ingest.as.yml
+│   │   │       └── omega.ingest.as.json
+│   │   ├── .md
+│   │   │   ├── .instruct
+│   │   │   │   ├── ettiquette.instruct.md
+│   │   │   │   ├── mar_protocol.instruct.md
+│   │   │   │   ├── mkdocs.instruct.as.md
+│   │   │   │   └── mkdocs.instruct.md
+│   │   │   ├── .persist
+│   │   │   │   ├── .mcp.json
+│   │   │   │   ├── PROGRESS_LOG.md
+│   │   │   │   ├── log_import_error_troubleshooting.py
+│   │   │   │   ├── log_progress.py
+│   │   │   │   └── session_2025-08-17.poml
+│   │   │   ├── .project
+│   │   │   │   ├── 20250813_memos.project.ingest.as.json
+│   │   │   │   ├── architecture.project.as.md
+│   │   │   │   ├── brand.project.as.md
+│   │   │   │   ├── brief.project.as.md
+│   │   │   │   ├── mcp.task.project.as.md
+│   │   │   │   ├── observability.completed.md
+│   │   │   │   ├── pip_freeze.ini
+│   │   │   │   ├── plan.project.as.md
+│   │   │   │   ├── plan.project.asV1.archived..md
+│   │   │   │   ├── security.project.as.md
+│   │   │   │   ├── task.project.as.md
+│   │   │   │   ├── task.project.asV1.archived.md
+│   │   │   │   └── techstsack.project.as.md
+│   │   │   ├── 20250122_memos_as_production_bundle.md
+│   │   │   ├── CLAUDE.md
+│   │   │   ├── COPILOT.md
+│   │   │   ├── DEPLOYMENT_SUCCESS.md
+│   │   │   ├── GEMINI.md
+│   │   │   ├── LICENSE
+│   │   │   ├── MEMOS_PROGRESS_UPDATE.md
+│   │   │   ├── OBSERVABILITY.md
+│   │   │   ├── OBSERVABILITY_COMPLETE.md
+│   │   │   ├── OBSERVABILITY_STATUS.md
+│   │   │   ├── OPERATION_ASGARD_REBIRTH_BASELINE.md
+│   │   │   ├── QWEN.md
+│   │   │   └── README.md
+│   │   ├── .mypy_cache
+│   │   ├── .pre-commit-config.yaml
+│   │   ├── .pytest_cache
+│   │   ├── .ruff_cache
+│   │   ├── .taskmaster
+│   │   │   ├── config.json
+│   │   │   ├── docs
+│   │   │   │   ├── Creating and Registering Tools in FastMCP.md
+│   │   │   │   ├── FINAL Sprint Plan MCP HTTP Client Implementation.md
+│   │   │   │   ├── prd.txt
+│   │   │   │   └── tools_verbose.yml
+│   │   │   ├── reports
+│   │   │   ├── state.json
+│   │   │   ├── tasks
+│   │   │   │   └── tasks.json
+│   │   │   └── templates
+│   │   │       └── example_prd.txt
+│   │   ├── .venv
+│   │   ├── .vscode
+│   │   ├── Dockerfile
+│   │   ├── GEMINI.md
+│   │   ├── README.md
+│   │   ├── VERIFIED_DOCKER_NETWORK_MAP.md
+│   │   ├── app
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   ├── background_worker.py
+│   │   │   ├── config.py
+│   │   │   ├── log_progress.md
+│   │   │   ├── log_progress.py
+│   │   │   ├── main.py
+│   │   │   ├── main_observability.py
+│   │   │   ├── mcp_server.py
+│   │   │   ├── models.py
+│   │   │   ├── progress_logs
+│   │   │   ├── schemas.py
+│   │   │   ├── services
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── __pycache__
+│   │   │   │   ├── database_health.py
+│   │   │   │   ├── e2e_tracing.py
+│   │   │   │   ├── neo4j_client.py
+│   │   │   │   ├── observability.py
+│   │   │   │   ├── observability_decorators.py
+│   │   │   │   ├── postgres_client.py
+│   │   │   │   ├── qdrant_client.py
+│   │   │   │   ├── redis_client.py
+│   │   │   │   ├── redis_lock.py
+│   │   │   │   └── redis_utils.py
+│   │   │   ├── tests
+│   │   │   │   ├── __pycache__
+│   │   │   │   ├── integration
+│   │   │   │   │   ├── __pycache__
+│   │   │   │   │   └── test_expire_memories.py
+│   │   │   │   ├── test_api.py
+│   │   │   │   ├── test_graph_api.py
+│   │   │   │   ├── test_ingest_integration.py
+│   │   │   │   ├── test_integration.py
+│   │   │   │   ├── test_neo4j_client.py
+│   │   │   │   ├── test_simple.py
+│   │   │   │   ├── test_tiered_storage.py
+│   │   │   │   └── unit
+│   │   │   │       ├── __pycache__
+│   │   │   │       └── test_redis_ttl.py
+│   │   │   └── tools.py
+│   │   ├── config
+│   │   │   ├── alert_rules.yml
+│   │   │   ├── grafana
+│   │   │   │   ├── dashboards
+│   │   │   │   │   ├── memos-logs.json
+│   │   │   │   │   └── memos-observability.json
+│   │   │   │   └── provisioning
+│   │   │   │       ├── dashboards
+│   │   │   │       │   └── dashboards.yml
+│   │   │   │       └── datasources
+│   │   │   │           └── datasources.yml
+│   │   │   ├── loki-config.yaml
+│   │   │   ├── otel-collector-config.yaml
+│   │   │   ├── prometheus.yml
+│   │   │   └── promtail-config.yaml
+│   │   ├── docker-compose.unified.yml
+│   │   ├── docs
+│   │   │   ├── AGENT.md
+│   │   │   ├── ECOSYSTEM_STATUS_REPORT.md
+│   │   │   ├── GEMINI.md
+│   │   │   ├── how-to
+│   │   │   │   └── index.md
+│   │   │   ├── index.md
+│   │   │   ├── reference
+│   │   │   │   ├── index.md
+│   │   │   │   ├── omega-ingest-knowledge-graph-prompt.md
+│   │   │   │   └── services.md
+│   │   │   ├── summaries
+│   │   │   │   ├── memos_chat_summary_20250819_061434.json
+│   │   │   │   └── memos_chat_summary_20250819_061434.md
+│   │   │   └── tutorials
+│   │   │       └── index.md
+│   │   ├── mcp.memos.as.code-workspace
+│   │   ├── mcp_client
+│   │   ├── memory-bank
+│   │   │   ├── activeContext.md
+│   │   │   ├── architect.md
+│   │   │   ├── decisionLog.md
+│   │   │   ├── productContext.md
+│   │   │   ├── progress.md
+│   │   │   ├── projectBrief.md
+│   │   │   └── systemPatterns.md
+│   │   ├── mkdocs.yml
+│   │   ├── poetry.lock
+│   │   ├── progress_logs
+│   │   ├── pyproject.toml
+│   │   ├── requirements-observability.txt
+│   │   ├── requirements.txt
+│   │   ├── scripts
+│   │   │   ├── chat_thread_summarizer.py
+│   │   │   ├── init_database.py
+│   │   │   ├── instrumentation_example.py
+│   │   │   ├── integrate_observability.py
+│   │   │   ├── log_orchestrator_fix_progress.py
+│   │   │   ├── log_phase2_progress.py
+│   │   │   ├── log_progress.py
+│   │   │   ├── log_tiered_storage_progress.py
+│   │   │   ├── log_troubleshooting.py
+│   │   │   ├── seed_tools.py
+│   │   │   ├── setup_observability.py
+│   │   │   └── setup_test_databases.py
+│   │   ├── test_mcp_http_client.py
+│   │   └── tests
+│   │       ├── __pycache__
+│   │       ├── test_background_worker.py
+│   │       ├── test_redis_client.py
+│   │       ├── test_redis_client_models.py
+│   │       └── test_redis_lock.py
+│   └── tools.as
+│       ├── # COPILOT.md
+│       ├── ${workspaceFolder}
+│       │   └── context_portal
+│       │       └── logs
+│       ├── .claude
+│       │   └── settings.local.json
+│       ├── .dockerignore
+│       ├── .env
+│       ├── .flake8
+│       ├── .git
+│       ├── .github
+│       │   ├── copilot-instructions.md
+│       │   └── workflows
+│       │       └── pull_request_check.yml
+│       ├── .gitignore
+│       ├── .ingest
+│       │   ├── beta.ingest.as.json
+│       │   └── omega.ingest.as.json
+│       ├── .md
+│       │   ├── .instruct
+│       │   │   └── mkdocs.instruct.as.md
+│       │   ├── .persist
+│       │   │   ├── test.db
+│       │   │   └── toolkit.db
+│       │   ├── .project
+│       │   │   ├── architecture.project.as.md
+│       │   │   ├── brand.project.as.md
+│       │   │   ├── brief.project.as.md
+│       │   │   ├── plan.project.as.md
+│       │   │   ├── security.project.as.md
+│       │   │   ├── tasks.project.as.md
+│       │   │   ├── techstack.project.as.md
+│       │   │   └── workflow.project.as.md
+│       │   ├── .rules
+│       │   │   └── naming.rules.as.md
+│       │   ├── .tools
+│       │   │   ├── .command
+│       │   │   │   └── create_readme_python.toml
+│       │   │   ├── .commands
+│       │   │   │   ├── README.md
+│       │   │   │   ├── changelog.toml
+│       │   │   │   ├── clip.toml
+│       │   │   │   ├── create_readme.toml
+│       │   │   │   ├── create_readme_node.command.as.toml
+│       │   │   │   ├── create_readme_node.toml
+│       │   │   │   ├── create_readme_python.command.as.toml
+│       │   │   │   ├── create_readme_python.toml
+│       │   │   │   ├── design_decompose_request.toml
+│       │   │   │   ├── design_update_architecture.toml
+│       │   │   │   ├── design_validate_plan.toml
+│       │   │   │   ├── dev-log-search.toml
+│       │   │   │   ├── dev-telemetry-status.toml
+│       │   │   │   ├── dev-trace-last-request.toml
+│       │   │   │   ├── eod (2).toml
+│       │   │   │   ├── eod.command.as.toml
+│       │   │   │   ├── eod.toml
+│       │   │   │   ├── extract_design.toml
+│       │   │   │   ├── format_toml.py
+│       │   │   │   ├── iterate_design.toml
+│       │   │   │   ├── outdated_package.toml
+│       │   │   │   ├── outline (2).toml
+│       │   │   │   ├── outline.command.as.toml
+│       │   │   │   ├── outline.toml
+│       │   │   │   ├── parallel_tasks.toml
+│       │   │   │   ├── prep.toml
+│       │   │   │   ├── scaffold (2).toml
+│       │   │   │   ├── scaffold.command.as.toml
+│       │   │   │   ├── scaffold.toml
+│       │   │   │   ├── scratchpad.toml
+│       │   │   │   ├── sod.command.as.toml
+│       │   │   │   ├── sod.toml
+│       │   │   │   ├── stack-status.toml
+│       │   │   │   ├── trace-last.toml
+│       │   │   │   └── ui_ux_expert.toml
+│       │   │   ├── .mcp
+│       │   │   │   └── claudecode.mcp.md
+│       │   │   ├── create_readme_node.command.as.toml
+│       │   │   ├── create_readme_python.command.as.toml
+│       │   │   ├── eod.command.as.toml
+│       │   │   ├── eod.ecosystem.command.as.toml
+│       │   │   ├── mcp.tools.as.md
+│       │   │   ├── outline.command.as.toml
+│       │   │   ├── scaffold.command.as.toml
+│       │   │   └── sod.command.as.toml
+│       │   ├── CLAUDE.md
+│       │   ├── GEMINI.md
+│       │   ├── LICENSE
+│       │   └── README.md
+│       ├── .pylintrc
+│       ├── .pytest_cache
+│       ├── .python-version
+│       ├── .vscode
+│       ├── 20250122_tools_as_production_bundle.md
+│       ├── CLAUDE.md
+│       ├── Dockerfile
+│       ├── GEMINI.md
+│       ├── OBSERVABILITY.md
+│       ├── QWEN.md
+│       ├── TOOLS_AS_OPERATION_ASGARD_BASELINE_BUNDLE.md
+│       ├── __pycache__
+│       ├── app
+│       │   ├── __init__.py
+│       │   ├── __pycache__
+│       │   ├── database.py
+│       │   ├── main.py
+│       │   ├── models.py
+│       │   ├── schemas.py
+│       │   ├── services
+│       │   │   ├── __pycache__
+│       │   │   ├── e2e_tracing.py
+│       │   │   └── observability.py
+│       │   └── tests
+│       │       ├── __init__.py
+│       │       └── test_main.py
+│       ├── docker-compose.dev.yml
+│       ├── docs
+│       │   └── reference
+│       │       ├── api.md
+│       │       ├── index.md
+│       │       ├── models.md
+│       │       └── schemas.md
+│       ├── mkdocs.yml
+│       ├── poetry.lock
+│       ├── pyproject.toml
+│       ├── requirements.txt
+│       ├── scripts
+│       │   ├── chat_thread_summarizer.py
+│       │   ├── docker-dev.sh
+│       │   └── init-db.sql
+│       ├── summaries
+│       │   ├── tools_chat_summary_20250819_061326.json
+│       │   ├── tools_chat_summary_20250819_061326.md
+│       │   ├── tools_chat_summary_20250819_061351.json
+│       │   └── tools_chat_summary_20250819_061351.md
+│       ├── test.db
+│       ├── test_observability.py
+│       ├── tests
+│       │   ├── __pycache__
+│       │   ├── test_chat_thread_summarizer.py
+│       │   ├── test_main.py
+│       │   ├── test_models.py
+│       │   └── test_schemas.py
+│       ├── toolkit.db
+│       └── uv.lock
+├── setup-eod-command.ps1
+├── setup-sod-command.ps1
+├── sod.bat
+├── sod.ps1
+└── tests
+    ├── README.md
+    ├── __pycache__
+    ├── pytest.ini
+    ├── run_integration_tests.py
+    ├── test_core_integration_e2e.py
+    ├── test_ecosystem_chat_sample.txt
+    └── test_langfuse_ecosystem.py
+```

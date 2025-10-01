@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
@@ -9,32 +9,57 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      # Set the required Python version ONCE for the entire job.
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.13"
 
+      # Use pipx to install Poetry, which is the modern best practice for CI.
+      # This is faster and more reliable than the curl installer.
       - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
+        run: pipx install poetry
 
+      # Configure Poetry caching based on the lock file. This will dramatically
+      # speed up builds after the first run.
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      # Install dependencies for all services sequentially.
       - name: Install apexsigma-core dependencies
         run: |
           cd libs/apexsigma-core
-          poetry install
-
-      - name: Run apexsigma-core tests
-        run: |
-          cd libs/apexsigma-core
-          poetry run pytest
+          poetry install --no-interaction
 
       - name: Install memos.as dependencies
         run: |
           cd services/memos.as
-          poetry install
+          poetry install --no-interaction
+
+      # Run tests for the core library. This step should be expanded for other services.
+      - name: Run apexsigma-core tests
+        run: |
+          cd libs/apexsigma-core
+          mkdir -p ../../reports
+          poetry run pytest --junit-xml=../../reports/apexsigma-core.junit.xml -o junit_family=xunit1
+
+      - name: Upload pytest results to Trunk Flaky Tests
+        run: |
+          curl -fsSLO --retry 3 https://trunk.io/releases/trunk
+          chmod +x trunk
+          ./trunk flakytests upload \
+            --junit-paths "reports/apexsigma-core.junit.xml" \
+            --org-url-slug "$TRUNK_ORG_URL_SLUG" \
+            --token "$TRUNK_API_TOKEN"
