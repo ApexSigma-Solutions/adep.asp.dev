@@ -1,0 +1,110 @@
+# ApexSigma Phase 2 Security Hardening Configuration
+# Comprehensive security enhancements for production-grade deployment
+
+version: '3.8'
+
+services:
+  # ===========================================
+  # SECURITY ENHANCEMENTS
+  # ===========================================
+
+  # Fail2Ban for intrusion prevention
+  fail2ban:
+    image: crazymax/fail2ban:latest
+    container_name: apexsigma_fail2ban
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./config/fail2ban:/data
+      - /var/log:/var/log:ro
+    environment:
+      - TZ=UTC
+      - F2B_LOG_LEVEL=INFO
+      - F2B_DB_PURGE_AGE=30d
+    restart: unless-stopped
+
+  # Vault for secrets management
+  vault:
+    image: vault:1.15.2
+    container_name: apexsigma_vault
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: myroot
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+    ports:
+      - "8200:8200"
+    volumes:
+      - vault_data:/vault/data
+      - ./config/vault:/vault/config
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "vault", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL Connection Pooler
+  pgbouncer:
+    image: pgbouncer/pgbouncer:1.21.0
+    container_name: apexsigma_pgbouncer
+    environment:
+      DATABASES_HOST: apexsigma_postgres
+      DATABASES_PORT: 5432
+      DATABASES_USER: apexsigma_user
+      DATABASES_PASSWORD: your_secure_postgres_password_here
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 100
+      DEFAULT_POOL_SIZE: 25
+    ports:
+      - "5433:5432"  # PgBouncer on different port
+    volumes:
+      - ./config/pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
+      - ./config/pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt
+    depends_on:
+      - postgres
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "psql", "-h", "localhost", "-p", "5432", "-U", "apexsigma_user", "-c", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis Sentinel for high availability
+  redis-sentinel:
+    image: redis:7-alpine
+    container_name: apexsigma_redis_sentinel
+    command: redis-sentinel /etc/redis/sentinel.conf
+    volumes:
+      - ./config/redis/sentinel.conf:/etc/redis/sentinel.conf
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    depends_on:
+      - redis
+
+  # Network security scanner
+  security-scanner:
+    image: owasp/zap2docker-stable
+    container_name: apexsigma_security_scanner
+    volumes:
+      - ./security/reports:/zap/wrk
+    networks:
+      - apexsigma_net
+    profiles:
+      - security-scan
+    command: zap-baseline.py -t https://localhost -r security-report.html
+
+volumes:
+  vault_data:
+    name: apexsigma_vault_data
+
+networks:
+  apexsigma_net:
+    external: true

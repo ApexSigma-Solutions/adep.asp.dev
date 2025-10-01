@@ -1,0 +1,82 @@
+# ApexSigma Phase 2 - Backup and Recovery Services
+version: '3.8'
+
+services:
+  # Automated backup service
+  backup-service:
+    image: alpine:latest
+    container_name: apexsigma_backup_service
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/backup:/scripts
+      - backup_storage:/backups
+      - ./:/app:ro
+    working_dir: /app
+    environment:
+      - BACKUP_SCHEDULE=0 2 * * *  # Daily at 2 AM
+      - RETENTION_DAYS=30
+      - TZ=UTC
+    command: |
+      sh -c '
+        apk add --no-cache docker-cli postgresql-client redis gzip tar curl
+        chmod +x /scripts/backup-script.sh
+        echo "$BACKUP_SCHEDULE /scripts/backup-script.sh" | crontab -
+        crond -f -l 2
+      '
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+      - neo4j
+      - clickhouse
+
+  # Backup monitoring and alerting
+  backup-monitor:
+    image: prom/node-exporter:latest
+    container_name: apexsigma_backup_monitor
+    volumes:
+      - backup_storage:/backups:ro
+    command:
+      - '--path.rootfs=/host'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--collector.textfile.directory=/backups'
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  # Recovery testing service (runs weekly)
+  recovery-test:
+    image: alpine:latest
+    container_name: apexsigma_recovery_test
+    volumes:
+      - backup_storage:/backups:ro
+      - ./config/backup:/scripts:ro
+    environment:
+      - TEST_SCHEDULE=0 3 * * 0  # Weekly on Sunday at 3 AM
+    command: |
+      sh -c '
+        apk add --no-cache postgresql-client redis gzip tar
+        echo "$TEST_SCHEDULE /scripts/test-recovery.sh" | crontab -
+        crond -f -l 2
+      '
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    profiles:
+      - recovery-test
+
+volumes:
+  backup_storage:
+    name: apexsigma_backup_storage
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./backups
+
+networks:
+  apexsigma_net:
+    external: true

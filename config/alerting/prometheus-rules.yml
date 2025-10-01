@@ -1,0 +1,214 @@
+# ApexSigma Phase 2 - Prometheus Alerting Rules
+# Comprehensive alerting rules for production monitoring
+
+groups:
+  # System Health Alerts
+  - name: system_health
+    rules:
+      - alert: ServiceDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+          category: system
+        annotations:
+          summary: "Service {{ $labels.instance }} is down"
+          description: "Service {{ $labels.instance }} has been down for more than 30 seconds"
+          
+      - alert: HighCPUUsage
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 80
+        for: 2m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 80% for more than 2 minutes"
+          
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+          category: performance
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 90% for more than 2 minutes"
+
+  # Database Alerts
+  - name: database_health
+    rules:
+      - alert: PostgresDown
+        expr: up{job="postgres"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: postgres
+          category: database
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL instance {{ $labels.instance }} is down"
+          
+      - alert: ClickHouseDown
+        expr: up{job="clickhouse"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: clickhouse
+          category: database
+        annotations:
+          summary: "ClickHouse is down"
+          description: "ClickHouse instance {{ $labels.instance }} is down"
+          
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: redis
+          category: database
+        annotations:
+          summary: "Redis is down"
+          description: "Redis instance {{ $labels.instance }} is down"
+          
+      - alert: DatabaseConnectionsHigh
+        expr: |
+          (
+            pg_stat_database_numbackends / 
+            (pg_settings_max_connections - pg_settings_superuser_reserved_connections)
+          ) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: postgres
+          category: database
+        annotations:
+          summary: "High database connection usage"
+          description: "Database connection usage is above 80%"
+
+  # Security Alerts  
+  - name: security
+    rules:
+      - alert: UnauthorizedAccess
+        expr: increase(nginx_http_requests_total{status=~"401|403"}[5m]) > 10
+        for: 1m
+        labels:
+          severity: warning
+          category: security
+        annotations:
+          summary: "Multiple unauthorized access attempts"
+          description: "More than 10 unauthorized access attempts in the last 5 minutes"
+          
+      - alert: SSLCertificateExpiring
+        expr: (ssl_certificate_expiry_seconds - time()) / 86400 < 30
+        for: 1h
+        labels:
+          severity: warning
+          category: security
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "SSL certificate for {{ $labels.instance }} expires in {{ $value }} days"
+          
+      - alert: FailedLoginAttempts
+        expr: increase(failed_login_attempts_total[5m]) > 20
+        for: 1m
+        labels:
+          severity: critical
+          category: security
+        annotations:
+          summary: "High number of failed login attempts"
+          description: "More than 20 failed login attempts detected in 5 minutes"
+
+  # Application Performance Alerts
+  - name: application_performance
+    rules:
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 2m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "High response time for {{ $labels.service }}"
+          description: "95th percentile response time is {{ $value }}s for more than 2 minutes"
+          
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100 > 5
+        for: 2m
+        labels:
+          severity: critical
+          category: performance
+        annotations:
+          summary: "High error rate for {{ $labels.service }}"
+          description: "Error rate is {{ $value }}% for more than 2 minutes"
+          
+      - alert: QueueBacklogHigh
+        expr: rabbitmq_queue_messages > 1000
+        for: 5m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "High queue backlog in {{ $labels.queue }}"
+          description: "Queue {{ $labels.queue }} has {{ $value }} messages"
+
+  # ClickHouse Specific Alerts
+  - name: clickhouse_health
+    rules:
+      - alert: ClickHouseQuerySlow
+        expr: ClickHouseProfileEvents_Query > 10
+        for: 2m
+        labels:
+          severity: warning
+          service: clickhouse
+          category: performance
+        annotations:
+          summary: "Slow ClickHouse queries detected"
+          description: "ClickHouse has {{ $value }} slow queries"
+          
+      - alert: ClickHouseReplicationLag
+        expr: ClickHouseAsyncMetrics_ReplicasMaxAbsoluteDelay > 300
+        for: 5m
+        labels:
+          severity: critical
+          service: clickhouse
+          category: database
+        annotations:
+          summary: "ClickHouse replication lag is high"
+          description: "Replication lag is {{ $value }} seconds"
+          
+      - alert: ClickHouseDiskSpaceLow
+        expr: ClickHouseAsyncMetrics_DiskAvailable / ClickHouseAsyncMetrics_DiskTotal * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+          service: clickhouse
+          category: system
+        annotations:
+          summary: "ClickHouse disk space is low"
+          description: "Available disk space is {{ $value }}%"
+
+  # Langfuse AI Observability Alerts
+  - name: langfuse_health
+    rules:
+      - alert: LangfuseTracesBacklog
+        expr: langfuse_pending_traces > 1000
+        for: 5m
+        labels:
+          severity: warning
+          service: langfuse
+          category: performance
+        annotations:
+          summary: "Langfuse traces backlog is high"
+          description: "{{ $value }} traces are pending processing"
+          
+      - alert: LangfuseHighTokenUsage
+        expr: increase(langfuse_tokens_total[1h]) > 1000000
+        for: 15m
+        labels:
+          severity: warning
+          service: langfuse
+          category: cost
+        annotations:
+          summary: "High token usage in Langfuse"
+          description: "Token usage exceeded 1M in the last hour"
