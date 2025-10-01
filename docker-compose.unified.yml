@@ -238,7 +238,7 @@ services:
       - vector_data:/var/lib/vector
     networks:
       apexsigma_net:
-        ipv4_address: 172.26.0.51
+        ipv4_address: 172.26.0.54
     restart: unless-stopped
     depends_on:
       - clickhouse
@@ -348,9 +348,6 @@ services:
       - AGENT_TECHNICAL_WRITER_TOKEN=${AGENT_TECHNICAL_WRITER_TOKEN:-supersecrettoken_writer}
     depends_on:
       - postgres
-      - redis
-      - rabbitmq
-      - qdrant
     volumes:
       - ./services/devenviro.as:/app
     networks:
@@ -608,6 +605,7 @@ services:
     volumes:
       - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro
       - ./services/dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
+      - ./services/dagster/definitions.py:/opt/dagster/dagster_home/definitions.py:ro
       - dagster_home:/opt/dagster/dagster_home
     networks:
       apexsigma_net:
@@ -639,6 +637,7 @@ services:
     volumes:
       - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro
       - ./services/dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
+      - ./services/dagster/definitions.py:/opt/dagster/dagster_home/definitions.py:ro
       - dagster_home:/opt/dagster/dagster_home
     networks:
       apexsigma_net:
