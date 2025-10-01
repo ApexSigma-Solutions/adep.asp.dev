@@ -19,9 +19,7 @@
         "details": "Create a `storage` module with ABCs for Cache, Persistent, Vector, and Graph storage using Python's `abc` module. Also, create a `utils` module with helpers for configuration loading and standardized logging. Both modules must include unit tests.",
         "testStrategy": "Review the `storage` and `utils` modules to confirm the presence of the specified components. Execute the unit tests for both modules to ensure they pass and function as expected.",
         "priority": "high",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "status": "review",
         "subtasks": []
       },
@@ -32,10 +30,7 @@
         "details": "The CI pipeline should be configured (e.g., using GitHub Actions) to run on every push/PR to the `libs/apexsigma-core` directory. The pipeline must execute the library's unit tests. A separate step should verify that the library can be installed in a clean environment using `pip install -e .`.",
         "testStrategy": "Trigger the CI pipeline by making a small commit. Verify that all steps, including tests and the installability check, pass successfully.",
         "priority": "high",
-        "dependencies": [
-          1,
-          2
-        ],
+        "dependencies": [1, 2],
         "status": "review",
         "subtasks": []
       },
@@ -47,7 +42,7 @@
         "testStrategy": "Run `docker-compose up -d` from the project root. Verify that all specified containers start without errors. Access the Grafana UI and other relevant service endpoints to confirm they are operational.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -57,10 +52,8 @@
         "details": "Define service entries for each application in the root `docker-compose.yml`. Ensure their Dockerfiles are correctly referenced and that they connect to the networks defined for the data and observability stacks.",
         "testStrategy": "Run `docker-compose up -d`. Verify that all application service containers start successfully alongside the infrastructure services. Check container logs for any connectivity errors to databases or other services.",
         "priority": "high",
-        "dependencies": [
-          4
-        ],
-        "status": "pending",
+        "dependencies": [4],
+        "status": "done",
         "subtasks": []
       },
       {
@@ -70,10 +63,8 @@
         "details": "Go through each service and update Python import statements to be compatible with the monorepo structure (e.g., using editable installs of `apexsigma-core`). Standardize the `Dockerfile` and `pyproject.toml` in each service. Delete all legacy, service-level `docker-compose.yml` files.",
         "testStrategy": "After refactoring, start the entire stack with `docker-compose up`. Verify that no service fails to start due to `ModuleNotFoundError` or configuration issues. Confirm that all legacy `docker-compose.yml` files have been removed.",
         "priority": "high",
-        "dependencies": [
-          5
-        ],
-        "status": "review",
+        "dependencies": [5],
+        "status": "done",
         "subtasks": []
       },
       {
@@ -83,10 +74,8 @@
         "details": "Create a root `.env` file for shared variables. For any service that needs specific overrides or additional variables, create a corresponding `.env` file (e.g., `services/memos.as/.env`). Ensure the `docker-compose.yml` is configured to load these files correctly.",
         "testStrategy": "Start the services and `exec` into a running container. Use `printenv` to verify that variables from both the root and service-specific `.env` files are loaded correctly, with service-specific values overriding root values where applicable.",
         "priority": "medium",
-        "dependencies": [
-          5
-        ],
-        "status": "pending",
+        "dependencies": [5],
+        "status": "done",
         "subtasks": []
       },
       {
@@ -96,10 +85,8 @@
         "details": "Add the `dagster-daemon` and `dagster-webserver` services to the root `docker-compose.yml`. Create a `workspace.yaml` file at the project root. This file should be configured to load code locations from the services within the monorepo.",
         "testStrategy": "Run `docker-compose up -d`. Verify the Dagster containers start successfully. Access the Dagster UI in a web browser and confirm that it loads without errors, showing an empty workspace.",
         "priority": "high",
-        "dependencies": [
-          5
-        ],
-        "status": "pending",
+        "dependencies": [5],
+        "status": "review",
         "subtasks": []
       },
       {
@@ -109,11 +96,7 @@
         "details": "Update `workspace.yaml` to point to the Dagster definitions within the `memos.as` service. Create a sample Dagster asset inside `memos.as`. This asset must import a Pydantic model from `apexsigma_core` and use it in its definition.",
         "testStrategy": "Refresh the Dagster UI. Verify that the `memos.as` code location appears. Find the sample asset and materialize it from the UI. The materialization should complete successfully without any `ModuleNotFoundError` or other import-related errors.",
         "priority": "high",
-        "dependencies": [
-          1,
-          6,
-          8
-        ],
+        "dependencies": [1, 6, 8],
         "status": "pending",
         "subtasks": []
       },
@@ -124,16 +107,14 @@
         "details": "Create a new markdown document named `VERIFIED_DOCKER_NETWORK_MAP_V2.md`. This document must accurately list all service names, images, ports, and volumes from the running root `docker-compose.yml` stack. It must include a 'Verified By' section for sign-offs. The old network map should be moved to an `_archive` directory.",
         "testStrategy": "Compare the generated markdown document against the output of `docker-compose config` and the live state from `docker ps`. Ensure every service, port, and volume is accurately documented. The task is complete only after the document is created and the old one is archived.",
         "priority": "medium",
-        "dependencies": [
-          9
-        ],
+        "dependencies": [9],
         "status": "pending",
         "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-09-12T23:54:30.257Z",
-      "updated": "2025-09-19T03:58:04.863Z",
+      "updated": "2025-09-21T21:00:57.493Z",
       "description": "Tasks for master context"
     }
   }

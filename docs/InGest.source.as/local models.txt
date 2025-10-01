@@ -1,8 +1,0 @@
-https://lmstudio.ai/models/qwen/qwen3-4b-thinking-2507
-https://lmstudio.ai/models/qwen/qwen3-4b-2507
-
-https://lmstudio.ai/models/openai/gpt-oss-20b
-https://lmstudio.ai/models/mistralai/devstral-small-2507
-
-https://lmstudio.ai/models/qwen/qwen3-coder-30b
-https://lmstudio.ai/models/mistralai/codestral-22b-v0.1

@@ -1,0 +1,84 @@
+# Command: session-start
+# Description: Initialize a new development session with goals and context
+# Category: development
+# Version: 1
+# Author: iFlow CLI
+
+description = "Initialize a new development session with goals and context"
+
+prompt = """
+AI Agent Instructions: ApexSigma Development Session Starter
+
+## Objective
+Your goal is to help the developer initialize a new development session by capturing session goals, context, and initial setup information. This will create a structured foundation for documenting the development work.
+
+## Session Initialization Process
+
+### Phase 1: Session Information Gathering
+
+1.  **Welcome and Introduction:**
+    -   Greet the developer and explain that this is the start of a documented development session
+    -   Explain that this session will be tracked and documented for future reference
+
+2.  **Session Goals Collection:**
+    -   Ask the developer to describe the primary goals for this development session
+    -   Encourage specific, measurable objectives
+    -   Example prompt: "What are your main goals for this development session?"
+
+3.  **Context and Background:**
+    -   Ask about the context or background that led to this session
+    -   Inquire about any relevant previous work or decisions
+    -   Example prompt: "What context or background should be considered for this work?"
+
+4.  **Technical Scope:**
+    -   Identify the technical areas, components, or files that will be involved
+    -   Ask about any specific technologies, frameworks, or tools to be used
+    -   Example prompt: "What technical components or areas will you be working with?"
+
+### Phase 2: Session Documentation Setup
+
+1.  **Session Metadata Creation:**
+    -   Generate a unique session ID (timestamp-based)
+    -   Record the start time of the session
+    -   Capture the developer's name or identifier
+    -   Store the collected goals, context, and technical scope
+
+2.  **Documentation Framework:**
+    -   Create a session documentation template with placeholders for:
+        - Session goals and context
+        - Progress tracking sections
+        - Technical achievements
+        - Problems encountered and resolved
+        - Lessons learned
+        - Next steps
+
+3.  **Integration Preparation:**
+    -   Prepare integration points with:
+        - Memos knowledge management system
+        - InGest-LLM content processing
+        - DevEnviro agent orchestration (if applicable)
+
+### Phase 3: Session Launch
+
+1.  **Confirmation and Summary:**
+    -   Present a summary of the session goals and context
+    -   Confirm that all information has been captured correctly
+    -   Provide instructions for tracking progress during the session
+
+2.  **Next Steps Guidance:**
+    -   Explain how to use the `session-progress` command to log updates
+    -   Explain how to use the `session-complete` command to finalize the session
+    -   Provide the session ID for reference
+
+3.  **Session Activation:**
+    -   Mark the session as active
+    -   Initialize the session tracking file
+    -   Output the session ID and a confirmation message
+
+## Output Format
+Provide a clear, structured output that includes:
+- Session ID
+- Confirmed goals and context
+- Next steps for the developer
+- Reminder of available session commands
+"""

@@ -1,0 +1,41 @@
+version: 0.1
+
+cli:
+  version: 1.25.0
+
+plugins:
+  sources:
+    - id: trunk
+      uri: https://github.com/trunk-io/plugins
+      ref: v1.7.2
+
+actions:
+  enabled:
+    - run-tests
+  definitions:
+    - id: run-tests
+      description: Run memos pytest suite and produce JUnit XML for Trunk uploads
+      run: C:/Users/steyn/.local/bin/poetry.exe run python -m pytest --junit-xml=services/memos.as/reports/junit.xml -o junit_family=xunit1
+lint:
+  enabled:
+    - yamllint@1.37.1
+    - taplo@0.10.0
+    - shfmt@3.6.0
+    - shellcheck@0.11.0
+    - osv-scanner@2.2.2
+    - prettier@3.6.2
+    - ruff@0.13.2
+    - trufflehog@3.90.8
+    - markdownlint@0.45.0
+    - isort@6.0.1
+    - hadolint@2.14.0
+    - git-diff-check
+    - checkov@3.2.472
+    - black@25.9.0
+    - bandit@1.8.6
+    - actionlint@1.7.7
+runtimes:
+  enabled:
+    - go@1.21.0
+    - node@22.16.0
+    - python@3.10.8

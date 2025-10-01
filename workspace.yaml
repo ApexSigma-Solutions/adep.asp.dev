@@ -1,0 +1,5 @@
+load_from:
+  - python_module: services.memos.as.app.dagster.repository
+  - python_file: services/devenviro.as/src/main.py
+  - python_file: services/InGest-LLM.as/src/ingest_llm_as/main.py
+  - python_file: services/tools.as/app/main.py

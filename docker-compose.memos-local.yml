@@ -1,0 +1,5 @@
+services:
+  memos-as:
+    build:
+      context: .
+      dockerfile: services/memos.as/Dockerfile

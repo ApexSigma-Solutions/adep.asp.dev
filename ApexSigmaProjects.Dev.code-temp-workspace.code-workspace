@@ -1,17 +1,44 @@
 {
 	"folders": [
 		{
+			"name": "ApexSigmaProjects.Dev",
 			"path": "."
 		},
 		{
-			"path": "../OneDrive/Apps/Omega Vault/ApexSigma"
+			"name": "Omega Vault",
+			"path": "../OneDrive/Apps/remotely-save/Omega Vault"
 		}
 	],
 	"settings": {
-	},
-	"extensions": {
-		"recommendations": [
-			"google.gemini-cli-vscode-ide-companion"
-		]
+		"powershell.cwd": "ApexSigmaProjects.Dev",
+		"git.decorations.enabled": false,
+		"markdown.validate.enabled": true,
+		"marktree.additionalIgnores": [
+			".git",
+			".gitignore",
+			".vscode/",
+			".idea/",
+			".settings/",
+			".vs/",
+			".code-workspace",
+			"yarn.lock",
+			"pnpm-lock.yaml",
+			"package-lock.json",
+			"README.md",
+			"LICENSE",
+			"LICENSE.md",
+			"CHANGELOG.md",
+			"CODE_OF_CONDUCT.md",
+			"CONTRIBUTING.md",
+			"SECURITY.md",
+			".editorconfig",
+			".gitattributes",
+			".mailmap",
+			"Apex Sigma Docker Network Convention.md",
+			"apexsigma.glossary.as.md",
+			"Valhalla Shield Engineering Standard v1.2.md"
+		],
+		"editor.fontSize": 14,
+		"semgrep.scan.onlyGitDirty": false
 	}
 }
