@@ -285,7 +285,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://langfuse:3000/api/public/health"]
+      test: ["CMD", "python", "-c", "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=2); conn.request('GET','/api/public/health'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -395,6 +395,8 @@ services:
       test:
         [
           "CMD",
+          "poetry",
+          "run",
           "python",
           "-c",
           "import sys; import os; sys.path.append('/app/app'); from src.listeners.gemini_cli_listener import GeminiCLIListener; sys.exit(0)",
@@ -425,7 +427,7 @@ services:
       dockerfile: Dockerfile
     container_name: apexsigma_devenviro_a2a_bridge
     ports:
-      - "8094:8000"
+      - "9184:8000"
     working_dir: /app/app
     command:
       [
@@ -561,7 +563,7 @@ services:
       dockerfile: Dockerfile
     container_name: apexsigma_tools_api
     ports:
-      - "8095:8000"
+      - "9185:8000"
     env_file:
       - .env
     environment:
@@ -615,7 +617,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      test: ["CMD", "python", "-c", "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=2); conn.request('GET','/'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)"]
       interval: 30s
       timeout: 10s
       retries: 3

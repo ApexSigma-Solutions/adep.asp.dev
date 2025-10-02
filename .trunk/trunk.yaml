@@ -22,7 +22,7 @@ lint:
     - taplo@0.10.0
     - shfmt@3.6.0
     - shellcheck@0.11.0
-    - osv-scanner@2.2.2
+    - osv-scanner@2.2.3
     - prettier@3.6.2
     - ruff@0.13.2
     - trufflehog@3.90.8
@@ -30,7 +30,7 @@ lint:
     - isort@6.0.1
     - hadolint@2.14.0
     - git-diff-check
-    - checkov@3.2.472
+    - checkov@3.2.473
     - black@25.9.0
     - bandit@1.8.6
     - actionlint@1.7.7
