@@ -88,31 +88,26 @@ class TestLangfuseEcosystem:
         client = langfuse_clients["apexsigma_main"]
         session_id = f"test-session-apexsigma-{uuid.uuid4().hex[:8]}"
 
-        # Create session
-        session = client.trace(
-            id=session_id,
+        # Create trace/span
+        span = client.start_span(
             name="ApexSigma Main Test Session",
-            user_id="test-user",
-            metadata={"service": "apexsigma_main", "test_type": "integration"},
-        )
-
-        # Create trace within session
-        trace = session.span(
-            id=f"test-trace-{uuid.uuid4().hex[:8]}",
-            name="Test Trace - ApexSigma Main",
-            metadata={"operation": "test_langfuse_integration"},
+            metadata={
+                "service": "apexsigma_main",
+                "test_type": "integration",
+                "session_id": session_id,
+            },
         )
 
         # Simulate some work
         time.sleep(0.1)
 
-        # End trace
-        trace.end()
+        # End span
+        span.end()
 
-        # End session
-        session.end()
+        # Flush to ensure data is sent
+        client.flush()
 
-        print(f"✅ ApexSigma Main: Session {session_id} and trace created successfully")
+        print(f"✅ ApexSigma Main: Session {session_id} and span created successfully")
         assert session_id is not None
 
     def test_ingest_llm_langfuse_session_and_trace(self, langfuse_clients):
@@ -123,31 +118,26 @@ class TestLangfuseEcosystem:
         client = langfuse_clients["ingest_llm"]
         session_id = f"test-session-ingest-llm-{uuid.uuid4().hex[:8]}"
 
-        # Create session
-        session = client.trace(
-            id=session_id,
+        # Create trace/span
+        span = client.start_span(
             name="InGest-LLM.as Test Session",
-            user_id="test-user",
-            metadata={"service": "ingest_llm", "test_type": "integration"},
-        )
-
-        # Create trace for content ingestion
-        trace = session.span(
-            id=f"test-trace-{uuid.uuid4().hex[:8]}",
-            name="Test Trace - Content Ingestion",
-            metadata={"operation": "content_ingestion", "content_type": "text"},
+            metadata={
+                "service": "ingest_llm",
+                "test_type": "integration",
+                "session_id": session_id,
+            },
         )
 
         # Simulate ingestion work
         time.sleep(0.1)
 
-        # End trace
-        trace.end()
+        # End span
+        span.end()
 
-        # End session
-        session.end()
+        # Flush to ensure data is sent
+        client.flush()
 
-        print(f"✅ InGest-LLM.as: Session {session_id} and trace created successfully")
+        print(f"✅ InGest-LLM.as: Session {session_id} and span created successfully")
         assert session_id is not None
 
     def test_devenviro_langfuse_session_and_trace(self, langfuse_clients):
@@ -158,31 +148,26 @@ class TestLangfuseEcosystem:
         client = langfuse_clients["devenviro"]
         session_id = f"test-session-devenviro-{uuid.uuid4().hex[:8]}"
 
-        # Create session
-        session = client.trace(
-            id=session_id,
+        # Create trace/span
+        span = client.start_span(
             name="Devenviro.as Test Session",
-            user_id="test-user",
-            metadata={"service": "devenviro", "test_type": "integration"},
-        )
-
-        # Create trace for agent orchestration
-        trace = session.span(
-            id=f"test-trace-{uuid.uuid4().hex[:8]}",
-            name="Test Trace - Agent Orchestration",
-            metadata={"operation": "agent_orchestration", "agent_count": 3},
+            metadata={
+                "service": "devenviro",
+                "test_type": "integration",
+                "session_id": session_id,
+            },
         )
 
         # Simulate orchestration work
         time.sleep(0.1)
 
-        # End trace
-        trace.end()
+        # End span
+        span.end()
 
-        # End session
-        session.end()
+        # Flush to ensure data is sent
+        client.flush()
 
-        print(f"✅ Devenviro.as: Session {session_id} and trace created successfully")
+        print(f"✅ Devenviro.as: Session {session_id} and span created successfully")
         assert session_id is not None
 
     def test_memos_langfuse_session_and_trace(self, langfuse_clients):
@@ -193,31 +178,26 @@ class TestLangfuseEcosystem:
         client = langfuse_clients["memos"]
         session_id = f"test-session-memos-{uuid.uuid4().hex[:8]}"
 
-        # Create session
-        session = client.trace(
-            id=session_id,
+        # Create trace/span
+        span = client.start_span(
             name="memOS.as Test Session",
-            user_id="test-user",
-            metadata={"service": "memos", "test_type": "integration"},
-        )
-
-        # Create trace for memory operations
-        trace = session.span(
-            id=f"test-trace-{uuid.uuid4().hex[:8]}",
-            name="Test Trace - Memory Operations",
-            metadata={"operation": "memory_retrieval", "memory_type": "episodic"},
+            metadata={
+                "service": "memos",
+                "test_type": "integration",
+                "session_id": session_id,
+            },
         )
 
         # Simulate memory work
         time.sleep(0.1)
 
-        # End trace
-        trace.end()
+        # End span
+        span.end()
 
-        # End session
-        session.end()
+        # Flush to ensure data is sent
+        client.flush()
 
-        print(f"✅ memOS.as: Session {session_id} and trace created successfully")
+        print(f"✅ memOS.as: Session {session_id} and span created successfully")
         assert session_id is not None
 
     def test_tools_langfuse_session_and_trace(self, langfuse_clients):
@@ -228,31 +208,26 @@ class TestLangfuseEcosystem:
         client = langfuse_clients["tools"]
         session_id = f"test-session-tools-{uuid.uuid4().hex[:8]}"
 
-        # Create session
-        session = client.trace(
-            id=session_id,
+        # Create trace/span
+        span = client.start_span(
             name="tools.as Test Session",
-            user_id="test-user",
-            metadata={"service": "tools", "test_type": "integration"},
-        )
-
-        # Create trace for tool execution
-        trace = session.span(
-            id=f"test-trace-{uuid.uuid4().hex[:8]}",
-            name="Test Trace - Tool Execution",
-            metadata={"operation": "tool_execution", "tool_name": "web_search"},
+            metadata={
+                "service": "tools",
+                "test_type": "integration",
+                "session_id": session_id,
+            },
         )
 
         # Simulate tool work
         time.sleep(0.1)
 
-        # End trace
-        trace.end()
+        # End span
+        span.end()
 
-        # End session
-        session.end()
+        # Flush to ensure data is sent
+        client.flush()
 
-        print(f"✅ tools.as: Session {session_id} and trace created successfully")
+        print(f"✅ tools.as: Session {session_id} and span created successfully")
         assert session_id is not None
 
     def test_langfuse_client_initialization(self, langfuse_clients):
@@ -277,8 +252,8 @@ class TestLangfuseEcosystem:
         # Check that clients are actually Langfuse instances
         for service_name, client in langfuse_clients.items():
             assert hasattr(
-                client, "trace"
-            ), f"{service_name} client should have trace method"
+                client, "start_span"
+            ), f"{service_name} client should have start_span method"
             assert hasattr(
-                client, "span"
-            ), f"{service_name} client should have span method"
+                client, "flush"
+            ), f"{service_name} client should have flush method"
