@@ -1,0 +1,11 @@
+# **Minimum Mandatory Setup**
+---
+ -* 1. Cleanup all unnecessary or invalid scripts and markdown documents.\
+-* 2. All tests that are outdated and no longer valid should be discarded as well.\
+-*  3. The entire repo must be unit tested from end to end, using pytest.cov, with a minimum of 85% coverage and 100% pass rate.\
+-*  4. The repo must be instrumented for traceability with Langfuse, Jaeger and Prometheus using OpenTelemetry, for the most fine grained metrics feasibly possible.\
+-*  5. Poetry and Pyproject for dependency management.\
+-*  6. Pyenv and Pydantic BaseSettings used for env management.\
+-*  7. MKDocs and Docstrings integrated for codified automated \Documentation.\
+-*  8. API end points properly tested using mock API calls and thoroughly documented, with swagger.\
+-*  9. Dockerfile, .vscode/, .github/, .gitignore, .dockerignore, .env.template, .env, files and folders all properly populated and linted in the root.\

@@ -1,0 +1,799 @@
+# POML (Prompt Orchestration Markup Language)
+
+```json
+{
+  "topic": "POML (Prompt Orchestration Markup Language) is a markup language designed for structured prompt engineering, offering components for content, data, intentions, and utilities, along with templating, styling, and SDKs for enhanced LLM application development.",
+  "knowledgeGraph": [
+    {
+      "id": "poml-language",
+      "category": "Core_Concept",
+      "label": "POML (Prompt Orchestration Markup Language)",
+      "detail": {
+        "description": "POML is an HTML-like markup language for creating structured prompts and conversations for Large Language Models (LLMs) [1, 2]. It aims to address challenges in prompt development like lack of structure, complex data integration, format sensitivity, and inadequate tooling [1].",
+        "pros": [
+          "Encourages modular design [3]",
+          "Enhances prompt readability, reusability, and maintainability [3]",
+          "Seamlessly integrates diverse data types [1, 3]",
+          "Decouples presentation styling from content [3]",
+          "Supports dynamic prompt generation via templating [3]",
+          "Provides a rich development toolkit with IDE extensions and SDKs [3]"
+        ]
+      },
+      "relevance_to_dev_assistant": "Fundamental concept for understanding the entire system. Developers will use POML to define prompts.",
+      "relationships": []
+    },
+    {
+      "id": "poml-components",
+      "category": "Core_Concept",
+      "label": "POML Components",
+      "detail": {
+        "description": "Semantic HTML-like tags used as building blocks within POML documents to structure content and define prompt elements [3, 4]. They are categorized into Basic Components, Intentions, Data Displays, and Utilities [4].",
+        "implementation_notes": "Component definitions are loaded from 'componentDocs.json' for detection and parsing [5]."
+      },
+      "relevance_to_dev_assistant": "Essential for guiding developers on how to structure their prompts and what elements are available for use.",
+      "relationships": [
+        {
+          "target_id": "basic-components",
+          "description": "include"
+        },
+        {
+          "target_id": "intentions-components",
+          "description": "include"
+        },
+        {
+          "target_id": "data-displays-components",
+          "description": "include"
+        },
+        {
+          "target_id": "utilities-components",
+          "description": "include"
+        },
+        {
+          "target_id": "ir-specification",
+          "description": "are represented in"
+        }
+      ]
+    },
+    {
+      "id": "ir-specification",
+      "category": "Core_Concept",
+      "label": "Intermediate Representation (IR)",
+      "detail": {
+        "description": "A parsed XML structure that POML components are converted into. It includes attributes applicable to all tags like 'speaker', 'original-start-index', and 'original-end-index' [6, 7].",
+        "implementation_notes": "The 'write' function in the TypeScript SDK converts an IR string into rich content or messages [8, 9]."
+      },
+      "relevance_to_dev_assistant": "Explains the internal data structure used for processing prompts, useful for debugging or advanced understanding of POML's pipeline.",
+      "relationships": [
+        {
+          "target_id": "poml-components",
+          "description": "are converted into"
+        },
+        {
+          "target_id": "poml-writers",
+          "description": "are processed by"
+        }
+      ]
+    },
+    {
+      "id": "extended-poml-file-format",
+      "category": "Core_Concept",
+      "label": "Extended POML File Format",
+      "detail": {
+        "description": "A design for a POML file format supporting mixed content (pure text like Markdown and POML markup elements) seamlessly integrated within a single file, addressing limitations of the original format [5, 10, 11].",
+        "pros": [
+          "Backward compatible with most existing POML files [11]",
+          "Supports pure text files with embedded POML elements [11]",
+          "Allows seamless switching between text and POML modes [11]",
+          "Simplifies migration of existing text files to POML [11]"
+        ]
+      },
+      "relevance_to_dev_assistant": "Crucial for developers wanting to integrate POML into existing text-based workflows or create more flexible prompt files.",
+      "relationships": [
+        {
+          "target_id": "current-poml-limitations",
+          "description": "addresses"
+        },
+        {
+          "target_id": "extended-poml-processing-pipeline",
+          "description": "is processed by"
+        }
+      ]
+    },
+    {
+      "id": "poml-context",
+      "category": "Core_Concept",
+      "label": "POML Context (PomlContext)",
+      "detail": {
+        "description": "A mutable object acting as the single source of truth for a POML file, passed through all readers during processing. It contains variables for substitutions, mappings for text content, merged stylesheets, minimum POML version, and source path [12, 13].",
+        "implementation_notes": "Used by `handleLet` to manage variables and accessed by the `PomlFile` constructor [14]."
+      },
+      "relevance_to_dev_assistant": "Helps developers understand how data and configurations are managed and shared across different parts of a POML document.",
+      "relationships": []
+    },
+    {
+      "id": "poml-styling",
+      "category": "Core_Concept",
+      "label": "POML Styling and Stylesheet",
+      "detail": {
+        "description": "Allows decoupling content from presentation. A CSS-like styling system enables modification of presentation aspects (e.g., verbosity, syntax format) via `<stylesheet>` definitions or inline attributes, mitigating LLM format sensitivity [3, 15].",
+        "implementation_notes": "Stylesheets are JSON objects placed under the root `<poml>` element. Components can be targeted by their tag name or `className` attribute [15, 16]."
+      },
+      "relevance_to_dev_assistant": "Provides flexible ways to control the output format of prompts, important for adapting to different LLM requirements or presentation needs.",
+      "relationships": [
+        {
+          "target_id": "poml-language",
+          "description": "is a key feature of"
+        }
+      ]
+    },
+    {
+      "id": "poml-templating-engine",
+      "category": "Core_Concept",
+      "label": "POML Templating Engine",
+      "detail": {
+        "description": "A built-in engine supporting dynamic content generation using variables (`{{ }}`), loops (`for`), conditionals (`if`), and variable definitions (`<let>`) [3, 17].",
+        "implementation_notes": "Expressions can be used in content and attribute values [17, 18]. `loop` variables (index, length, first, last) are available within `for` loops [19]."
+      },
+      "relevance_to_dev_assistant": "Enables dynamic and data-driven prompt generation, a crucial feature for complex LLM applications.",
+      "relationships": [
+        {
+          "target_id": "poml-language",
+          "description": "is a key feature of"
+        },
+        {
+          "target_id": "let-expressions",
+          "description": "includes"
+        },
+        {
+          "target_id": "for-attribute",
+          "description": "includes"
+        },
+        {
+          "target_id": "if-condition",
+          "description": "includes"
+        },
+        {
+          "target_id": "include-tag",
+          "description": "includes"
+        }
+      ]
+    },
+    {
+      "id": "meta-element",
+      "category": "Core_Concept",
+      "label": "Meta Element (`<meta>`)",
+      "detail": {
+        "description": "Provides metadata and configuration for POML documents, typically placed at the beginning. It supports version control, component management, response schema definitions, tool registration, and runtime parameters [20, 21].",
+        "implementation_notes": "Processed before any content parsing [22]. Can be used without a `type` attribute for general configuration or with a `type` attribute for specific functionalities like 'responseSchema', 'tool', or 'runtime' [23]."
+      },
+      "relevance_to_dev_assistant": "Crucial for configuring LLM behavior, defining structured outputs, and enabling tool use.",
+      "relationships": [
+        {
+          "target_id": "response-schema",
+          "description": "defines"
+        },
+        {
+          "target_id": "tool-registration",
+          "description": "enables"
+        },
+        {
+          "target_id": "runtime-parameters",
+          "description": "configures"
+        },
+        {
+          "target_id": "version-control",
+          "description": "enforces"
+        },
+        {
+          "target_id": "component-control",
+          "description": "manages"
+        }
+      ]
+    },
+    {
+      "id": "response-schema",
+      "category": "Core_Concept",
+      "label": "Response Schema",
+      "detail": {
+        "description": "Defines the expected structure of AI-generated responses, transforming free-form text generation into structured data generation. Can be specified in JSON Schema or Expression format (JavaScript) [24, 25].",
+        "implementation_notes": "JSON schemas support template expressions `{{ }}` [26]. Expression schemas are evaluated as JavaScript code with access to context variables and the 'z' (Zod) variable [26, 27]."
+      },
+      "relevance_to_dev_assistant": "Enables LLMs to return structured, parsable data, which is vital for integrating LLM outputs into automated workflows.",
+      "relationships": [
+        {
+          "target_id": "meta-element",
+          "description": "is defined by"
+        },
+        {
+          "target_id": "tool-registration",
+          "description": "is mutually exclusive with"
+        }
+      ]
+    },
+    {
+      "id": "tool-registration",
+      "category": "Core_Concept",
+      "label": "Tool Registration",
+      "detail": {
+        "description": "Enables AI models to interact with external functions by defining their names, descriptions, and expected parameters. Can be specified in JSON Schema or Expression format [27, 28].",
+        "implementation_notes": "Tool schemas support template expressions and JavaScript evaluation, similar to response schemas [29]."
+      },
+      "relevance_to_dev_assistant": "Allows LLMs to perform actions via external tools, expanding their capabilities beyond text generation.",
+      "relationships": [
+        {
+          "target_id": "meta-element",
+          "description": "is enabled by"
+        },
+        {
+          "target_id": "response-schema",
+          "description": "is mutually exclusive with"
+        }
+      ]
+    },
+    {
+      "id": "runtime-parameters",
+      "category": "Core_Concept",
+      "label": "Runtime Parameters",
+      "detail": {
+        "description": "Configure the language model's behavior during execution. Common parameters include `temperature`, `maxOutputTokens`, `model`, `topP`, `frequencyPenalty`, `presencePenalty`, and `seed` [30].",
+        "implementation_notes": "These parameters are automatically used in VSCode's test command functionality and handled by the Vercel AI SDK for different model providers [30, 31]."
+      },
+      "relevance_to_dev_assistant": "Provides fine-grained control over LLM inference, allowing developers to optimize model responses for specific use cases.",
+      "relationships": [
+        {
+          "target_id": "meta-element",
+          "description": "are set by"
+        }
+      ]
+    },
+    {
+      "id": "poml-sdks",
+      "category": "Core_Concept",
+      "label": "POML SDKs",
+      "detail": {
+        "description": "Software Development Kits provided for Node.js (TypeScript) and Python, facilitating seamless integration of POML into various application workflows and popular LLM frameworks [3, 6, 32].",
+        "implementation_notes": "Installation for TypeScript is via `npm install pomljs` and for Python via `pip install poml` [6, 33]."
+      },
+      "relevance_to_dev_assistant": "Offers practical ways for developers to programmatically interact with POML, embedding it within their applications.",
+      "relationships": [
+        {
+          "target_id": "poml-language",
+          "description": "provides API for"
+        },
+        {
+          "target_id": "poml-function-python",
+          "description": "is part of Python"
+        },
+        {
+          "target_id": "langchain-poml-template",
+          "description": "is part of Python"
+        }
+      ]
+    },
+    {
+      "id": "extended-poml-processing-pipeline",
+      "category": "Architectural_Pattern",
+      "label": "Extended POML Processing Pipeline",
+      "detail": {
+        "description": "A three-pass process for handling Extended POML files: Segmentation, Metadata Extraction, and Recursive Rendering [34].",
+        "implementation_notes": "This architecture refactors the existing `PomlFile` class, changing its role to a specialized parser for POML segments [35]."
+      },
+      "relevance_to_dev_assistant": "Illustrates the internal mechanism for processing mixed-content POML files, aiding in troubleshooting and understanding complex document flows.",
+      "relationships": [
+        {
+          "target_id": "extended-poml-file-format",
+          "description": "processes"
+        },
+        {
+          "target_id": "segmentation-pass",
+          "description": "consists of"
+        },
+        {
+          "target_id": "metadata-processing-pass",
+          "description": "consists of"
+        },
+        {
+          "target_id": "text-poml-dispatching",
+          "description": "consists of"
+        }
+      ]
+    },
+    {
+      "id": "segmentation-pass",
+      "category": "Algorithm",
+      "label": "Segmentation Pass",
+      "detail": {
+        "description": "The initial preprocessing step in the Extended POML pipeline. It scans raw file content using a stack-based algorithm to partition it into a hierarchical tree of `META`, `POML`, or `TEXT` segments by identifying their boundaries [34, 36]. Special `<text>` tags found within a POML segment are treated recursively as nested TEXT segments [36].",
+        "implementation_notes": "Outputs a `Segment` tree, with a `children` property for nested structures [36, 37]. Backward compatibility can revert to simpler parsing if the root is a single `<poml>` block [36]."
+      },
+      "relevance_to_dev_assistant": "Explains how mixed content files are initially broken down, which is foundational for understanding parsing behavior.",
+      "relationships": [
+        {
+          "target_id": "extended-poml-processing-pipeline",
+          "description": "is the first step of"
+        }
+      ]
+    },
+    {
+      "id": "metadata-processing-pass",
+      "category": "Algorithm",
+      "label": "Metadata Processing Pass",
+      "detail": {
+        "description": "The second step in the Extended POML pipeline. It traverses the segment tree to find all `META` segments, parses their content, populates the global `PomlContext` object, and then removes the `META` segments from the tree [12].",
+        "implementation_notes": "`PomlContext` is mutable, allowing stateful operations like `<let>` to have file-wide effect [12]."
+      },
+      "relevance_to_dev_assistant": "Details how document-level configurations and variables are applied, critical for understanding global settings.",
+      "relationships": [
+        {
+          "target_id": "extended-poml-processing-pipeline",
+          "description": "is the second step of"
+        },
+        {
+          "target_id": "poml-context",
+          "description": "populates"
+        },
+        {
+          "target_id": "meta-element",
+          "description": "processes"
+        }
+      ]
+    },
+    {
+      "id": "text-poml-dispatching",
+      "category": "Architectural_Pattern",
+      "label": "Text/POML Dispatching (Recursive Rendering)",
+      "detail": {
+        "description": "The third step in the Extended POML pipeline, which recursively renders the segment tree by dispatching segments to appropriate readers: `PureTextReader` for `TEXT` segments and `PomlReader` for `POML` segments [38].",
+        "implementation_notes": "`PureTextReader` handles Markdown and variable substitutions, while `PomlReader` replaces child `<text>` regions with placeholders before delegating to a modified `PomlFile` class for rendering [38, 39]."
+      },
+      "relevance_to_dev_assistant": "Explains how different content types (plain text vs. POML markup) are rendered and combined.",
+      "relationships": [
+        {
+          "target_id": "extended-poml-processing-pipeline",
+          "description": "is the third step of"
+        },
+        {
+          "target_id": "pure-text-reader",
+          "description": "uses"
+        },
+        {
+          "target_id": "poml-reader",
+          "description": "uses"
+        }
+      ]
+    },
+    {
+      "id": "poml-function-python",
+      "category": "Code_Implementation",
+      "label": "poml() function (Python)",
+      "detail": {
+        "description": "A core Python function that processes POML markup (from string or file path) with optional context and stylesheet. It returns the result in various formats, including 'raw', 'dict', 'openai_chat', 'langchain', or 'pydantic' objects [2, 40, 41].",
+        "implementation_notes": "Supports multi-modal content in chat format and integrates with backend tracing tools (Weave, AgentOps, MLflow) [42, 43]. Raises `FileNotFoundError`, `RuntimeError`, or `ValueError` for invalid inputs [44].",
+        "pros": [
+          "Flexible input (markup string or file path) [2]",
+          "Supports optional context and stylesheet for dynamic content and styling [2, 45]",
+          "Multiple output formats for integration with different LLM frameworks [41]",
+          "Built-in tracing for debugging and logging [42]"
+        ]
+      },
+      "relevance_to_dev_assistant": "The primary entry point for Python developers to use POML. Provides details on its capabilities and parameters.",
+      "relationships": [
+        {
+          "target_id": "poml-sdks",
+          "description": "is a core part of"
+        },
+        {
+          "target_id": "tracing",
+          "description": "is logged by"
+        }
+      ]
+    },
+    {
+      "id": "prompt-class-python",
+      "category": "Code_Implementation",
+      "label": "Prompt Class (Python)",
+      "detail": {
+        "description": "Builds an XML structure using ElementTree, supporting context-managed tags (e.g., using `with` blocks). It can add text content, dump the generated XML string (pretty-printed for debugging), and render the final XML [46-48].",
+        "implementation_notes": "Resets the stack of open elements on `__enter__` and cleans up on `__exit__`. Warnings are issued if tags remain open when rendering or exiting the context [47, 49, 50]."
+      },
+      "relevance_to_dev_assistant": "Useful for developers who want to programmatically construct POML prompts using Python's object-oriented features.",
+      "relationships": [
+        {
+          "target_id": "poml-sdks",
+          "description": "is part of Python"
+        },
+        {
+          "target_id": "unclosed-tags",
+          "description": "can result in warnings or errors if not handled correctly"
+        }
+      ]
+    },
+    {
+      "id": "langchain-poml-template",
+      "category": "Code_Implementation",
+      "label": "LangchainPomlTemplate (Python)",
+      "detail": {
+        "description": "A LangChain-compatible prompt template that leverages POML markup for rich prompt formatting, including speaker modes and structured content. It can load templates from files or strings and format them into `ChatPromptValue` (for chat messages) or `StringPromptValue` (for plain text) [51, 52].",
+        "cons": [
+          "Does not support `from_examples()` method; will raise `NotImplementedError` [53]"
+        ]
+      },
+      "relevance_to_dev_assistant": "Enables seamless integration of POML prompts within LangChain applications, important for developers using this framework.",
+      "relationships": [
+        {
+          "target_id": "poml-sdks",
+          "description": "is part of Python"
+        },
+        {
+          "target_id": "poml-integration",
+          "description": "is an example of"
+        }
+      ]
+    },
+    {
+      "id": "poml-writers",
+      "category": "Code_Implementation",
+      "label": "POML Writers (TypeScript)",
+      "detail": {
+        "description": "Classes responsible for converting the Intermediate Representation (IR) string into various output formats such as Markdown, JSON, HTML, CSV, TSV, XML, YAML, Free (plain text), and Multimedia [54-64].",
+        "implementation_notes": "Key methods include `writeElementTree` (processes XML elements), `writeMessages` (generates speaker-based messages), and `writeWithSourceMap` (provides detailed mapping between input and output segments) [55, 56, 56, 57, 59-65, 65, 66, 66, 67, 67-91]."
+      },
+      "relevance_to_dev_assistant": "Explains how POML renders its content into different formats, useful for customizing output and understanding rendering logic.",
+      "relationships": [
+        {
+          "target_id": "ir-specification",
+          "description": "convert"
+        }
+      ]
+    },
+    {
+      "id": "current-poml-limitations",
+      "category": "Pitfall_or_Anti_Pattern",
+      "label": "Current POML Limitations",
+      "detail": {
+        "description": "The original POML implementation required files to be fully enclosed in `<poml>` tags (though outer optional, still XML parsed), necessitating escaping of characters like `<` and `>` in text content, and making gradual migration of existing text files difficult [10, 92].",
+        "cons": [
+          "Friction when writing primarily text-based documents with occasional POML components [11]",
+          "Need to escape special characters in text content [11]",
+          "Challenges in gradually migrating existing text files to use POML features [11]"
+        ]
+      },
+      "relevance_to_dev_assistant": "Highlights areas where POML might pose challenges or require workarounds, informing developers about best practices or upcoming improvements.",
+      "relationships": [
+        {
+          "target_id": "extended-poml-file-format",
+          "description": "are addressed by"
+        }
+      ]
+    },
+    {
+      "id": "multiple-response-tool-conflict",
+      "category": "Pitfall_or_Anti_Pattern",
+      "label": "Multiple Response/Tool Conflict",
+      "detail": {
+        "description": "Only one `responseSchema` meta element is allowed per document; multiple will result in an error [27]. Additionally, `responseSchema` and `tool` meta elements are mutually exclusive and cannot be used together in the same POML document [27, 28].",
+        "cons": [
+          "Restricts documents to either structured responses OR tool calling, not both simultaneously."
+        ]
+      },
+      "relevance_to_dev_assistant": "Critical constraint for prompt design, preventing developers from attempting unsupported configurations.",
+      "relationships": []
+    },
+    {
+      "id": "unclosed-tags",
+      "category": "Pitfall_or_Anti_Pattern",
+      "label": "Unclosed Tags",
+      "detail": {
+        "description": "When using the Python `Prompt` class, if `_ImplicitDualTagHandler` contexts (tags) are still open when the `Prompt` context itself exits, warnings will be issued. Attempting to render the final XML with open tags will raise a `ValueError` [47, 50].",
+        "cons": [
+          "Can lead to unexpected behavior or runtime errors.",
+          "Requires careful management of `with` blocks for tags."
+        ]
+      },
+      "relevance_to_dev_assistant": "Informs developers about a common coding error and how to avoid it when programmatically building prompts in Python.",
+      "relationships": [
+        {
+          "target_id": "prompt-class-python",
+          "description": "is a risk for"
+        }
+      ]
+    },
+    {
+      "id": "basic-components",
+      "category": "Core_Concept",
+      "label": "Basic Components",
+      "detail": {
+        "description": "Fundamental POML components for basic content formatting and structure. Examples include `Audio`, `Bold`, `CaptionedParagraph`, `Code`, `Header`, `Inline`, `Italic`, `List`, `ListItem`, `Newline`, `Paragraph`, `Strikethrough`, `SubContent`, `Text`, and `Underline` [4, 93-108]."
+      },
+      "relevance_to_dev_assistant": "Provides a quick reference for common text formatting and structural elements.",
+      "relationships": [
+        {
+          "target_id": "poml-components",
+          "description": "are a category of"
+        }
+      ]
+    },
+    {
+      "id": "intentions-components",
+      "category": "Core_Concept",
+      "label": "Intentions Components",
+      "detail": {
+        "description": "POML components used to define the intent or expected behavior of the LLM. Examples include `Example`, `ExampleInput`, `ExampleOutput`, `ExampleSet`, `Hint`, `Introducer`, `OutputFormat`, `Question`, `Role`, `StepwiseInstructions`, and `Task` [4, 109-122]."
+      },
+      "relevance_to_dev_assistant": "Helps developers clearly specify the prompt's purpose and expected interaction patterns.",
+      "relationships": [
+        {
+          "target_id": "poml-components",
+          "description": "are a category of"
+        }
+      ]
+    },
+    {
+      "id": "data-displays-components",
+      "category": "Core_Concept",
+      "label": "Data Displays Components",
+      "detail": {
+        "description": "POML components designed for embedding or referencing various external data sources. Examples include `Document`, `Image`, `Object`, and `Table` [4, 123-126]."
+      },
+      "relevance_to_dev_assistant": "Crucial for providing LLMs with diverse external data as context, enhancing the model's ability to reason over real-world information.",
+      "relationships": [
+        {
+          "target_id": "poml-components",
+          "description": "are a category of"
+        }
+      ]
+    },
+    {
+      "id": "utilities-components",
+      "category": "Core_Concept",
+      "label": "Utilities Components",
+      "detail": {
+        "description": "POML components for displaying conversations, directory structures, and web content. Examples include `Conversation`, `Folder`, `HumanMessage`, `MessageContent`, `SystemMessage`, `Tree`, and `Webpage` [4, 127-132]."
+      },
+      "relevance_to_dev_assistant": "Provides tools for handling common utility tasks within prompt engineering, like structuring chat history or displaying external web content.",
+      "relationships": [
+        {
+          "target_id": "poml-components",
+          "description": "are a category of"
+        }
+      ]
+    },
+    {
+      "id": "let-expressions",
+      "category": "Core_Concept",
+      "label": "Let Expressions (`<let>`)",
+      "detail": {
+        "description": "The `<let>` tag allows defining variables, importing data from external files (JSON, text, CSV), and setting inline JSON values within a POML template [133-135].",
+        "implementation_notes": "Can set variables from a `value` attribute, import from a `src` file (inferring type or explicitly with `type`), or use inline JSON content [133-135]. If `src` is used without `name` for a JSON file, its properties are added directly to the context [134]."
+      },
+      "relevance_to_dev_assistant": "Enables variable management and data injection, key for dynamic and reusable prompts.",
+      "relationships": [
+        {
+          "target_id": "poml-templating-engine",
+          "description": "is a feature of"
+        },
+        {
+          "target_id": "expressions",
+          "description": "can define variables used in"
+        }
+      ]
+    },
+    {
+      "id": "expressions",
+      "category": "Core_Concept",
+      "label": "Expressions (`{{ }}`)",
+      "detail": {
+        "description": "Used to evaluate variables or expressions dynamically within POML markup, enclosed in double curly brackets (`{{ }}`). Supported in content and attribute values [17, 18].",
+        "implementation_notes": "Supports JavaScript expressions including variables, arithmetic, string concatenation, array/object property access, function calls, and ternary operators [18]."
+      },
+      "relevance_to_dev_assistant": "Fundamental for adding dynamic behavior and data integration into prompts.",
+      "relationships": [
+        {
+          "target_id": "poml-templating-engine",
+          "description": "is a feature of"
+        }
+      ]
+    },
+    {
+      "id": "type-autocasting",
+      "category": "Technical_Parameter",
+      "label": "Type Auto-casting in Attributes",
+      "detail": {
+        "description": "Attribute values are automatically cast to their defined types (boolean, number, object, string) based on component documentation, simplifying type handling for users [136].",
+        "implementation_notes": "For booleans, values like 'true', 1, '1' cast to `true`; 'false', 0, '0' cast to `false`. Numbers are parsed from strings or expressions. Objects attempt JSON parsing. Strings are unchanged [136]."
+      },
+      "relevance_to_dev_assistant": "Reduces boilerplate and potential errors for developers by handling type conversions automatically.",
+      "relationships": []
+    },
+    {
+      "id": "for-attribute",
+      "category": "Core_Concept",
+      "label": "For Attribute (`for`)",
+      "detail": {
+        "description": "Enables looping over a list of items within POML components. The syntax is `for=\"itemName in listName\"`. Special `loop` variables (e.g., `loop.index`, `loop.length`) are available inside the loop [19].",
+        "pros": [
+          "Enables iterative content generation, useful for examples or structured lists."
+        ]
+      },
+      "relevance_to_dev_assistant": "Allows developers to generate repetitive content efficiently, such as multiple examples from a data array.",
+      "relationships": [
+        {
+          "target_id": "poml-templating-engine",
+          "description": "is a feature of"
+        }
+      ]
+    },
+    {
+      "id": "if-condition",
+      "category": "Core_Concept",
+      "label": "If Condition (`if`)",
+      "detail": {
+        "description": "Allows conditional rendering of elements using the `if` attribute. The value can be a simple boolean variable name or a POML expression [137].",
+        "pros": [
+          "Enables dynamic content based on conditions."
+        ]
+      },
+      "relevance_to_dev_assistant": "Provides control flow for prompt content, allowing for flexible and adaptive prompt generation.",
+      "relationships": [
+        {
+          "target_id": "poml-templating-engine",
+          "description": "is a feature of"
+        }
+      ]
+    },
+    {
+      "id": "include-tag",
+      "category": "Core_Concept",
+      "label": "Include Tag (`<include>`)",
+      "detail": {
+        "description": "Enables splitting prompts into multiple files and including them using the `<include src=\"file.poml\" />` tag. Contents are injected in place, and variables from the current context are available in the included file [138].",
+        "implementation_notes": "Supports `for` and `if` attributes for conditional inclusion and looping [138]. Handled at a higher level in the processing pipeline, invoking segmentation, metadata, and rendering for the included file [14]."
+      },
+      "relevance_to_dev_assistant": "Promotes modularity and reusability of prompt components across different files.",
+      "relationships": [
+        {
+          "target_id": "poml-templating-engine",
+          "description": "is a feature of"
+        }
+      ]
+    },
+    {
+      "id": "tracing",
+      "category": "Core_Concept",
+      "label": "Tracing",
+      "detail": {
+        "description": "Ability to enable or disable logging of `poml` calls, including markup, context, stylesheet, and result. Supports local tracing (saving files to disk) and integrations with external backends like Weights & Biases Weave, AgentOps, and MLflow (which require local tracing) [42, 139, 140].",
+        "implementation_notes": "Controlled via `set_trace()` function in Python SDK [139]. `trace_artifact()` allows writing additional artifact files for the most recent `poml` call [141]."
+      },
+      "relevance_to_dev_assistant": "Provides observability for prompt processing, crucial for debugging, auditing, and optimizing LLM interactions.",
+      "relationships": [
+        {
+          "target_id": "poml-function-python",
+          "description": "logs calls of"
+        },
+        {
+          "target_id": "poml-integration",
+          "description": "supports"
+        }
+      ]
+    },
+    {
+      "id": "poml-integration",
+      "category": "Core_Concept",
+      "label": "POML Integrations",
+      "detail": {
+        "description": "POML provides integrations with various tools and frameworks, such as AgentOps, LangChain, MLflow, and Weave, to enhance observability and workflow management [142].",
+        "implementation_notes": "Each integration includes functions like `log_poml_call` to log `poml` executions to the respective platform [143-145]."
+      },
+      "relevance_to_dev_assistant": "Shows how POML can fit into existing MLOps and LLM development ecosystems, making it more appealing for enterprise use.",
+      "relationships": [
+        {
+          "target_id": "tracing",
+          "description": "leverages"
+        },
+        {
+          "target_id": "langchain-poml-template",
+          "description": "is part of"
+        }
+      ]
+    },
+    {
+      "id": "version-control",
+      "category": "Core_Concept",
+      "label": "Version Control",
+      "detail": {
+        "description": "Ensures compatibility between POML documents and the runtime by specifying minimum (`minVersion`) and maximum (`maxVersion`) required POML versions within the `<meta>` tag. Uses semantic versioning [31, 146].",
+        "pros": [
+          "Prevents runtime errors due to feature mismatches."
+        ]
+      },
+      "relevance_to_dev_assistant": "Important for managing prompt lifecycles and ensuring consistent behavior across different POML runtime environments.",
+      "relationships": [
+        {
+          "target_id": "meta-element",
+          "description": "is configured by"
+        }
+      ]
+    },
+    {
+      "id": "component-control",
+      "category": "Core_Concept",
+      "label": "Component Control",
+      "detail": {
+        "description": "Allows dynamically enabling or disabling POML components within a document using the `components` attribute in the `<meta>` tag. Prefixing with `-` disables, `+` re-enables [146, 147].",
+        "pros": [
+          "Useful for conditional content or feature flags.",
+          "Can restrict elements in specific contexts."
+        ],
+        "implementation_notes": "Aliases can be disabled independently of the main component name [147]."
+      },
+      "relevance_to_dev_assistant": "Offers flexibility in prompt design by allowing or disallowing specific components based on context or deployment environment.",
+      "relationships": [
+        {
+          "target_id": "meta-element",
+          "description": "is configured by"
+        }
+      ]
+    },
+    {
+      "id": "pure-text-reader",
+      "category": "Architectural_Pattern",
+      "label": "PureTextReader",
+      "detail": {
+        "description": "A component of the Text/POML Dispatching pass. It handles `TEXT` segments by rendering their content, potentially using a Markdown processor, and performing variable substitutions (`{{...}}`) [38]."
+      },
+      "relevance_to_dev_assistant": "Explains how plain text and variables are processed and rendered within mixed-content POML files.",
+      "relationships": [
+        {
+          "target_id": "text-poml-dispatching",
+          "description": "is used by"
+        },
+        {
+          "target_id": "poml-reader",
+          "description": "delegates to for child POML segments"
+        }
+      ]
+    },
+    {
+      "id": "poml-reader",
+      "category": "Architectural_Pattern",
+      "label": "PomlReader",
+      "detail": {
+        "description": "A component of the Text/POML Dispatching pass. Before parsing, it replaces child `<text>` regions with self-closing placeholders (`<text ref=\"TEXT_ID\" />`) and stores the original content in `context.texts`. It then instantiates a modified `PomlFile` class and calls `pomlFile.react(context)` to render the segment [39, 148].",
+        "implementation_notes": "The modified `PomlFile` class removes `autoAddPoml` logic and receives the `PomlContext` object [14, 35]. It handles parsing `TEXT` placeholders by looking up content from `context.texts` [149]."
+      },
+      "relevance_to_dev_assistant": "Shows how POML blocks are specifically processed, including how pure text within POML is handled.",
+      "relationships": [
+        {
+          "target_id": "text-poml-dispatching",
+          "description": "is used by"
+        },
+        {
+          "target_id": "poml-file-class",
+          "description": "delegates to"
+        }
+      ]
+    },
+    {
+      "id": "poml-file-class",
+      "category": "Code_Implementation",
+      "label": "PomlFile Class (TypeScript)",
+      "detail": {
+        "description": "In the refactored design for Extended POML, `PomlFile` is a specialized parser for POML segments. It no longer auto-wraps content with `<poml>` tags and directly accepts a `PomlContext` object. It handles state management (e.g., `<let>` tags) and parsing of `<text ref=\"...\" />` placeholders [14, 35, 149].",
+        "implementation_notes": "Methods include `getCompletions`, `getExpressionEvaluations`, `getHoverToken`, `getResponseSchema`, `getRuntimeParameters`, `getToolsSchema`, and `react` [150-152]."
+      },
+      "relevance_to_dev_assistant": "Details the internal workings of POML file processing at a granular level, useful for advanced customization or debugging.",
+      "relationships": [
+        {
+          "target_id": "poml-reader",
+          "description": "is instantiated and called by"
+        },
+        {
+          "target_id": "extended-poml-processing-pipeline",
+          "description": "is a key component in"
+        }
+      ]
+    }
+  ]
+}
+```

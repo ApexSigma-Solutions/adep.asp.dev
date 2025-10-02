@@ -1,0 +1,107 @@
+.linear-issues-container {
+    margin: 1em 0;
+}
+
+.linear-issue {
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+.linear-issue-header {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin-bottom: 0.5em;
+}
+
+.linear-issue-title {
+    font-weight: 600;
+    text-decoration: none;
+    flex-grow: 1;
+}
+
+.linear-issue-status {
+    font-size: 0.85em;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background-color: var(--background-modifier-border);
+}
+
+.linear-issue-metadata {
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.linear-issue-due-date {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+/* Due date status styles */
+.linear-issue-due-date.overdue {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ff4444;
+}
+
+.linear-issue-due-date.due-today {
+    background-color: rgba(255, 165, 0, 0.1);
+    color: #ffa500;
+}
+
+.linear-issue-due-date.due-tomorrow {
+    background-color: rgba(0, 122, 255, 0.1);
+    color: #007aff;
+}
+
+.linear-issue-due-date.upcoming {
+    background-color: rgba(52, 199, 89, 0.1);
+    color: #34c759;
+}
+
+.linear-issue-due-date.no-date {
+    background-color: rgba(128, 128, 128, 0.1);
+    color: var(--text-muted);
+}
+
+/* Status-specific styles */
+.linear-status-todo {
+    background-color: #e2e8f0;
+    color: #1a202c;
+}
+
+.linear-status-in.progress {
+    background-color: #3182ce;
+    color: white;
+}
+
+.linear-status-done {
+    background-color: #48bb78;
+    color: white;
+}
+
+.linear-status-canceled {
+    background-color: #718096;
+    color: white;
+}
+
+.linear-status-backlog {
+    background-color: #cbd5e0;
+    color: #2d3748;
+}
+
+.linear-issue-description {
+    font-size: 0.9em;
+    color: var(--text-muted);
+    margin-top: 0.5em;
+} 

@@ -1,0 +1,21 @@
+{
+  "alwaysUpdateLinks": true,
+  "showUnsupportedFiles": true,
+  "propertiesInDocument": "visible",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "Staging",
+  "attachmentFolderPath": "./attached",
+  "readableLineLength": true,
+  "showLineNumber": true,
+  "showInlineTitle": true,
+  "uriCallbacks": true,
+  "trashOption": "local",
+  "userIgnoreFilters": [
+    "Junkyard/",
+    "copilot/",
+    "Templates/",
+    "Staging/"
+  ],
+  "livePreview": true,
+  "defaultViewMode": "source"
+}

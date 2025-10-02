@@ -1,0 +1,424 @@
+{
+  "userId": "d0949bce-cf07-4089-91fa-02dc6b16457f",
+  "isPlusUser": false,
+  "plusLicenseKey": "",
+  "openAIApiKey": "enc_desk_djEwyQKpfofi006FUNE8hBHoRfrVe5smeDIMYbTB2oxzKCoI4KAhLvQEQxprT9QwADAAry+NXOkPfY4cKDsAwIGmTkjYO79cblrPIbBudbjLuhYPb60WGqLSvx/VZspK+E7dTqpF/UUKuP+50GbxPw+Ub/eyUSrnP+msW++sj98DgG28goM3KxGMlPXACSFvYSwXgxfUdtimjIlnm9FVvKYEYAimu14Mz06mpN5n6AcwtbVBAD8HxpgWm7x550CYcszc",
+  "openAIOrgId": "",
+  "huggingfaceApiKey": "",
+  "cohereApiKey": "",
+  "anthropicApiKey": "enc_desk_djEwL4GyZyGy1hY7b8u0IQsfz109hAQPqkPZZI08lgBD9mxgBCc/6O3Lay0Q8yAgTA4gJWlLZYA95LF+XlbpUeNRHlyJ/bgc5VHVfyo5r+4FvBYsZMaMxWeVAADfwPmbCJn+VyIiNy3MMtfx5frt0ptrbf7BtsY7aeX6xAVADuzi7r26nfiQSeDlvQ==",
+  "azureOpenAIApiKey": "",
+  "azureOpenAIApiInstanceName": "",
+  "azureOpenAIApiDeploymentName": "",
+  "azureOpenAIApiVersion": "",
+  "azureOpenAIApiEmbeddingDeploymentName": "",
+  "googleApiKey": "enc_desk_djEw/fqi3DWeN7F/3VmjOrRBU3orqlyHMgHROXNEdlDhhoKdf0zshE4fFMsNc98xhJddEv8EKwKCVr5uS+nESElg1fBZBA==",
+  "openRouterAiApiKey": "enc_desk_djEw5Aj9s9lkrnVhMm4mLODuV6LoQ5NJuPyUBO2ghrAiv9Dz6tIU9fbTsFw2Vz7/RpFfv2mvyTGzAkxoV0ogj98MV7HTKVNRxG80sAUi1caaQru4H90qU9fSu4I2arAJkMy926BjAE0=",
+  "xaiApiKey": "enc_desk_djEwUtFCL9KC8VWhCAjljs4KBxdcYYcgoMCHcL6SxN1asPyYc4lizsFIbyI9sZL9LsjehAhXt6JoPo1d0LNn01a/pwobB9exd3eeEidGRBof/121MVtEUorUvZyzizxGBRcq4YjG9vfUgi8A1mvWU8TtlA==",
+  "mistralApiKey": "enc_desk_djEw9HVCAlthc/8auIUYSFONYUQXfaTn97JZ7ypgYU/OVO+m2mkDChlSshGicSAHAGrSVpn6VDKH8zCovOOh",
+  "deepseekApiKey": "enc_desk_djEwSfHqK2+Bm1ngTH36NiOMqmmaz50CEoNZqMXOc+2K/WB5vcF85uqwA6RPKhPQE4azkYXloESzK2pnCysHyRHq",
+  "defaultChainType": "vault_qa",
+  "defaultModelKey": "gemini-2.5-pro|google",
+  "embeddingModelKey": "gemini-embedding-001|google",
+  "temperature": 0.1,
+  "maxTokens": 6000,
+  "contextTurns": 15,
+  "userSystemPrompt": "Adopt a skeptical, questioning approach. Always do what is in the best interest of the prompter, but don't just agree for the sake of making the user feel comfortable. Always check facts and calculations twice, and verify data whenever possible. Respect is earned, and reciprocated. You should therefore offer the same level of respect as you are shown. Be empathetic and understanding in your responses, but critical and scrutinizing when evaluating the user. Be innovative and think outside the box, look for edge case technologies and concepts when brainstorming new ideas and projects. Be practical above all. Be humble when appropriate. Focus on the core point and elaborate and ask follow-up questions, if more clarity is needed. Get right to the point. Keep it relaxed and easygoing. Respond briefly and directly. Tell it like it is; don't sugar-coat responses. Take a forward-thinking view. Use esoteric wisdom and knowledge to advise me. Use an encouraging tone. Use quick and clever humor when appropriate.\n\nRemember to adopt a personality and mindset that is Strategic & Granular, A Focused Finisher, Automation-Obsessed, and The Guardian of Reality. Adopt a communication style that is Direct, clear, and data-driven. When something is \"done,\" it means it's tested, documented, automated, and ready for anything.\n\nYou are assistant to Sean Steyn, who is a logical thinker, formally trained in Hospitality. He has worked in the hospitality industry for the past two decades and is currently in his second year working in a more suited position. He now analyzes the stock movements in the 250+ coffee shops owned by Vida e Caffe in South Africa. You are also the curator and guardian of his personal knowledge vault. \n\nUse quick and clever humor when appropriate. Tell it like it is; don't sugar-coat responses. Take a forward-thinking view. Use esoteric wisdom and knowledge to advise me. Use an encouraging tone. Be practical above all. Be empathetic and understanding in your responses. Always be respectful. Be innovative and think outside the box. Take a forward-thinking view. Be humble when appropriate. Keep it relaxed and easygoing. Get right to the point. Respond briefly and directly. Focus on the core point without elaboration or follow-up questions, unless more clarity is needed. Use deeper thinking if a problem is more complicated. Always do what is in the best interest of the prompter (Me). Always check facts and calculations twice. Adopt a skeptical, questioning approach. Do not be afraid to use profanity as swear words are part of the English language, and are merely descriptive adjectives. Local South African and Cape Town slang is to be adopted when learnt and understood. It is ok to be a little dark at times.\n\nDo not be afraid to use profanity as swear words are part of the English language, and are merely descriptive adjectives. Local South African and Cape Town slang is to be adopted when learnt and understood. It is ok to be a little dark at times.",
+  "openAIProxyBaseUrl": "",
+  "openAIEmbeddingProxyBaseUrl": "",
+  "stream": true,
+  "defaultSaveFolder": "copilot/copilot-conversations",
+  "defaultConversationTag": "copilot-conversation",
+  "autosaveChat": true,
+  "generateAIChatTitleOnSave": true,
+  "includeActiveNoteAsContext": true,
+  "defaultOpenArea": "view",
+  "customPromptsFolder": "copilot/copilot-custom-prompts",
+  "indexVaultToVectorStore": "ON MODE SWITCH",
+  "qaExclusions": "copilot",
+  "qaInclusions": "",
+  "chatNoteContextPath": "",
+  "chatNoteContextTags": [],
+  "enableIndexSync": false,
+  "debug": false,
+  "enableEncryption": true,
+  "maxSourceChunks": 33,
+  "groqApiKey": "",
+  "activeModels": [
+    {
+      "name": "copilot-plus-flash",
+      "provider": "copilot-plus",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "plusExclusive": true,
+      "projectEnabled": false,
+      "capabilities": [
+        "vision"
+      ],
+      "enableCors": false,
+      "apiKey": ""
+    },
+    {
+      "name": "google/gemini-2.5-flash-lite",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "google/gemini-2.5-flash",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "google/gemini-2.5-pro",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "gpt-5",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "gpt-5-mini",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "gpt-5-nano",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "gpt-4.1",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "gpt-4.1-mini",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "openai/gpt-4.1",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": false,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "openai/gpt-4.1-mini",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": false,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "x-ai/grok-4-fast:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": false,
+      "projectEnabled": true,
+      "apiKey": ""
+    },
+    {
+      "name": "gpt-4.1-nano",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "claude-sonnet-4-20250514",
+      "provider": "anthropic",
+      "enabled": true,
+      "isBuiltIn": true,
+      "capabilities": [
+        "reasoning",
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "claude-3-7-sonnet-latest",
+      "provider": "anthropic",
+      "enabled": true,
+      "isBuiltIn": true,
+      "capabilities": [
+        "reasoning",
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "grok-3-beta",
+      "provider": "xai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "apiKey": ""
+    },
+    {
+      "name": "grok-3-mini-beta",
+      "provider": "xai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "apiKey": ""
+    },
+    {
+      "name": "gemini-2.5-flash",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "gemini-2.5-flash-lite",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "gemini-2.5-pro",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "azure-openai",
+      "provider": "azure openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "apiKey": ""
+    },
+    {
+      "name": "deepseek-chat",
+      "provider": "deepseek",
+      "enabled": true,
+      "isBuiltIn": true,
+      "apiKey": ""
+    },
+    {
+      "name": "deepseek-reasoner",
+      "provider": "deepseek",
+      "enabled": true,
+      "isBuiltIn": true,
+      "capabilities": [
+        "reasoning"
+      ],
+      "apiKey": ""
+    },
+    {
+      "name": "mistral-large-latest",
+      "provider": "mistralai",
+      "apiKey": "enc_desk_djEwMzXMUZ9dVMw23Pc7Qh3R4bV6fMHVqW+jL98f21u1ZCzrwnmXWlgIlDWB9OSkemLwLZtvRaY2CMwxZeCR",
+      "enabled": true
+    },
+    {
+      "name": "mistralai/mistral-7b-instruct:free",
+      "provider": "openrouterai",
+      "apiKey": "enc_desk_djEwVzdoxam65M/NgsdUAWVlr9K+kDxO2EuFDqPHLwgnNBJgOXHUYZmAVWMcOmVGQNqK7+P2T2g2tqUKuzc7NK2bkz6O4x/LCU1Xp9gV8zUJ4GnmcXz5fwpEqmUxttQmMPcc4lknVUI=",
+      "enabled": true
+    }
+  ],
+  "activeEmbeddingModels": [
+    {
+      "name": "copilot-plus-small",
+      "provider": "copilot-plus",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "plusExclusive": true,
+      "apiKey": ""
+    },
+    {
+      "name": "copilot-plus-large",
+      "provider": "copilot-plus-jina",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "plusExclusive": true,
+      "believerExclusive": true,
+      "dimensions": 1024,
+      "apiKey": ""
+    },
+    {
+      "name": "copilot-plus-multilingual",
+      "provider": "copilot-plus-jina",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "plusExclusive": true,
+      "dimensions": 512,
+      "apiKey": ""
+    },
+    {
+      "name": "text-embedding-3-small",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "apiKey": ""
+    },
+    {
+      "name": "gemini-embedding-001",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "apiKey": ""
+    },
+    {
+      "name": "text-embedding-3-large",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "apiKey": ""
+    },
+    {
+      "name": "embed-multilingual-light-v3.0",
+      "provider": "cohereai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "apiKey": ""
+    },
+    {
+      "name": "text-embedding-004",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "apiKey": ""
+    },
+    {
+      "name": "azure-openai",
+      "provider": "azure openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "apiKey": ""
+    }
+  ],
+  "embeddingRequestsPerMin": 60,
+  "embeddingBatchSize": 16,
+  "disableIndexOnMobile": true,
+  "showSuggestedPrompts": true,
+  "showRelevantNotes": true,
+  "numPartitions": 1,
+  "lexicalSearchRamLimit": 280,
+  "promptUsageTimestamps": {},
+  "promptSortStrategy": "timestamp",
+  "defaultConversationNoteName": "{$topic}@{$date}_{$time}",
+  "inlineEditCommands": [],
+  "projectList": [],
+  "enableAutocomplete": false,
+  "autocompleteAcceptKey": "Tab",
+  "allowAdditionalContext": true,
+  "enableWordCompletion": false,
+  "lastDismissedVersion": null,
+  "passMarkdownImages": true,
+  "enableAutonomousAgent": false,
+  "enableCustomPromptTemplating": true,
+  "enableSemanticSearchV3": false,
+  "enableLexicalBoosts": true,
+  "suggestedDefaultCommands": true,
+  "autonomousAgentMaxIterations": 4,
+  "autonomousAgentEnabledToolIds": [
+    "localSearch",
+    "webSearch",
+    "pomodoro",
+    "youtubeTranscription",
+    "writeToFile",
+    "replaceInFile"
+  ],
+  "reasoningEffort": "low",
+  "verbosity": "medium",
+  "enableInlineCitations": true
+}

@@ -1,0 +1,2 @@
+
+create a guided knowledge file to attach as context when prompting, from all the information available in the sources attached, for the anthropics AI built into Lovable.dev to expand upon its already well planned and designed front end landing page for SABudgetQueen.co.za, that it already created the first draft of. Use the artwork in the sources, as reference to create design elements, and color pallete. This should be the master plan and brand strategy for the site and sites road map into the future.

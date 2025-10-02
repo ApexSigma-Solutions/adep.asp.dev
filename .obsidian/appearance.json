@@ -1,0 +1,10 @@
+{
+  "cssTheme": "Violet Evening",
+  "accentColor": "",
+  "baseFontSize": 16,
+  "baseFontSizeAction": true,
+  "interfaceFontFamily": "Lucida Sans Unicode",
+  "textFontFamily": "Helvetica",
+  "nativeMenus": true,
+  "showViewHeader": true
+}

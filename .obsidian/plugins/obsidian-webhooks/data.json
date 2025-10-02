@@ -1,0 +1,6 @@
+{
+  "token": "",
+  "frequency": "0",
+  "triggerOnLoad": true,
+  "error": "Firebase: Invalid assertion format. 3 dot separated segments required. (auth/invalid-custom-token)."
+}

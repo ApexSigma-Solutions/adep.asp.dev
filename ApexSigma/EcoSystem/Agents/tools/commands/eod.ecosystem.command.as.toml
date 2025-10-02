@@ -1,0 +1,81 @@
+# ApexSigma Ecosystem EOD Command Configuration
+# This file integrates ecosystem ingestion into the tools.as command system
+
+[command]
+name = "eod-ecosystem"
+description = "End of Day ecosystem update with comprehensive codebase ingestion"
+version = "1.0.0"
+category = "ecosystem"
+tags = ["eod", "ecosystem", "ingestion", "apexsigma"]
+
+[command.execution]
+type = "python_script"
+script_path = "C:\\Users\\steyn\\ApexSigmaProjects.Dev\\InGest-LLM.as\\scripts\\eod_ecosystem_update.py"
+working_directory = "C:\\Users\\steyn\\ApexSigmaProjects.Dev\\InGest-LLM.as"
+environment = "poetry"
+timeout_minutes = 30
+
+[command.parameters]
+force = { type = "boolean", default = false, flag = "--force", description = "Force refresh even if recent snapshots exist" }
+no_historical = { type = "boolean", default = false, flag = "--no-historical", description = "Skip storing historical snapshots" }
+report_only = { type = "boolean", default = false, flag = "--report-only", description = "Generate report without full ingestion" }
+
+[command.scheduling]
+[command.scheduling.daily]
+time = "18:00"
+description = "Daily ecosystem snapshot at 6 PM"
+
+[command.scheduling.weekly]
+day = "sunday"
+time = "19:00"
+parameters = { force = true }
+description = "Weekly comprehensive ecosystem analysis"
+
+[command.outputs]
+[command.outputs.ecosystem_snapshot]
+type = "json"
+description = "Complete ecosystem analysis snapshot"
+storage = "memOS.as"
+
+[command.outputs.daily_report]
+type = "markdown" 
+description = "Human-readable daily ecosystem report"
+storage = "local_files"
+
+[command.outputs.health_metrics]
+type = "metrics"
+description = "Ecosystem health and performance metrics"
+storage = "prometheus"
+
+[command.dependencies]
+services = ["InGest-LLM.as", "memOS.as"]
+external = ["LM Studio", "Langfuse"]
+optional = ["Prometheus", "Grafana"]
+
+[command.monitoring]
+success_criteria = [
+    "All 4 projects successfully processed",
+    "Ecosystem health score > 0.7", 
+    "Historical snapshot stored in memOS"
+]
+failure_recovery = [
+    "Retry with --force flag",
+    "Check service dependencies",
+    "Verify memOS connectivity"
+]
+
+[command.monitoring.notifications]
+success = "Log ecosystem health score and project count"
+failure = "Alert if ecosystem health degrades significantly"
+warnings = "Notify if individual project processing fails"
+
+[command.integration]
+[command.integration.memOS]
+memory_tiers = ["semantic", "episodic"]
+metadata_tags = ["ecosystem", "daily_snapshot", "eod"]
+retention_policy = "semantic: permanent, episodic: 30 days"
+
+[command.integration.observability]
+langfuse_tracing = true
+prometheus_metrics = true
+structured_logging = true

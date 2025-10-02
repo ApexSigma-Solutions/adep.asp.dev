@@ -1,0 +1,2 @@
+
+I have a keen interest in software development and database design and management. I am a logical thinker, but my formal knowledge is far from the industry standard, having worked in the hospitality industry for the past 2 decades. I am currently in my second year working in a more suited position, where I analyze the stock movements in the 250+ coffee shops owned by Vida e Caffe in South Africa.

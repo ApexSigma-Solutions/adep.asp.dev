@@ -1,0 +1,148 @@
+---
+name: agent_delegation
+description: "Template for delegating tasks to specialized AI agents in the ApexSigma ecosystem"
+version: "2.0"
+category: "delegation"
+---
+
+<POML>
+    <!-- 
+        ID: agent_delegation.poml
+        Version: 2.0
+        Category: Agent Management
+        Description: Structured template for delegating tasks to appropriate agents based on expertise
+        Usage: Task assignment, agent coordination, workload balancing
+    -->
+
+    <delegation_context>
+        <session_id>{{ sessionId }}</session_id>
+        <timestamp>{{ timestamp }}</timestamp>
+        <orchestrator>{{ orchestrator | default("Claude Code") }}</orchestrator>
+        <coordination_mode>{{ coordinationMode | default("Sequential") }}</coordination_mode>
+    </delegation_context>
+
+    <agent_roster>
+        {% for agent in available_agents %}
+        <agent name="{{ agent.name }}" status="{{ agent.status | default('Available') }}">
+            <expertise>
+                {% for skill in agent.expertise %}
+                <skill level="{{ skill.level | default('Intermediate') }}">{{ skill.name }}</skill>
+                {% endfor %}
+            </expertise>
+            <current_workload>{{ agent.currentWorkload | default('0') }} tasks</current_workload>
+            <specializations>
+                {% for spec in agent.specializations %}
+                <specialization>{{ spec }}</specialization>
+                {% endfor %}
+            </specializations>
+            <tools_access>
+                {% for tool in agent.toolsAccess %}
+                <tool>{{ tool }}</tool>
+                {% endfor %}
+            </tools_access>
+        </agent>
+        {% endfor %}
+    </agent_roster>
+
+    <task_delegation>
+        {% for delegation in task_delegations %}
+        <delegation task_id="{{ delegation.taskId }}" agent="{{ delegation.assignedAgent }}">
+            <task_type>{{ delegation.taskType }}</task_type>
+            <priority>{{ delegation.priority }}</priority>
+            <complexity>{{ delegation.complexity | default('Medium') }}</complexity>
+            <estimated_duration>{{ delegation.estimatedDuration | default('TBD') }}</estimated_duration>
+            
+            <requirements>
+                {% for req in delegation.requirements %}
+                <requirement type="{{ req.type }}">{{ req.description }}</requirement>
+                {% endfor %}
+            </requirements>
+
+            <deliverables>
+                {% for deliverable in delegation.deliverables %}
+                <deliverable type="{{ deliverable.type }}" format="{{ deliverable.format }}">
+                    <description>{{ deliverable.description }}</description>
+                    <acceptance_criteria>
+                        {% for criteria in deliverable.acceptanceCriteria %}
+                        <criteria>{{ criteria }}</criteria>
+                        {% endfor %}
+                    </acceptance_criteria>
+                </deliverable>
+                {% endfor %}
+            </deliverables>
+
+            <coordination>
+                <handoff_points>
+                    {% for handoff in delegation.handoffPoints %}
+                    <handoff to="{{ handoff.agent }}" trigger="{{ handoff.trigger }}">
+                        {{ handoff.description }}
+                    </handoff>
+                    {% endfor %}
+                </handoff_points>
+                <communication_protocol>{{ delegation.communicationProtocol | default('Standard') }}</communication_protocol>
+                <progress_reporting>{{ delegation.progressReporting | default('On completion') }}</progress_reporting>
+            </coordination>
+
+            <context_transfer>
+                <knowledge_base_access>{{ delegation.knowledgeBaseAccess | default('Full') }}</knowledge_base_access>
+                <project_context>{{ delegation.projectContext }}</project_context>
+                <relevant_files>
+                    {% for file in delegation.relevantFiles %}
+                    <file path="{{ file.path }}" purpose="{{ file.purpose }}">{{ file.description }}</file>
+                    {% endfor %}
+                </relevant_files>
+            </context_transfer>
+
+            <success_metrics>
+                {% for metric in delegation.successMetrics %}
+                <metric name="{{ metric.name }}" target="{{ metric.target }}">{{ metric.description }}</metric>
+                {% endfor %}
+            </success_metrics>
+        </delegation>
+        {% endfor %}
+    </task_delegation>
+
+    <coordination_rules>
+        <parallel_execution>
+            <allowed>{{ parallelExecutionAllowed | default('true') }}</allowed>
+            <max_concurrent_tasks>{{ maxConcurrentTasks | default('3') }}</max_concurrent_tasks>
+            <resource_constraints>
+                {% for constraint in resourceConstraints %}
+                <constraint type="{{ constraint.type }}" limit="{{ constraint.limit }}">{{ constraint.description }}</constraint>
+                {% endfor %}
+            </resource_constraints>
+        </parallel_execution>
+
+        <dependency_management>
+            {% for dependency in dependencies %}
+            <dependency source_task="{{ dependency.sourceTask }}" target_task="{{ dependency.targetTask }}">
+                <type>{{ dependency.type }}</type>
+                <strength>{{ dependency.strength | default('Hard') }}</strength>
+                <handoff_criteria>
+                    {% for criteria in dependency.handoffCriteria %}
+                    <criteria>{{ criteria }}</criteria>
+                    {% endfor %}
+                </handoff_criteria>
+            </dependency>
+            {% endfor %}
+        </dependency_management>
+
+        <quality_gates>
+            {% for gate in qualityGates %}
+            <gate name="{{ gate.name }}" stage="{{ gate.stage }}">
+                <criteria>
+                    {% for criteria in gate.criteria %}
+                    <criteria mandatory="{{ criteria.mandatory | default('true') }}">{{ criteria.description }}</criteria>
+                    {% endfor %}
+                </criteria>
+                <reviewers>
+                    {% for reviewer in gate.reviewers %}
+                    <reviewer role="{{ reviewer.role }}">{{ reviewer.agent }}</reviewer>
+                    {% endfor %}
+                </reviewers>
+            </gate>
+            {% endfor %}
+        </quality_gates>
+    </coordination_rules>
+
+</POML>

@@ -1,0 +1,11 @@
+Component,Entry Point,Container/Port,Primary Dependencies,Data Flow Direction
+SigmaDev11 (Human),Strategic Direction & Approval Authority,N/A (Human Interface),All Services (Admin Access),Bidirectional (Command & Status)
+Gemini (MAR Guardian),MAR Protocol Review & Quality Gates,N/A (AI Agent Interface),"devenviro.as, memos.as, GitHub",Inbound Review → Outbound Approval
+Gemini CLI (DevOps),Infrastructure Implementation & Docker Orchestration,N/A (AI Agent Interface),"Docker Network, Infrastructure Services",Outbound Implementation → Inbound Status
+Qwen 3 Coder Plus (Config),Code Generation & Configuration Management,N/A (AI Agent Interface),"Configuration APIs, Testing Frameworks",Outbound Generation → Inbound Validation
+devenviro.as,"/api/orchestration, /api/agents - Task Distribution Hub",devenviro-as:8000,"postgres, redis, langfuse, jaeger",Hub (All Directions - Orchestration)
+memos.as,"/api/knowledge, /api/memory, /api/graph - Knowledge Management",memos-as:8001,"postgres, neo4j, qdrant, redis, langfuse",Inbound Storage → Outbound Retrieval
+ingest-llm.as,"/api/ingestion, /api/processing - Document Gateway",ingest-llm-as:8002,"qdrant, memos.as, langfuse",Inbound Processing → Outbound Results
+tools.as,"/api/tools, /api/registry - Utility Services",tools-as:8003,"postgres, langfuse",Bidirectional (Tool Access)
+GitHub Actions,Webhook Triggers from Repository Events,External Platform,devenviro.as webhooks,Inbound Events → Outbound Updates
+Linear Integration,Task Synchronization & Agent Assignment,External Platform,devenviro.as API,Bidirectional (Task Sync)

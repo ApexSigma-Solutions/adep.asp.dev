@@ -1,0 +1,310 @@
+{
+  "tasksFolder": "TaskNotes/Tasks",
+  "moveArchivedTasks": true,
+  "archiveFolder": "TaskNotes/Archive",
+  "taskTag": "#task",
+  "taskIdentificationMethod": "property",
+  "taskPropertyName": "noteTYPE",
+  "taskPropertyValue": "\"TaskNOTE\", \"taskWO\"",
+  "excludedFolders": "Templates, Junkyard, Staging",
+  "defaultTaskPriority": "normal",
+  "defaultTaskStatus": "Created",
+  "taskOrgFiltersCollapsed": false,
+  "taskFilenameFormat": "zettel",
+  "storeTitleInFilename": true,
+  "customFilenameTemplate": "{title}",
+  "taskCreationDefaults": {
+    "defaultContexts": "@ApexSigma",
+    "defaultTags": "#task",
+    "defaultProjects": "[[Junkyard/ApexSigma Ecosystem Status_ 16 September 2025_Markdown]]",
+    "useParentNoteAsProject": true,
+    "defaultTimeEstimate": 0,
+    "defaultRecurrence": "none",
+    "defaultDueDate": "next-week",
+    "defaultScheduledDate": "tomorrow",
+    "bodyTemplate": "Standard Task Noteaaaa",
+    "useBodyTemplate": true,
+    "defaultReminders": [
+      {
+        "id": "reminder_1758223382056",
+        "type": "relative",
+        "relatedTo": "due",
+        "offset": 1,
+        "unit": "hours",
+        "direction": "before",
+        "description": "Reminder"
+      }
+    ]
+  },
+  "calendarViewSettings": {
+    "defaultView": "timeGridWeek",
+    "customDayCount": 3,
+    "slotDuration": "00:30:00",
+    "slotMinTime": "00:00:00",
+    "slotMaxTime": "24:00:00",
+    "scrollTime": "08:00:00",
+    "firstDay": 1,
+    "timeFormat": "24",
+    "showWeekends": true,
+    "locale": "en-za",
+    "defaultShowScheduled": true,
+    "defaultShowDue": true,
+    "defaultShowDueWhenScheduled": true,
+    "defaultShowTimeEntries": true,
+    "defaultShowRecurring": true,
+    "defaultShowICSEvents": true,
+    "enableTimeblocking": true,
+    "defaultShowTimeblocks": true,
+    "nowIndicator": true,
+    "selectMirror": true,
+    "weekNumbers": true,
+    "showTodayHighlight": true,
+    "eventMinHeight": 15
+  },
+  "pomodoroWorkDuration": 25,
+  "pomodoroShortBreakDuration": 5,
+  "pomodoroLongBreakDuration": 15,
+  "pomodoroLongBreakInterval": 4,
+  "pomodoroAutoStartBreaks": true,
+  "pomodoroAutoStartWork": false,
+  "pomodoroNotifications": true,
+  "pomodoroSoundEnabled": true,
+  "pomodoroSoundVolume": 50,
+  "pomodoroStorageLocation": "plugin",
+  "enableTaskLinkOverlay": true,
+  "enableInstantTaskConvert": true,
+  "useDefaultsOnInstantConvert": true,
+  "enableNaturalLanguageInput": true,
+  "nlpDefaultToScheduled": true,
+  "nlpLanguage": "en",
+  "statusSuggestionTrigger": "*",
+  "singleClickAction": "edit",
+  "doubleClickAction": "openNote",
+  "projectAutosuggest": {
+    "enableFuzzy": true,
+    "rows": [
+      "{title|n(Title)}",
+      "{aliases|n(Aliases)}",
+      "{file.path|n(Path)}"
+    ],
+    "showAdvanced": true,
+    "requiredTags": [
+      "Project",
+      "Task Plan",
+      "Road Map",
+      "Operation"
+    ],
+    "includeFolders": [],
+    "propertyKey": "typeNOTE",
+    "propertyValue": "Task"
+  },
+  "inlineTaskConvertFolder": "{{currentNotePath}}",
+  "disableNoteIndexing": true,
+  "suggestionDebounceMs": 0,
+  "fieldMapping": {
+    "title": "title",
+    "status": "status",
+    "priority": "priority",
+    "due": "due",
+    "scheduled": "scheduled",
+    "contexts": "contexts",
+    "projects": "projects",
+    "timeEstimate": "timeEstimate",
+    "completedDate": "completedDate",
+    "dateCreated": "dateCreated",
+    "dateModified": "dateModified",
+    "recurrence": "recurrence",
+    "archiveTag": "archived",
+    "timeEntries": "timeEntries",
+    "completeInstances": "complete_instances",
+    "blockedBy": "blockedBy",
+    "pomodoros": "pomodoros",
+    "icsEventId": "icsEventId",
+    "icsEventTag": "ics_event",
+    "reminders": "reminders"
+  },
+  "customStatuses": [
+    {
+      "id": "none",
+      "value": "Created",
+      "label": "Created",
+      "color": "#cccccc",
+      "isCompleted": false,
+      "order": 0,
+      "autoArchive": false,
+      "autoArchiveDelay": 5
+    },
+    {
+      "id": "open",
+      "value": "Planning",
+      "label": "Planning",
+      "color": "#5affff",
+      "isCompleted": false,
+      "order": 1,
+      "autoArchive": false,
+      "autoArchiveDelay": 5
+    },
+    {
+      "id": "in-progress",
+      "value": "in-progress",
+      "label": "In progress",
+      "color": "#37a7b7",
+      "isCompleted": false,
+      "order": 2,
+      "autoArchive": false,
+      "autoArchiveDelay": 5
+    },
+    {
+      "id": "done",
+      "value": "in-review",
+      "label": "awaiting revirew",
+      "color": "#004252",
+      "isCompleted": false,
+      "order": 3,
+      "autoArchive": false,
+      "autoArchiveDelay": 5
+    },
+    {
+      "id": "status_1758222279331",
+      "value": "in-progress again",
+      "label": "review rejected",
+      "color": "#ffc49d",
+      "completed": false,
+      "isCompleted": false,
+      "order": 4,
+      "autoArchive": false,
+      "autoArchiveDelay": 5
+    },
+    {
+      "id": "status_1758221307589",
+      "value": "Done is Done",
+      "label": "Done is Done",
+      "color": "#f94e04",
+      "completed": false,
+      "isCompleted": true,
+      "order": 5,
+      "autoArchive": true,
+      "autoArchiveDelay": 5
+    }
+  ],
+  "customPriorities": [
+    {
+      "id": "none",
+      "value": "none",
+      "label": "None",
+      "color": "#cccccc",
+      "weight": 0
+    },
+    {
+      "id": "low",
+      "value": "low",
+      "label": "Low",
+      "color": "#00aa00",
+      "weight": 1
+    },
+    {
+      "id": "normal",
+      "value": "normal",
+      "label": "Normal",
+      "color": "#ffaa00",
+      "weight": 2
+    },
+    {
+      "id": "high",
+      "value": "high",
+      "label": "High",
+      "color": "#ff0000",
+      "weight": 3
+    }
+  ],
+  "recurrenceMigrated": true,
+  "showTrackedTasksInStatusBar": true,
+  "autoStopTimeTrackingOnComplete": true,
+  "autoStopTimeTrackingNotification": true,
+  "showProjectSubtasks": true,
+  "showExpandableSubtasks": true,
+  "projectSubtasksPosition": "bottom",
+  "subtaskChevronPosition": "right",
+  "viewsButtonAlignment": "right",
+  "hideCompletedFromOverdue": true,
+  "icsIntegration": {
+    "defaultNoteTemplate": "",
+    "defaultNoteFolder": "",
+    "icsNoteFilenameFormat": "title",
+    "customICSNoteFilenameTemplate": "{title}",
+    "enableAutoExport": true,
+    "autoExportPath": "tasknotes-calendar.ics",
+    "autoExportInterval": 60
+  },
+  "savedViews": [],
+  "enableNotifications": true,
+  "notificationType": "system",
+  "enableAPI": true,
+  "apiPort": 8080,
+  "apiAuthToken": "",
+  "webhooks": [],
+  "userFields": [
+    {
+      "id": "field_1758222774553",
+      "displayName": "Task ID",
+      "key": "UUID",
+      "type": "text"
+    },
+    {
+      "id": "field_1758222943032",
+      "displayName": "Implementer",
+      "key": "nameAGENT",
+      "type": "text"
+    },
+    {
+      "id": "field_1758223022035",
+      "displayName": "Reviewer",
+      "key": "nameAGENT",
+      "type": "text"
+    },
+    {
+      "id": "field_1758908157124",
+      "displayName": "Note Type",
+      "key": "typeNOTE",
+      "type": "text"
+    },
+    {
+      "id": "field_1758908304022",
+      "displayName": "Author",
+      "key": "nameAGENT",
+      "type": "text"
+    }
+  ],
+  "defaultVisibleProperties": [
+    "status",
+    "priority",
+    "due",
+    "scheduled",
+    "projects",
+    "contexts",
+    "tags",
+    "user:field_1758222774553",
+    "user:field_1758908304022"
+  ],
+  "enableBases": true,
+  "maintainDueDateOffsetInRecurring": false,
+  "icsSubscriptions": [
+    {
+      "name": "steynsean11",
+      "url": "https://calendar.google.com/calendar/ical/steynsean11%40gmail.com/private-c0691004aa1de50d4e27ae8e20b1740c/basic.ics",
+      "color": "#077773",
+      "enabled": true,
+      "type": "remote",
+      "refreshInterval": 60,
+      "id": "ics_gakv9ew93mg1dz1e9",
+      "lastFetched": "2025-10-02T15:16:38.171Z"
+    }
+  ],
+  "pomodoroState": {
+    "isRunning": false,
+    "timeRemaining": 1500
+  },
+  "lastPomodoroDate": "2025-10-01",
+  "uiLanguage": "system",
+  "showTaskCardInNote": true
+}

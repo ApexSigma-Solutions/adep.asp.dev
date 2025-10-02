@@ -1,0 +1,33 @@
+# Start from the official VS Code dev container image for Python 3.11
+FROM mcr.microsoft.com/devcontainers/python:3.11
+
+# --- Perform all installations as the ROOT user ---
+# Switch to root to have permissions for system-wide installations.
+USER root
+
+# 1. Install Core Utilities (like 'sleep')
+RUN apt-get update && apt-get install -y coreutils
+
+# 2. Add the user's local bin directory to the PATH for subsequent commands.
+ENV PATH="/home/vscode/.local/bin:${PATH}"
+
+# 3. Set the working directory.
+WORKDIR /workspaces/POML-Processor
+
+# 4. Install Poetry itself.
+RUN pip install poetry
+
+# 5. Configure Poetry to use the main system Python environment.
+RUN poetry config virtualenvs.create false
+
+# 6. Copy dependency files.
+COPY poetry.lock pyproject.toml ./
+
+# 7. Install all project dependencies. This now runs as root and has permission.
+RUN poetry install --no-root
+
+# --- Final Step: Switch to the non-root 'vscode' user ---
+# For security and best practices, the container will run as this user.
+USER vscode
+
+	

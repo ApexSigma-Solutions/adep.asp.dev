@@ -1,0 +1,305 @@
+{
+  "main": {
+    "id": "e80d59d7010487b2",
+    "type": "split",
+    "children": [
+      {
+        "id": "209a44487794e0d7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c720c669771fa172",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ApexSigma/Workflow Support/Plans/Current/Operation Valhalla Shield Masterplan V0.1.3.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Operation Valhalla Shield Masterplan V0.1.3"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b1e5a5419e6e2e90",
+    "type": "split",
+    "children": [
+      {
+        "id": "a55f9fa09f923224",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bbd7d4866add4f90",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "cfd3ebc2466ee3d4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#MCP",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "d96001cd55252555",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 305.5
+  },
+  "right": {
+    "id": "2938026d064703d6",
+    "type": "split",
+    "children": [
+      {
+        "id": "53c70442087b7847",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "770a55bb8ad8abdf",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "pinned": true,
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          },
+          {
+            "id": "8b01f91b1ab39083",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Staging/templates/template_ImplementationReport V0.1.0.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for template_ImplementationReport V0.1.0"
+            }
+          },
+          {
+            "id": "2d55c20b96b17140",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Staging/templates/template_ImplementationReport V0.1.0.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": false
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from template_ImplementationReport V0.1.0"
+            }
+          },
+          {
+            "id": "1cbe995010bce4c1",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "d33ff159f5261ee7",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Journal/20250928 ApexSigma EcoSystem - Morning Briefing Report.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 20250928 ApexSigma EcoSystem - Morning Briefing Report"
+            }
+          },
+          {
+            "id": "43188df6dad5b81c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "1dd758a31689a0f4",
+            "type": "leaf",
+            "state": {
+              "type": "footnotes",
+              "state": {
+                "file": "ApexSigma/Workflow Support/Plans/Current/Operation Valhalla Shield Masterplan V0.1.3.md"
+              },
+              "icon": "lucide-file-signature",
+              "title": "Footnotes"
+            }
+          },
+          {
+            "id": "f70b72355441d8da",
+            "type": "leaf",
+            "state": {
+              "type": "file-properties",
+              "state": {
+                "file": "ApexSigma/Workflow Support/Plans/Current/Operation Valhalla Shield Masterplan V0.1.3.md"
+              },
+              "icon": "lucide-info",
+              "title": "File properties for Operation Valhalla Shield Masterplan V0.1.3"
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 516.5,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "remotely-save:Remotely Save": false,
+      "obsidian-task-progress-bar:Open Task Genius view": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "quickadd:QuickAdd": false,
+      "zk-prefixer:Create new unique note": false,
+      "workspaces:Manage workspace layouts": false,
+      "publish:Publish changes...": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "markdown-importer:Open format converter": false,
+      "switcher:Open quick switcher": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "audio-recorder:Start/stop recording": false,
+      "obsidian-importer:Open Importer": false,
+      "tasknotes:Open mini calendar": false,
+      "tasknotes:Open advanced calendar": false,
+      "tasknotes:Open task list": false,
+      "tasknotes:Open notes": false,
+      "tasknotes:Open agenda": false,
+      "tasknotes:Open kanban board": false,
+      "tasknotes:Open pomodoro": false,
+      "tasknotes:Open pomodoro stats": false,
+      "tasknotes:Create new task": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "copilot:Open Copilot Chat": false,
+      "templater-obsidian:Templater": false,
+      "obsidian-excalidraw-plugin:New drawing": false
+    }
+  },
+  "active": "c720c669771fa172",
+  "lastOpenFiles": [
+    "ApexSigma/Workflow Support/Plans/Current/Consolidated Battle Plan - From Stabilization to Dominance.md",
+    "Staging/ApexSigma/In-Progress/OVS-WO-007-Implement Full Valhalla Shield Compliance V 0.1.1.md",
+    "Staging/ApexSigma/In-Progress/OVS-WO-006-Optimize Docker Image Builds.md",
+    "ApexSigma/EcoSystem/Logs/Chat/Dev Assistants/GitHub/02102025_3.copilot.chat.log.as.md",
+    "ApexSigma/EcoSystem/Logs/Chat/Dev Assistants/GitHub/02102025_2.copilot.chat.log.as.md",
+    "ApexSigma/Workflow Support/Plans/Current/OVS Phase 0 - Core Infrastructure Stabilizartion.md",
+    "ApexSigma/Workflow Support/Tasks/Task Work Orders/OVS-WO-001-Fix Application Service Dependencies.md",
+    "Staging/ApexSigma/In-Progress/30092025/OVS-WO-001-Fix Application Service Dependencies.md",
+    "QuickCapture.md",
+    "copilot/copilot-log.md",
+    "ApexSigma/Omega Knowledge Base Migration Log.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output/ApexSigma-Comprehensive-Architecture-Summary.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output/Architecture-Improvement-Recommendations.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output/ApexSigma-Architecture-Analysis.md",
+    "ApexSigma/Workflow Support/Tasks/Task Work Orders/OVS-WO-005-Resolve Code Quality Gate Failures.md",
+    "ApexSigma/EcoSystem/Agents/LLxprt/Secure API keys and manage profiles in LLxprt Code.md",
+    "ApexSigma/EcoSystem/Agents/Factory.ai/Factory.ai - CLI Installation.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output/Technology-Stack-Patterns-Analysis.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output/Service-Dependencies-API-Mapping.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output/Performance-Optimization-Recommendations.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output/Maintenance-Onboarding-Guide.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output/Code-Quality-Maintainability-Analysis.md",
+    "ApexSigma/EcoSystem/Agents/iFlow/Output",
+    "ApexSigma/EcoSystem/Agents/iFlow/New folder",
+    "ApexSigma/EcoSystem/Agents/iFlow",
+    "ApexSigma/EcoSystem/Agents/New folder",
+    "ApexSigma/EcoSystem/Agents/LLxprt/LLxprt_Config_Provider_Configuration.md",
+    "ApexSigma/EcoSystem/Infrastructure/Observability/Langfuse_Config.md",
+    "ApexSigma/EcoSystem/Infrastructure/Observability/Langfuse_Config-SeanMiniPC-2.md",
+    "ApexSigma/EcoSystem/Infrastructure/Observability/Langfuse_Config-SeanMiniPC.md",
+    "Staging/attached/Pasted image 20250929232348.png",
+    "Staging/attached/Pasted image 20250929232308.png",
+    "Staging/attached/Pasted image 20250929231746.png",
+    "ApexSigma/EcoSystem/Agents/tools/Prompts",
+    "ApexSigma/EcoSystem/Agents/Gemini/Code Assist",
+    "ApexSigma/EcoSystem/Logs/Chat/Dev Assistants/Droid",
+    "Staging/ApexSigma/chat-export-1758645288643.json",
+    "ApexSigma/Research & Development/Completed/Tooling & Development/Code Quality/Semgrep",
+    "ApexSigma/Research & Development/Completed/Documentation/Trunk",
+    "ApexSigma/Research/Memory/memos_architecture.png",
+    "Web Clips/1758448633793.png",
+    "ApexSigma/EcoSystem/Infrastructure/Diagrams/apexsigma_pipeline_clean.png",
+    "ApexSigma/EcoSystem/Infrastructure/Diagrams/apexsigma_devex_pipeline.png",
+    "Staging/Google Keep/Assets/190ad3cff10.9c9a54d682ca149f.jpg",
+    "Staging/Google Keep/Assets/1698147361258.1337064812.png",
+    "Staging/Google Keep/Assets/1745850559576.1558838978.png",
+    "Untitled.canvas"
+  ]
+}

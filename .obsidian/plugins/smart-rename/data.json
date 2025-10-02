@@ -1,0 +1,8 @@
+{
+  "invalidCharacterAction": "Replace",
+  "replacementCharacter": "_",
+  "shouldStoreInvalidTitle": true,
+  "shouldSupportNonMarkdownFiles": true,
+  "shouldUpdateFirstHeader": true,
+  "shouldUpdateTitleKey": true
+}

@@ -1,0 +1,2 @@
+
+I am looking forward to learning new skills and challenging myself. I expect to enjoy the process growing as I overcome the challenges along the way. I believe it can only be a positive addition to my life if I approach it seriously and remain committed to the end. I expect to grow in confidence as I grow through various lessons and challenges ahead. 

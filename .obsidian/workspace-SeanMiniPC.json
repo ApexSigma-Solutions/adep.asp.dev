@@ -1,0 +1,296 @@
+{
+  "main": {
+    "id": "e80d59d7010487b2",
+    "type": "split",
+    "children": [
+      {
+        "id": "fdbe69d44586db96",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7f02a2bcaa4f9ffc",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b1e5a5419e6e2e90",
+    "type": "split",
+    "children": [
+      {
+        "id": "a55f9fa09f923224",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bbd7d4866add4f90",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "cfd3ebc2466ee3d4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "d96001cd55252555",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 441.5
+  },
+  "right": {
+    "id": "2938026d064703d6",
+    "type": "split",
+    "children": [
+      {
+        "id": "53c70442087b7847",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "770a55bb8ad8abdf",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "pinned": true,
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          },
+          {
+            "id": "8b01f91b1ab39083",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "ApexSigma/EcoSystem/Governance/depracated/Apex Sigma Docker Network Convention.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Apex Sigma Docker Network Convention"
+            }
+          },
+          {
+            "id": "2d55c20b96b17140",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "ApexSigma/EcoSystem/Governance/depracated/Apex Sigma Docker Network Convention.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": false
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Apex Sigma Docker Network Convention"
+            }
+          },
+          {
+            "id": "1cbe995010bce4c1",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "d33ff159f5261ee7",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Staging/25-09-2025.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 25-09-2025"
+            }
+          },
+          {
+            "id": "43188df6dad5b81c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "1dd758a31689a0f4",
+            "type": "leaf",
+            "state": {
+              "type": "footnotes",
+              "state": {
+                "file": "Staging/25-09-2025.md"
+              },
+              "icon": "lucide-file-signature",
+              "title": "Footnotes"
+            }
+          },
+          {
+            "id": "b04b9d2fde2830e7",
+            "type": "leaf",
+            "state": {
+              "type": "copilot-chat-view",
+              "state": {},
+              "icon": "message-square",
+              "title": "Copilot"
+            }
+          },
+          {
+            "id": "f70b72355441d8da",
+            "type": "leaf",
+            "state": {
+              "type": "file-properties",
+              "state": {
+                "file": "Staging/25-09-2025.md"
+              },
+              "icon": "lucide-info",
+              "title": "File properties for 25-09-2025"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 516.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "zk-prefixer:Create new unique note": false,
+      "workspaces:Manage workspace layouts": false,
+      "publish:Publish changes...": false,
+      "remotely-save:Remotely Save": false,
+      "graph:Open graph view": false,
+      "templates:Insert template": false,
+      "canvas:Create new canvas": false,
+      "markdown-importer:Open format converter": false,
+      "switcher:Open quick switcher": false,
+      "command-palette:Open command palette": false,
+      "daily-notes:Open today's daily note": false,
+      "bases:Create new base": false,
+      "audio-recorder:Start/stop recording": false,
+      "obsidian-importer:Open Importer": false,
+      "tasknotes:Open mini calendar": false,
+      "tasknotes:Open advanced calendar": false,
+      "tasknotes:Open task list": false,
+      "tasknotes:Open notes": false,
+      "tasknotes:Open agenda": false,
+      "tasknotes:Open kanban board": false,
+      "tasknotes:Open pomodoro": false,
+      "tasknotes:Open pomodoro stats": false,
+      "tasknotes:Create new task": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "copilot:Open Copilot Chat": false,
+      "obsidian-excalidraw-plugin:New drawing": false
+    }
+  },
+  "active": "7f02a2bcaa4f9ffc",
+  "lastOpenFiles": [
+    "ApexSigma/Plans/Future Planned/🌐_ApexSigma_Docker_Network_Topology_-_TARGET_STATE_FOR_MONOREPO 1.md",
+    "ApexSigma/Plans/Depracated/High Level Task List -Stability and Foundational.md",
+    "ApexSigma/Plans/Depracated/ADEP Foundation (Hardened Protocol v2.1) - 1st Sprint.md",
+    "ApexSigma/Plans/Depracated/MCP Client Implementation Version 1.0.md",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-45-16.485Z-84c3304e.json",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-44-37.173Z-d40c49a6.json",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-44-43.374Z-e0ba189e.json",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-44-30.808Z-df85bdae.json",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-44-20.575Z-c901ff89.json",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-42-55.510Z-7c8b5172.json",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-43-57.529Z-557215f2.json",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-43-53.112Z-80973b6e.json",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-20T07-42-25.059Z-53da76bf.json",
+    "ApexSigma/EcoSystem/Infrastructure/APEXSIGMA_ECOSYSTEM_COMPREHENSIVE_SUMMARY.md",
+    "ApexSigma/EcoSystem/Infrastructure/ApexSigmaProjects.Dev_Directory_&_File_Structure.md",
+    "Staging/ApexSigma/VERIFIED_DOCKER_NETWORK_MAP_V2.md",
+    "Staging/ApexSigma/devenviro_baseline_bundle.md",
+    "Staging/ApexSigma/GIT_STATUS_REPORT.md",
+    "ApexSigma/EcoSystem/Logs/OpenAI/openai-2025-09-21T22-38-20.314Z-c5a0e9dc.json",
+    "ApexSigma/EcoSystem/Governance/Protocols & Laws/OMEGA_INGEST_LAWS.md",
+    "ApexSigma/EcoSystem/Governance/Protocols & Laws/ApexSigma_Task_Workflow.md",
+    "ApexSigma/EcoSystem/Governance/Protocols & Laws/ApexSigma_SOP_The_TaskMaster_Generation_Protocol.md",
+    "ApexSigma/EcoSystem/Governance/Protocols & Laws/Valhalla_Shield_Engineering_Standard_v1.2.md",
+    "ApexSigma/EcoSystem/Governance/Protocols & Laws/The_Laws_of_Asgard_A_Primer_for_Agents_of_the_ApexSigma_Ecosystem.md",
+    "ApexSigma/EcoSystem/Governance/Protocols & Laws/The_ApexSigma_Glossary_(v1.0).md",
+    "ApexSigma/EcoSystem/Governance/Protocols & Laws/Parallel Task Delegation for ApexSigma Agents.md",
+    "ApexSigma/EcoSystem/Governance/Protocols & Laws/Operation_Truth_Unification.md",
+    "Staging/ApexSigma/InGest.source.as/templates/poml/README.md",
+    "Staging/ApexSigma/InGest.source.as/Current Task Related InGest/MEMOS-P0/2_cuurent.context.ingest.as.md",
+    "Staging/ApexSigma/InGest.source.as/Current Task Related InGest/MEMOS-P0/VERIFIED_DOCKER_NETWORK_MAP.md",
+    "Staging/ApexSigma/InGest.source.as/Current Task Related InGest/MEMOS-P0/Apex Sigma Docker Network Convention.md",
+    "Staging/ApexSigma/InGest.source.as/Current Task Related InGest/MEMOS-P0/3_cuurent.context.ingest.as.md",
+    "Staging/ApexSigma/InGest.source.as/Current Task Related InGest/MEMOS-P0/123_cuurent.context.ingest.as.md",
+    "Staging/ApexSigma/InGest.source.as/Current Task Related InGest/MEMOS-P0/24092025.qwen.chat.log.as.md",
+    "Staging/ApexSigma/InGest.source.as/Current Task Related InGest/MEMOS-P0/2_24092025.iFlow.chat.log.as.md",
+    "Staging/ApexSigma/InGest.source.as/Current Task Related InGest/MEMOS-P0/24092025.iFlow.chat.log.as.md",
+    "ApexSigma/Research/Memory MCP Build/memos_architecture.png",
+    "Staging/ApexSigma/apexsigma_devex_pipeline.png",
+    "Staging/Clippings/1758449044624.png",
+    "Staging/Clippings/1758448633793.png",
+    "Staging/attached/{4ECB616C-384D-4300-9137-EAB0C2376F8E}.png",
+    "Staging/ApexSigma/apexsigma_pipeline_clean.png",
+    "Staging/attached/{C3162114-1E23-4F8B-9219-DAB707542529}.png",
+    "Staging/attached/{3FD55FA5-A8E1-418C-A22E-84B2AB6449C6}.png",
+    "Vida/Stock Movement Pipeline Project/exported-assets/vida_schema.png",
+    "Vida/Stock Movement Pipeline Project/exported-assets/vida_etl_pipeline.png",
+    "Untitled.canvas"
+  ]
+}

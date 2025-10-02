@@ -1,0 +1,486 @@
+{
+  "core_services": {
+    "devenviro.as": {
+      "role": "Central Orchestrator & Agent Coordination Hub",
+      "container_name": "devenviro-as",
+      "ports": [
+        "8000:8000"
+      ],
+      "volumes": [
+        "./services/devenviro.as:/app",
+        "./docs:/app/docs",
+        "devenviro_db_data:/app/data"
+      ],
+      "environment_vars": [
+        "DATABASE_URL",
+        "POSTGRES_HOST=postgres",
+        "REDIS_HOST=redis",
+        "LANGFUSE_HOST=langfuse",
+        "OTEL_EXPORTER_JAEGER_ENDPOINT"
+      ],
+      "dependencies": [
+        "postgres",
+        "redis",
+        "langfuse",
+        "jaeger"
+      ],
+      "entry_points": [
+        "main.py",
+        "orchestrator.py",
+        "enhanced_initialization_manager.py"
+      ],
+      "apis": [
+        "/api/agents",
+        "/api/orchestration",
+        "/api/health",
+        "/api/metrics"
+      ],
+      "data_flows": [
+        "Task Distribution",
+        "Agent Status Collection",
+        "MAR Protocol Enforcement"
+      ]
+    },
+    "memos.as": {
+      "role": "Knowledge Graph & Memory Management System",
+      "container_name": "memos-as",
+      "ports": [
+        "8001:8000"
+      ],
+      "volumes": [
+        "./services/memos.as:/app",
+        "memos_postgres_data:/var/lib/postgresql/data",
+        "memos_neo4j_data:/data",
+        "memos_qdrant_data:/qdrant/storage",
+        "memos_redis_data:/data"
+      ],
+      "environment_vars": [
+        "POSTGRES_DB=memos",
+        "NEO4J_URI=bolt://neo4j:7687",
+        "QDRANT_HOST=qdrant",
+        "REDIS_URL=redis://redis:6379",
+        "LANGFUSE_SECRET_KEY",
+        "OPENAI_API_KEY"
+      ],
+      "dependencies": [
+        "postgres",
+        "neo4j",
+        "qdrant",
+        "redis",
+        "langfuse"
+      ],
+      "entry_points": [
+        "main.py",
+        "mcp_server.py"
+      ],
+      "apis": [
+        "/api/knowledge",
+        "/api/memory",
+        "/api/search",
+        "/api/graph",
+        "/api/vectors",
+        "/api/health"
+      ],
+      "data_flows": [
+        "Knowledge Ingestion",
+        "Semantic Search",
+        "Graph Relationships",
+        "Memory Persistence"
+      ]
+    },
+    "ingest-llm.as": {
+      "role": "Document Processing & Vectorization Gateway",
+      "container_name": "ingest-llm-as",
+      "ports": [
+        "8002:8000"
+      ],
+      "volumes": [
+        "./services/ingest-llm.as:/app",
+        "ingest_processing_data:/app/processing",
+        "ingest_raw_documents:/app/.ingest/raw_documents"
+      ],
+      "environment_vars": [
+        "OPENAI_API_KEY",
+        "QDRANT_HOST=qdrant",
+        "MEMOS_AS_URL=http://memos-as:8000",
+        "LANGFUSE_SECRET_KEY"
+      ],
+      "dependencies": [
+        "qdrant",
+        "memos.as",
+        "langfuse"
+      ],
+      "entry_points": [
+        "main.py"
+      ],
+      "apis": [
+        "/api/ingestion",
+        "/api/processing",
+        "/api/analysis",
+        "/api/repository",
+        "/api/omega-ingest",
+        "/api/health"
+      ],
+      "data_flows": [
+        "Document Ingestion",
+        "Text Processing",
+        "Vector Generation",
+        "Knowledge Graph Updates"
+      ]
+    },
+    "tools.as": {
+      "role": "Developer Tools Registry & Utility Services",
+      "container_name": "tools-as",
+      "ports": [
+        "8003:8000"
+      ],
+      "volumes": [
+        "./services/tools.as:/app",
+        "tools_registry_data:/app/registry"
+      ],
+      "environment_vars": [
+        "POSTGRES_HOST=postgres",
+        "LANGFUSE_SECRET_KEY",
+        "TOOLS_REGISTRY_PATH=/app/registry"
+      ],
+      "dependencies": [
+        "postgres",
+        "langfuse"
+      ],
+      "entry_points": [
+        "main.py"
+      ],
+      "apis": [
+        "/api/tools",
+        "/api/registry",
+        "/api/commands",
+        "/api/utilities",
+        "/api/health"
+      ],
+      "data_flows": [
+        "Tool Registration",
+        "Command Execution",
+        "Utility Access"
+      ]
+    }
+  },
+  "infrastructure_services": {
+    "postgres": {
+      "role": "Primary Relational Database",
+      "container_name": "postgres",
+      "image": "postgres:15-alpine",
+      "ports": [
+        "5432:5432"
+      ],
+      "volumes": [
+        "postgres_data:/var/lib/postgresql/data"
+      ],
+      "environment_vars": [
+        "POSTGRES_DB=apexsigma",
+        "POSTGRES_USER=apexsigma",
+        "POSTGRES_PASSWORD"
+      ],
+      "data_storage": [
+        "Agent Registry",
+        "Session Data",
+        "Task History",
+        "Configuration"
+      ]
+    },
+    "neo4j": {
+      "role": "Graph Database for Knowledge Relationships",
+      "container_name": "neo4j",
+      "image": "neo4j:5.13-community",
+      "ports": [
+        "7474:7474",
+        "7687:7687"
+      ],
+      "volumes": [
+        "neo4j_data:/data",
+        "neo4j_logs:/logs"
+      ],
+      "environment_vars": [
+        "NEO4J_AUTH=neo4j/apexsigma",
+        "NEO4J_PLUGINS=[\"apoc\"]"
+      ],
+      "data_storage": [
+        "Knowledge Graph",
+        "Entity Relationships",
+        "Dependency Mapping"
+      ]
+    },
+    "qdrant": {
+      "role": "Vector Database for Semantic Search",
+      "container_name": "qdrant",
+      "image": "qdrant/qdrant:v1.7.4",
+      "ports": [
+        "6333:6333",
+        "6334:6334"
+      ],
+      "volumes": [
+        "qdrant_data:/qdrant/storage"
+      ],
+      "data_storage": [
+        "Document Embeddings",
+        "Semantic Vectors",
+        "Search Indices"
+      ]
+    },
+    "redis": {
+      "role": "Cache & Session Store",
+      "container_name": "redis",
+      "image": "redis:7-alpine",
+      "ports": [
+        "6379:6379"
+      ],
+      "volumes": [
+        "redis_data:/data"
+      ],
+      "data_storage": [
+        "Session Cache",
+        "Agent State",
+        "Temporary Data",
+        "Task Queues"
+      ]
+    }
+  },
+  "observability_stack": {
+    "langfuse": {
+      "role": "LLM Tracing & Observability Platform",
+      "container_name": "langfuse",
+      "image": "langfuse/langfuse:2.0.0",
+      "ports": [
+        "3000:3000"
+      ],
+      "volumes": [
+        "langfuse_data:/app/data"
+      ],
+      "environment_vars": [
+        "DATABASE_URL=postgresql://postgres:password@postgres:5432/langfuse",
+        "NEXTAUTH_SECRET"
+      ],
+      "dependencies": [
+        "postgres"
+      ],
+      "data_collection": [
+        "LLM Traces",
+        "Performance Metrics",
+        "Cost Tracking",
+        "Agent Activity"
+      ]
+    },
+    "jaeger": {
+      "role": "Distributed Tracing System",
+      "container_name": "jaeger",
+      "image": "jaegertracing/all-in-one:1.50",
+      "ports": [
+        "16686:16686",
+        "14268:14268"
+      ],
+      "environment_vars": [
+        "COLLECTOR_OTLP_ENABLED=true"
+      ],
+      "data_collection": [
+        "Request Tracing",
+        "Service Dependencies",
+        "Performance Analysis"
+      ]
+    },
+    "prometheus": {
+      "role": "Metrics Collection & Monitoring",
+      "container_name": "prometheus",
+      "image": "prom/prometheus:v2.47.2",
+      "ports": [
+        "9090:9090"
+      ],
+      "volumes": [
+        "./config/prometheus.yml:/etc/prometheus/prometheus.yml"
+      ],
+      "data_collection": [
+        "System Metrics",
+        "Application Metrics",
+        "Custom Metrics"
+      ]
+    },
+    "grafana": {
+      "role": "Visualization & Dashboarding",
+      "container_name": "grafana",
+      "image": "grafana/grafana:10.2.0",
+      "ports": [
+        "3001:3000"
+      ],
+      "volumes": [
+        "grafana_data:/var/lib/grafana",
+        "./config/grafana/provisioning:/etc/grafana/provisioning"
+      ],
+      "dependencies": [
+        "prometheus",
+        "langfuse"
+      ],
+      "dashboards": [
+        "System Health",
+        "Agent Performance",
+        "Resource Utilization"
+      ]
+    }
+  },
+  "external_integrations": {
+    "github": {
+      "role": "Source Control & CI/CD Platform",
+      "integration_points": [
+        "Webhook Endpoints in devenviro.as",
+        "Actions Runners for CI/CD",
+        "Branch Protection via MAR Protocol",
+        "Linear Issue Synchronization"
+      ],
+      "data_flows": [
+        "Code Changes",
+        "PR Events",
+        "Deployment Triggers",
+        "Issue Updates"
+      ]
+    },
+    "linear": {
+      "role": "Project Management & Task Tracking",
+      "integration_points": [
+        "Task Synchronization with devenviro.as",
+        "Agent Assignment Automation",
+        "Status Updates via Webhooks"
+      ],
+      "data_flows": [
+        "Task Creation",
+        "Status Updates",
+        "Assignment Changes"
+      ]
+    }
+  },
+  "network_topology": {
+    "docker_network": {
+      "name": "apexsigma-network",
+      "driver": "bridge",
+      "subnet": "172.20.0.0/16",
+      "gateway": "172.20.0.1"
+    },
+    "service_discovery": {
+      "dns_resolution": "Internal Docker DNS",
+      "service_mesh": "Docker Compose Service Discovery",
+      "health_checks": "HTTP Health Endpoints on all services"
+    }
+  },
+  "data_volumes": {
+    "persistent_storage": [
+      "postgres_data",
+      "neo4j_data",
+      "qdrant_data",
+      "redis_data",
+      "langfuse_data",
+      "grafana_data",
+      "devenviro_db_data",
+      "memos_postgres_data",
+      "memos_neo4j_data",
+      "memos_qdrant_data",
+      "memos_redis_data",
+      "ingest_processing_data",
+      "ingest_raw_documents",
+      "tools_registry_data"
+    ],
+    "shared_volumes": [
+      "docs:/app/docs (shared documentation)",
+      "logs:/app/logs (shared logging)"
+    ]
+  },
+  "agent_ecosystem": {
+    "human_agents": {
+      "SigmaDev11": {
+        "tier": "Tier 1: Strategic Leadership",
+        "authority": "Absolute - Can override any agent decision",
+        "access_points": [
+          "All service APIs",
+          "Direct database access",
+          "Administrative dashboards"
+        ],
+        "workflow_entry": "Strategic direction and approval authority"
+      }
+    },
+    "ai_agents": {
+      "Gemini": {
+        "tier": "Tier 2: Quality & Strategic Review",
+        "authority": "High - Can block implementations via MAR Protocol",
+        "access_points": [
+          "devenviro.as orchestration API",
+          "memos.as knowledge API",
+          "GitHub webhooks"
+        ],
+        "workflow_entry": "MAR Protocol enforcement and quality gates"
+      },
+      "Gemini CLI": {
+        "tier": "Tier 3: Implementation Specialists",
+        "authority": "Medium - Can make tactical infrastructure decisions",
+        "access_points": [
+          "Docker orchestration",
+          "GitHub API",
+          "Infrastructure APIs"
+        ],
+        "workflow_entry": "Infrastructure implementation and DevOps automation"
+      },
+      "Qwen 3 Coder Plus": {
+        "tier": "Tier 3: Implementation Specialists",
+        "authority": "Medium - Can make tactical code decisions",
+        "access_points": [
+          "Code generation APIs",
+          "Configuration management",
+          "Testing frameworks"
+        ],
+        "workflow_entry": "Code and configuration generation"
+      }
+    }
+  },
+  "workflow_patterns": {
+    "mar_protocol_flow": {
+      "trigger": "Code/Config change in GitHub",
+      "path": "GitHub -> devenviro.as -> Gemini (Review) -> Implementation Agent -> Deployment",
+      "checkpoints": [
+        "Initial review",
+        "Implementation review",
+        "Deployment approval"
+      ]
+    },
+    "omega_ingest_flow": {
+      "trigger": "Knowledge update required",
+      "path": "Source -> ingest-llm.as -> Processing -> memos.as -> Knowledge Graph Update",
+      "checkpoints": [
+        "Data validation",
+        "Processing verification",
+        "Knowledge graph integration"
+      ]
+    },
+    "agent_coordination_flow": {
+      "trigger": "Task assignment",
+      "path": "SigmaDev11 -> devenviro.as -> Agent Assignment -> Task Execution -> Review -> Completion",
+      "checkpoints": [
+        "Task creation",
+        "Agent assignment",
+        "Implementation",
+        "Quality review",
+        "Completion verification"
+      ]
+    }
+  },
+  "security_boundaries": {
+    "network_security": [
+      "Internal Docker network isolation",
+      "Port exposure only for required services",
+      "Environment variable encryption"
+    ],
+    "data_security": [
+      "Database authentication",
+      "API key management",
+      "Secret management via environment variables"
+    ],
+    "access_control": [
+      "Agent authentication",
+      "Role-based access control",
+      "API endpoint authorization"
+    ]
+  }
+}

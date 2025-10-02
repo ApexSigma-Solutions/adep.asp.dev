@@ -1,0 +1,37 @@
+{
+	"name": "POML Processor Dev Container",
+	"dockerFile": "../Dockerfile",
+
+	"containerEnv": {
+		"PATH": "/home/vscode/.local/bin:${containerEnv:PATH}"
+	},
+
+	// --- FIX APPLIED HERE ---
+	// This command explicitly tells the container to run a long-lived process.
+	// We use the full path '/bin/sleep' to ensure it's found by the container's
+	// startup shell, which solves the "sleep: not found" error and keeps the
+	// container running so VS Code can connect.
+	"overrideCommand": "/bin/sleep infinity",
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"charliermarsh.ruff",
+				"ast-grep.ast-grep-vscode",
+				"tamasfe.even-better-toml",
+				"esbenp.prettier-vscode",
+				"github.copilot"
+			]
+		}
+	},
+	"forwardPorts": [
+		3000
+	],
+	// This command runs once after the container is created and you connect.
+	// It installs the actual 'poml-processor' package in an editable mode.
+	"postCreateCommand": "poetry install",
+	"remoteUser": "vscode"
+}
+
