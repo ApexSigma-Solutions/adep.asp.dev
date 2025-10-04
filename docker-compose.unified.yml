@@ -15,7 +15,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-apexsigma_db}
       POSTGRES_USER: ${POSTGRES_USER:-apexsigma_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-your_secure_postgres_password_here}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Apexsigma123_}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -34,6 +34,8 @@ services:
   redis:
     image: redis:7-alpine
     container_name: apexsigma_redis
+    environment:
+      - REDIS_PASSWORD=Apexsigma123_
     volumes:
       - redis_data:/data
     networks:
@@ -50,7 +52,7 @@ services:
     container_name: apexsigma_rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-apexsigma_user}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-apexsigma_pass}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-Apexsigma123_}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
@@ -75,7 +77,7 @@ services:
     image: neo4j:5.15-community
     container_name: apexsigma_neo4j
     environment:
-      - NEO4J_AUTH=neo4j/apexsigma_neo4j_password
+      - NEO4J_AUTH=neo4j/Apexsigma123_
       - NEO4J_PLUGINS=["graph-data-science"]
       - NEO4J_dbms_security_procedures_unrestricted=gds.*
       - NEO4J_dbms_security_procedures_whitelist=gds.*
@@ -92,7 +94,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "cypher-shell -u neo4j -p apexsigma_neo4j_password 'RETURN 1'",
+          "cypher-shell -u neo4j -p Apexsigma123_ 'RETURN 1'",
         ]
       interval: 30s
       timeout: 10s
@@ -166,7 +168,7 @@ services:
     image: grafana/grafana:10.4.1
     container_name: apexsigma_grafana
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=apexsigma123
+      - GF_SECURITY_ADMIN_PASSWORD=Apexsigma123_
     ports:
       - "3000:3000"  # Grafana web UI
     volumes:
@@ -198,7 +200,7 @@ services:
     environment:
       - CLICKHOUSE_DB=apexsigma_observability
       - CLICKHOUSE_USER=${CLICKHOUSE_USER:-clickhouse_user}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-change_me_securely}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-Apexsigma123_}
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
       - CLICKHOUSE_MAX_MEMORY_USAGE=4294967296  # 4GB
       - CLICKHOUSE_MAX_CONCURRENT_QUERIES=100
@@ -255,10 +257,10 @@ services:
     hostname: langfuse
     environment:
       # Primary PostgreSQL storage
-      DATABASE_URL: "postgresql://${POSTGRES_USER:-apexsigma_user}:${POSTGRES_PASSWORD:-your_secure_postgres_password_here}@postgres:5432/${POSTGRES_DB:-apexsigma_db}"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-apexsigma_user}:${POSTGRES_PASSWORD:-Apexsigma123_}@postgres:5432/${POSTGRES_DB:-apexsigma_db}"
 
       # ClickHouse analytics (native protocol - REQUIRED for v3)
-      CLICKHOUSE_URL: "clickhouse://${CLICKHOUSE_USER:-clickhouse_user}:${CLICKHOUSE_PASSWORD:-change_me_securely}@clickhouse:9000/${CLICKHOUSE_DB:-apexsigma_observability}"
+      CLICKHOUSE_URL: "clickhouse://${CLICKHOUSE_USER:-clickhouse_user}:${CLICKHOUSE_PASSWORD:-Apexsigma123_}@clickhouse:9000/${CLICKHOUSE_DB:-apexsigma_observability}"
       LANGFUSE_CLICKHOUSE_ENABLED: "true"
       LANGFUSE_CLICKHOUSE_MIGRATION_TARGET: "latest"
 
@@ -331,7 +333,7 @@ services:
       - .env
     environment:
       - PYTHONPATH=/app/app
-      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@rabbitmq:5672/
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@rabbitmq:5672/
       - AGENT_ORCHESTRATOR_TOKEN=${AGENT_ORCHESTRATOR_TOKEN:-supersecrettoken_orchestrator}
       - AGENT_BACKEND_SPECIALIST_TOKEN=${AGENT_BACKEND_SPECIALIST_TOKEN:-supersecrettoken_backend}
       - AGENT_CODE_REFACTORING_SPECIALIST_TOKEN=${AGENT_CODE_REFACTORING_SPECIALIST_TOKEN:-supersecrettoken_refactoring}
@@ -375,13 +377,13 @@ services:
       - ./services/devenviro.as/.env
     environment:
       - PYTHONPATH=/app/app
-      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@apexsigma_rabbitmq:5672/
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@apexsigma_rabbitmq:5672/
       - AGENT_GEMINI_CLI_TOKEN=${AGENT_GEMINI_CLI_TOKEN:-supersecrettoken_gemini_cli}
       - GEMINI_COMMAND=echo "Gemini CLI simulation:"
       - POSTGRES_HOST=apexsigma_postgres
       - POSTGRES_DB=${POSTGRES_DB:-apexsigma-memtank}
       - POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-your_secure_postgres_password_here}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
     depends_on:
       - postgres
       - rabbitmq
@@ -445,7 +447,7 @@ services:
       - ./services/devenviro.as/.env
     environment:
       - PYTHONPATH=/app/app
-      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-apexsigma_pass}@apexsigma_rabbitmq:5672/
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@apexsigma_rabbitmq:5672/
       - RABBITMQ_EXCHANGE=agent_exchange
     depends_on:
       - rabbitmq
@@ -544,7 +546,7 @@ services:
     environment:
       - POSTGRES_DB=tools_db
       - POSTGRES_USER=tools_user
-      - POSTGRES_PASSWORD=tools_pass
+      - POSTGRES_PASSWORD=Apexsigma123_
     volumes:
       - tools_postgres_data:/var/lib/postgresql/data
       - ./services/tools.as/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
@@ -600,7 +602,7 @@ services:
       - DAGSTER_POSTGRES_HOST=postgres
       - DAGSTER_POSTGRES_PORT=5432
       - DAGSTER_POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
-      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-your_secure_postgres_password_here}
+      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
       - DAGSTER_POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
     ports:
       - "3080:3000"  # Changed from 8080 to avoid Grafana conflict
@@ -617,11 +619,12 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=2); conn.request('GET','/'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+      # OVS-T03 FIX: Improved healthcheck with longer intervals and timeout
+      test: ["CMD", "python", "-c", "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=5); conn.request('GET','/server_info'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)"]
+      interval: 60s       # Increase from 30s to reduce check frequency
+      timeout: 20s        # Increase from 10s to allow more response time
+      retries: 5          # Increase from 3 for better resilience
+      start_period: 120s  # Increase from 60s to allow full startup
 
   dagster-daemon:
     build:
@@ -634,7 +637,7 @@ services:
       - DAGSTER_POSTGRES_HOST=postgres
       - DAGSTER_POSTGRES_PORT=5432
       - DAGSTER_POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
-      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-your_secure_postgres_password_here}
+      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
       - DAGSTER_POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
     volumes:
       - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro

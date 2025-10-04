@@ -18,3 +18,7 @@ telemetry:
 run_launcher:
   module: dagster.core.launcher
   class: DefaultRunLauncher
+
+# OVS-T03 FIX: Increase code server startup timeout to prevent premature shutdowns
+code_servers:
+  local_startup_timeout: 120  # Increase from default 60s to allow more time for code server initialization
