@@ -243,7 +243,7 @@ tools.execute         # Tool execution requests
 #### Agent Orchestration Flow
 ```
 Producer: devenviro.as
-Exchange: apesxigma.topic
+Exchange: apexsigma.topic
 Routing Key: agent.orchestrate.*
 Consumers: All agent services
 ```
