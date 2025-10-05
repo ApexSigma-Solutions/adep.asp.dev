@@ -44,12 +44,3 @@ venv.bak/
 # Docker
 docker-compose.override.yml
 node_modules
-
-# Logs and local artifacts
-logs/
-*.log
-
-# Ignore large export directories and personal vaults
-ApexSigma/EcoSystem/Logs/
-"..\\Omega Vault"/
-
