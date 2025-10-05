@@ -231,7 +231,7 @@ graph TB
 
 2. **Data Architecture Modernization**
    - Unified data lake with MinIO object storage
-     n - Advanced analytics pipeline with ClickHouse
+   - Advanced analytics pipeline with ClickHouse
    - Streaming data processing capabilities
 
 3. **Security Framework Advancement**
