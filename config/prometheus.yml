@@ -1,0 +1,40 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files: []
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['api-gateway:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'pipeline-orchestrator'
+    static_configs:
+      - targets: ['pipeline-orchestrator:8081']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'code-analyzer'
+    static_configs:
+      - targets: ['code-analyzer:8082']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'deployment-manager'
+    static_configs:
+      - targets: ['deployment-manager:8083']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'agent-coordinator'
+    static_configs:
+      - targets: ['agent-coordinator:8084']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
