@@ -1,0 +1,45 @@
+name: ApexSigma Scheduled Security Scans
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  container-scan:
+    name: Trivy Container Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build memos-api image
+        run: docker-compose -f docker-compose.unified.yml build memos-api
+
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@v0.11.0
+        with:
+          image-ref: 'memos-api:latest'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  dynamic-scan:
+    name: OWASP ZAP Baseline
+    runs-on: ubuntu-latest
+    needs: container-scan
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run ZAP baseline scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: ${{ secrets.STAGING_URL }}
+          format: 'json'

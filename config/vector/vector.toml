@@ -1,0 +1,19 @@
+# Minimal Vector Configuration for ApexSigma
+# Basic log collection and forwarding
+
+[sources.docker_logs]
+type = "docker_logs"
+include_containers = ["apexsigma_*"]
+
+[sinks.clickhouse_logs]
+type = "clickhouse"
+inputs = ["docker_logs"]
+endpoint = "http://clickhouse:8123"
+database = "apexsigma_observability"
+table = "logs"
+auth = { strategy = "basic", user = "clickhouse_user", password = "change_me_securely" }
+
+[api]
+enabled = true
+address = "0.0.0.0:8686"
+playground = false

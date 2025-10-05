@@ -1,0 +1,12 @@
+[submodule "services/InGest-LLM.as"]
+	path = services/InGest-LLM.as
+	url = https://github.com/ApexSigma-Solutions/InGest-LLM.as
+[submodule "services/devenviro.as"]
+	path = services/devenviro.as
+	url = https://github.com/ApexSigma-Solutions/devenviro.as
+[submodule "services/memos.as"]
+	path = services/memos.as
+	url = https://github.com/ApexSigma-Solutions/memos.as
+[submodule "services/tools.as"]
+	path = services/tools.as
+	url = https://github.com/ApexSigma-Solutions/tools.as

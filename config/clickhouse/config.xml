@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<yandex>
+    <!-- Listen on all interfaces -->
+    <listen_host>0.0.0.0</listen_host>
+    
+    <!-- HTTP Interface -->
+    <http_port>8123</http_port>
+    
+    <!-- Native TCP Interface -->
+    <tcp_port>9000</tcp_port>
+    
+    <!-- Timezone -->
+    <timezone>UTC</timezone>
+    
+    <!-- Logging configuration -->
+    <logger>
+        <level>information</level>
+        <log>/var/log/clickhouse-server/clickhouse-server.log</log>
+        <errorlog>/var/log/clickhouse-server/clickhouse-server.err.log</errorlog>
+        <size>1000M</size>
+        <count>3</count>
+    </logger>
+    
+    <!-- Path configuration -->
+    <path>/var/lib/clickhouse/</path>
+    <tmp_path>/var/lib/clickhouse/tmp/</tmp_path>
+    
+    <!-- Users configuration will be loaded from users.xml -->
+    <users_config>users.xml</users_config>
+</yandex>

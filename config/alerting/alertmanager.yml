@@ -1,0 +1,103 @@
+# ApexSigma Phase 2 - Advanced Alerting Configuration
+# Intelligent alerting system for production monitoring
+
+global:
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alerts@apexsigma.local'
+  slack_api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+
+# Routing tree for alert distribution
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'default-receiver'
+  routes:
+    # Critical system alerts
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 0s
+      repeat_interval: 5m
+      
+    # Database alerts
+    - match_re:
+        service: '(postgres|clickhouse|redis|neo4j|qdrant)'
+      receiver: 'database-alerts'
+      group_interval: 2m
+      
+    # Security alerts
+    - match:
+        category: security
+      receiver: 'security-alerts'
+      group_wait: 0s
+      repeat_interval: 15m
+      
+    # Performance alerts
+    - match:
+        category: performance
+      receiver: 'performance-alerts'
+      group_interval: 5m
+
+# Alert receivers configuration
+receivers:
+  - name: 'default-receiver'
+    slack_configs:
+      - channel: '#apexsigma-alerts'
+        title: 'ApexSigma Alert'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        
+  - name: 'critical-alerts'
+    slack_configs:
+      - channel: '#apexsigma-critical'
+        title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+    email_configs:
+      - to: 'admin@apexsigma.local'
+        subject: '🚨 CRITICAL ALERT: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Service: {{ .Labels.service }}
+          Severity: {{ .Labels.severity }}
+          {{ end }}
+          
+  - name: 'database-alerts'
+    slack_configs:
+      - channel: '#apexsigma-database'
+        title: '💾 Database Alert: {{ .GroupLabels.service }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        
+  - name: 'security-alerts'
+    slack_configs:
+      - channel: '#apexsigma-security'
+        title: '🔒 Security Alert'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+    email_configs:
+      - to: 'security@apexsigma.local'
+        subject: '🔒 Security Alert: {{ .GroupLabels.alertname }}'
+        
+  - name: 'performance-alerts'
+    slack_configs:
+      - channel: '#apexsigma-performance'
+        title: '⚡ Performance Alert'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+# Inhibition rules to reduce noise
+inhibit_rules:
+  # If service is down, don't alert on high response time
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['service']
+    
+  # If database is down, don't alert on connection issues
+  - source_match:
+      alertname: 'DatabaseDown'
+    target_match_re:
+      alertname: '(DatabaseConnectionHigh|DatabaseQuerySlow)'
+    equal: ['instance']

@@ -1,0 +1,14 @@
+version: api/v1beta1
+kind: config
+metadata:
+  name: keploy-config
+spec:
+  path: "./tools-tests"
+  command: "python -m uvicorn services.tools.as.app.main:app --host 0.0.0.0 --port 8000"
+  network:
+    filterNoise: true
+    delay: 10
+  test:
+    path: "./tools-tests/tests"
+    command: "python -m pytest tools-tests/ -v"
+    delay: 5

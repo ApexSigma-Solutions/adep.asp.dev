@@ -1,0 +1,700 @@
+# ApexSigma Ecosystem - Unified Docker Compose
+# This file orchestrates all four microservices: DevEnviro.as, memOS.as, InGest-LLM.as, tools.as
+# Each service remains decoupled while enabling cross-service communication
+
+services:
+  # ===========================================
+  # INFRASTRUCTURE SERVICES (from DevEnviro)
+  # ===========================================
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: apexsigma_postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-apexsigma_db}
+      POSTGRES_USER: ${POSTGRES_USER:-apexsigma_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Apexsigma123_}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-apexsigma_user} -d ${POSTGRES_DB:-apexsigma_db}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: apexsigma_redis
+    environment:
+      - REDIS_PASSWORD=Apexsigma123_
+    volumes:
+      - redis_data:/data
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: apexsigma_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-apexsigma_user}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-Apexsigma123_}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  qdrant:
+    image: qdrant/qdrant:v1.8.2
+    container_name: apexsigma_qdrant
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:5.15-community
+    container_name: apexsigma_neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/Apexsigma123_
+      - NEO4J_PLUGINS=["graph-data-science"]
+      - NEO4J_dbms_security_procedures_unrestricted=gds.*
+      - NEO4J_dbms_security_procedures_whitelist=gds.*
+      - NEO4J_dbms_memory_heap_initial__size=512m
+      - NEO4J_dbms_memory_heap_max__size=2g
+      - NEO4J_dbms_memory_pagecache_size=1g
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "cypher-shell -u neo4j -p Apexsigma123_ 'RETURN 1'",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===========================================
+  # SSL/TLS SECURITY LAYER (Phase 2)
+  # ===========================================
+
+  nginx-ssl-proxy:
+    build:
+      context: ./config/ssl
+      dockerfile: Dockerfile.nginx
+    container_name: apexsigma_nginx_ssl_proxy
+    ports:
+      - "443:443"  # HTTPS
+      - "80:80"    # HTTP (redirects to HTTPS)
+    depends_on:
+      - grafana
+      - prometheus
+      - jaeger
+      - langfuse
+      - clickhouse
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ===========================================
+  # OBSERVABILITY STACK
+  # ===========================================
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.60
+    container_name: apexsigma_jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"  # Jaeger web UI
+      - "14268:14268"  # HTTP collector
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: apexsigma_prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=200h"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"  # Prometheus web UI
+    volumes:
+      - ./services/devenviro.as/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.4.1
+    container_name: apexsigma_grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=Apexsigma123_
+    ports:
+      - "3000:3000"  # Grafana web UI
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./services/devenviro.as/config/grafana.ini:/etc/grafana/grafana.ini
+      - ./services/devenviro.as/config/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: apexsigma_loki
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./services/devenviro.as/config/loki-config.yml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3-alpine
+    container_name: apexsigma_clickhouse
+    hostname: clickhouse
+    environment:
+      - CLICKHOUSE_DB=apexsigma_observability
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-clickhouse_user}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-Apexsigma123_}
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_MAX_MEMORY_USAGE=4294967296  # 4GB
+      - CLICKHOUSE_MAX_CONCURRENT_QUERIES=100
+    ports:
+      - "9123:8123"  # HTTP interface (mapped to avoid conflicts)
+      - "9000:9000"  # Native TCP protocol
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_logs:/var/log/clickhouse-server
+      - ./config/clickhouse/config.xml:/etc/clickhouse-server/config.d/custom.xml:ro
+      - ./config/clickhouse/users.xml:/etc/clickhouse-server/users.d/custom.xml:ro
+    networks:
+      apexsigma_net:
+        ipv4_address: 172.26.0.50
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  vector:
+    image: timberio/vector:0.37.0-alpine
+    container_name: apexsigma_vector
+    hostname: vector
+    environment:
+      - VECTOR_CONFIG=/etc/vector/vector.toml
+    ports:
+      - "8686:8686"  # Vector admin interface
+    volumes:
+      - ./config/vector/vector.toml:/etc/vector/vector.toml:ro
+      - vector_data:/var/lib/vector
+    networks:
+      apexsigma_net:
+        ipv4_address: 172.26.0.54
+    restart: unless-stopped
+    depends_on:
+      - clickhouse
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8686/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  langfuse:
+    image: langfuse/langfuse:2.56.1  # Use stable version with native ClickHouse support
+    container_name: apexsigma_langfuse
+    hostname: langfuse
+    environment:
+      # Primary PostgreSQL storage
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-apexsigma_user}:${POSTGRES_PASSWORD:-Apexsigma123_}@postgres:5432/${POSTGRES_DB:-apexsigma_db}"
+
+      # ClickHouse analytics (native protocol - REQUIRED for v3)
+      CLICKHOUSE_URL: "clickhouse://${CLICKHOUSE_USER:-clickhouse_user}:${CLICKHOUSE_PASSWORD:-Apexsigma123_}@clickhouse:9000/${CLICKHOUSE_DB:-apexsigma_observability}"
+      LANGFUSE_CLICKHOUSE_ENABLED: "true"
+      LANGFUSE_CLICKHOUSE_MIGRATION_TARGET: "latest"
+
+      # Feature flags
+      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
+      NEXTAUTH_URL: "http://localhost:3001"
+      NEXTAUTH_SECRET: "REDACTED_FOR_COMMIT"
+
+      # API keys
+      LANGFUSE_PUBLIC_KEY: "pk-lf-REDACTED_FOR_COMMIT"
+      LANGFUSE_SECRET_KEY: "REDACTED_FOR_COMMIT"
+      SALT: "${LANGFUSE_SALT:-your-secure-salt-here-change-this-in-production}"
+    ports:
+      - "3001:3000"
+    volumes:
+      - langfuse_data:/app/data
+    networks:
+      apexsigma_net:
+        ipv4_address: 172.26.0.52
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=2); conn.request('GET','/api/public/health'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: apexsigma_promtail
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./services/devenviro.as/config/promtail-config.yml:/etc/promtail/config.yml
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    depends_on:
+      - loki
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+
+  # ===========================================
+  # DEVENVIRO.AS - AI SOCIETY ORCHESTRATOR
+  # ===========================================
+
+  devenviro-api:
+    build:
+      context: ./services/devenviro.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_devenviro_api
+    working_dir: /app/app
+    command:
+      [
+        "poetry",
+        "run",
+        "uvicorn",
+        "src.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload",
+      ]
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app/app
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@rabbitmq:5672/
+      - AGENT_ORCHESTRATOR_TOKEN=${AGENT_ORCHESTRATOR_TOKEN:-supersecrettoken_orchestrator}
+      - AGENT_BACKEND_SPECIALIST_TOKEN=${AGENT_BACKEND_SPECIALIST_TOKEN:-supersecrettoken_backend}
+      - AGENT_CODE_REFACTORING_SPECIALIST_TOKEN=${AGENT_CODE_REFACTORING_SPECIALIST_TOKEN:-supersecrettoken_refactoring}
+      - AGENT_DEVOPS_ENGINEER_TOKEN=${AGENT_DEVOPS_ENGINEER_TOKEN:-supersecrettoken_devops}
+      - AGENT_ENGINEERING_MANAGER_TOKEN=${AGENT_ENGINEERING_MANAGER_TOKEN:-supersecrettoken_manager}
+      - AGENT_ENTERPRISE_CTO_TOKEN=${AGENT_ENTERPRISE_CTO_TOKEN:-supersecrettoken_cto}
+      - AGENT_FRONTEND_SPECIALIST_TOKEN=${AGENT_FRONTEND_SPECIALIST_TOKEN:-supersecrettoken_frontend}
+      - AGENT_PRODUCT_OWNER_TOKEN=${AGENT_PRODUCT_OWNER_TOKEN:-supersecrettoken_product}
+      - AGENT_PROJECT_MANAGER_TOKEN=${AGENT_PROJECT_MANAGER_TOKEN:-supersecrettoken_project}
+      - AGENT_QA_ENGINEER_TOKEN=${AGENT_QA_ENGINEER_TOKEN:-supersecrettoken_qa}
+      - AGENT_SECURITY_ENGINEER_TOKEN=${AGENT_SECURITY_ENGINEER_TOKEN:-supersecrettoken_security}
+      - AGENT_SENIOR_FULLSTACK_DEVELOPER_TOKEN=${AGENT_SENIOR_FULLSTACK_DEVELOPER_TOKEN:-supersecrettoken_fullstack}
+      - AGENT_SOFTWARE_ARCHITECT_TOKEN=${AGENT_SOFTWARE_ARCHITECT_TOKEN:-supersecrettoken_architect}
+      - AGENT_TECHNICAL_WRITER_TOKEN=${AGENT_TECHNICAL_WRITER_TOKEN:-supersecrettoken_writer}
+    depends_on:
+      - postgres
+    volumes:
+      - ./services/devenviro.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===========================================
+  # DEVENVIRO AGENT SERVICES
+  # ===========================================
+
+  devenviro-gemini-cli-listener:
+    build:
+      context: ./services/devenviro.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_devenviro_gemini_cli_listener
+    working_dir: /app/app
+    command: ["poetry", "run", "python", "src/listeners/gemini_cli_listener.py"]
+    env_file:
+      - ./services/devenviro.as/.env
+    environment:
+      - PYTHONPATH=/app/app
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@apexsigma_rabbitmq:5672/
+      - AGENT_GEMINI_CLI_TOKEN=${AGENT_GEMINI_CLI_TOKEN:-supersecrettoken_gemini_cli}
+      - GEMINI_COMMAND=echo "Gemini CLI simulation:"
+      - POSTGRES_HOST=apexsigma_postgres
+      - POSTGRES_DB=${POSTGRES_DB:-apexsigma-memtank}
+      - POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
+    depends_on:
+      - postgres
+      - rabbitmq
+      - devenviro-api
+    volumes:
+      - ./services/devenviro.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "poetry",
+          "run",
+          "python",
+          "-c",
+          "import sys; import os; sys.path.append('/app/app'); from src.listeners.gemini_cli_listener import GeminiCLIListener; sys.exit(0)",
+        ]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+  devenviro-docs:
+    image: python:3.11-slim
+    container_name: apexsigma_devenviro_docs
+    working_dir: /app
+    command: >
+      sh -c "pip install mkdocs mkdocs-material &&
+      mkdocs serve --dev-addr 0.0.0.0:8000"
+    volumes:
+      - ./services/devenviro.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    profiles:
+      - docs
+
+  devenviro-a2a-bridge:
+    build:
+      context: ./services/devenviro.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_devenviro_a2a_bridge
+    ports:
+      - "9184:8000"
+    working_dir: /app/app
+    command:
+      [
+        "poetry",
+        "run",
+        "uvicorn",
+        "bridge.bridge_service:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload",
+      ]
+    env_file:
+      - ./services/devenviro.as/.env
+    environment:
+      - PYTHONPATH=/app/app
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@apexsigma_rabbitmq:5672/
+      - RABBITMQ_EXCHANGE=agent_exchange
+    depends_on:
+      - rabbitmq
+      - devenviro-api
+    volumes:
+      - ./services/devenviro.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/agents/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===========================================
+  # MEMOS.AS - PERSISTENT MEMORY SERVICE
+  # ===========================================
+
+  memos-api:
+    build:
+      context: .
+      dockerfile: ./services/memos.as/Dockerfile
+    container_name: apexsigma_memos_api
+    env_file:
+      - .env
+    environment:
+      - SERVICE_NAME=memos.as
+      - PYTHONPATH=/code
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+      - neo4j
+    volumes:
+      - ./services/memos.as:/code
+      - ./libs/apexsigma-core:/code/libs/apexsigma-core
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ===========================================
+  # INGEST-LLM.AS - DATA INGESTION SERVICE
+  # ===========================================
+
+  ingest-llm-api:
+    build:
+      context: ./services/InGest-LLM.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_ingest_llm_api
+    env_file:
+      - .env
+    environment:
+      - SERVICE_NAME=InGest-LLM.as
+      - INGEST_MEMOS_BASE_URL=http://memos-api:8090
+      - INGEST_MEMOS_TIMEOUT=30
+      - INGEST_LM_STUDIO_BASE_URL=http://host.docker.internal:1234/v1
+      - INGEST_LM_STUDIO_ENABLED=true
+      - INGEST_EMBEDDING_ENABLED=true
+      - JAEGER_ENDPOINT=http://jaeger:14268/api/traces
+      - PROMETHEUS_GATEWAY=http://prometheus:9090
+      - INGEST_APP_NAME=InGest-LLM.as
+      - INGEST_DEBUG=false
+      - LOG_LEVEL=INFO
+      - LOG_JSON=true
+      - ENVIRONMENT=docker
+    depends_on:
+      - memos-api
+      - jaeger
+    volumes:
+      - ./services/InGest-LLM.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ===========================================
+  # TOOLS.AS - TOOL REGISTRY SERVICE
+  # ===========================================
+
+  tools-postgres:
+    image: postgres:16-alpine
+    container_name: apexsigma_tools_postgres
+    environment:
+      - POSTGRES_DB=tools_db
+      - POSTGRES_USER=tools_user
+      - POSTGRES_PASSWORD=Apexsigma123_
+    volumes:
+      - tools_postgres_data:/var/lib/postgresql/data
+      - ./services/tools.as/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tools_user -d tools_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tools-api:
+    build:
+      context: ./services/tools.as
+      dockerfile: Dockerfile
+    container_name: apexsigma_tools_api
+    ports:
+      - "9185:8000"
+    env_file:
+      - .env
+    environment:
+      - SERVICE_NAME=tools.as
+      - DATABASE_URL=postgresql://tools_user:tools_pass@tools-postgres:5432/tools_db
+      - ENVIRONMENT=production
+      - PYTHONPATH=/app
+    depends_on:
+      - tools-postgres
+    volumes:
+      - ./services/tools.as:/app
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ===========================================
+  # DAGSTER SERVICES
+  # ===========================================
+
+  dagster-webserver:
+    build:
+      context: .
+      dockerfile: ./services/dagster/Dockerfile
+    container_name: apexsigma_dagster_webserver
+    hostname: dagster-webserver
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+      - DAGSTER_POSTGRES_HOST=postgres
+      - DAGSTER_POSTGRES_PORT=5432
+      - DAGSTER_POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
+      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
+      - DAGSTER_POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
+    ports:
+      - "3080:3000"  # Changed from 8080 to avoid Grafana conflict
+    volumes:
+      - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro
+      - ./services/dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
+      - ./services/dagster/definitions.py:/opt/dagster/dagster_home/definitions.py:ro
+      - dagster_home:/opt/dagster/dagster_home
+    networks:
+      apexsigma_net:
+        ipv4_address: 172.26.0.51
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      # OVS-T03 FIX: Improved healthcheck with longer intervals and timeout
+      test: ["CMD", "python", "-c", "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=5); conn.request('GET','/server_info'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)"]
+      interval: 60s       # Increase from 30s to reduce check frequency
+      timeout: 20s        # Increase from 10s to allow more response time
+      retries: 5          # Increase from 3 for better resilience
+      start_period: 120s  # Increase from 60s to allow full startup
+
+  dagster-daemon:
+    build:
+      context: .
+      dockerfile: ./services/dagster/Dockerfile
+    container_name: apexsigma_dagster_daemon
+    hostname: dagster-daemon
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+      - DAGSTER_POSTGRES_HOST=postgres
+      - DAGSTER_POSTGRES_PORT=5432
+      - DAGSTER_POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
+      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
+      - DAGSTER_POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
+    volumes:
+      - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro
+      - ./services/dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
+      - ./services/dagster/definitions.py:/opt/dagster/dagster_home/definitions.py:ro
+      - dagster_home:/opt/dagster/dagster_home
+    networks:
+      apexsigma_net:
+        ipv4_address: 172.26.0.53
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dagster-webserver:
+        condition: service_started
+    restart: unless-stopped
+    command: ["dagster-daemon", "run", "-w", "/opt/dagster/dagster_home/workspace.yaml"]
+
+# ===========================================
+# VOLUMES
+# ===========================================
+
+volumes:
+  postgres_data:
+    name: apexsigma_postgres_data
+  tools_postgres_data:
+    name: apexsigma_tools_postgres_data
+  redis_data:
+    name: apexsigma_redis_data
+  rabbitmq_data:
+    name: apexsigma_rabbitmq_data
+  qdrant_data:
+    name: apexsigma_qdrant_data
+  neo4j_data:
+    name: apexsigma_neo4j_data
+  neo4j_logs:
+    name: apexsigma_neo4j_logs
+  prometheus_data:
+    name: apexsigma_prometheus_data
+  grafana_data:
+    name: apexsigma_grafana_data
+  loki_data:
+    name: apexsigma_loki_data
+  clickhouse_data:
+    name: apexsigma_clickhouse_data
+  dagster_home:
+    driver: local
+  langfuse_data:
+    driver: local
+  clickhouse_logs:
+    name: apexsigma_clickhouse_logs
+  vector_data:
+    name: apexsigma_vector_data
+
+# ===========================================
+# NETWORKS
+# ===========================================
+
+networks:
+  apexsigma_net:
+    external: true

@@ -1,0 +1,91 @@
+# Command: session-progress
+# Description: Log progress during a development session
+# Category: development
+# Version: 1
+# Author: iFlow CLI
+
+description = "Log progress during a development session"
+
+prompt = """
+AI Agent Instructions: ApexSigma Development Session Progress Logger
+
+## Objective
+Your goal is to help the developer log progress during an active development session, capturing completed work, current status, challenges encountered, and next steps. This maintains a continuous record of the development process.
+
+## Progress Logging Process
+
+### Phase 1: Session Validation
+
+1.  **Active Session Check:**
+    -   Verify that there is an active development session
+    -   If no active session exists, prompt the user to start a session with `session-start`
+    -   If multiple sessions are active, ask which one to update
+
+2.  **Session Information Display:**
+    -   Show the current session ID and goals for context
+    -   Display the last progress update (if any) for continuity
+
+### Phase 2: Progress Information Gathering
+
+1.  **Completed Work:**
+    -   Ask the developer to describe what has been completed since the last update
+    -   Encourage specific details about implemented features, fixed bugs, or completed tasks
+    -   Example prompt: "What have you completed since the last progress update?"
+
+2.  **Current Status:**
+    -   Inquire about the current focus or task being worked on
+    -   Ask about the status (in progress, blocked, testing, etc.)
+    -   Example prompt: "What are you currently working on, and what's its status?"
+
+3.  **Challenges and Issues:**
+    -   Ask about any challenges, obstacles, or issues encountered
+    -   Inquire about any help or resources needed
+    -   Example prompt: "Are you facing any challenges or blockers?"
+
+4.  **Next Steps:**
+    -   Ask about planned next steps or upcoming tasks
+    -   Inquire about any adjustments to the original session goals
+    -   Example prompt: "What are your next steps or planned tasks?"
+
+### Phase 3: Progress Documentation
+
+1.  **Progress Entry Creation:**
+    -   Generate a timestamp for the progress update
+    -   Record all the collected information in a structured format
+    -   Associate the progress entry with the session ID
+
+2.  **Session State Update:**
+    -   Update the session tracking file with the new progress entry
+    -   Update any time tracking or metrics if applicable
+    -   Maintain a chronological log of progress updates
+
+3.  **Integration Updates:**
+    -   If configured, send progress updates to:
+        - Memos knowledge management system
+        - InGest-LLM content processing
+        - DevEnviro agent orchestration (if applicable)
+
+### Phase 4: Progress Confirmation
+
+1.  **Summary and Confirmation:**
+    -   Present a summary of the progress update
+    -   Confirm that all information has been captured correctly
+    -   Show the updated session status
+
+2.  **Next Steps Guidance:**
+    -   Remind the developer of available session commands:
+        - `session-progress` for additional updates
+        - `session-complete` to finalize the session
+        - `session-view` to review session details
+
+3.  **Session Continuation:**
+    -   Keep the session marked as active
+    -   Output a confirmation message with the updated session information
+
+## Output Format
+Provide a clear, structured output that includes:
+- Session ID and confirmation of update
+- Summary of progress logged
+- Next steps for the developer
+- Reminder of available session commands
+"""

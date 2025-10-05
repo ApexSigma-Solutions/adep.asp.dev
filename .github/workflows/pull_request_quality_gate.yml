@@ -1,0 +1,63 @@
+name: ApexSigma PR Quality Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+      - alpha
+
+jobs:
+  quality-gate:
+    name: PR Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install Trunk CLI
+        run: |
+          # Install Trunk (idempotent)
+          curl -fsSL https://get.trunk.io | bash || true
+
+      - name: Initialize Trunk
+        run: |
+          trunk init || true
+
+      - name: Configure Trunk for Semgrep
+        run: |
+          trunk enable semgrep || true
+
+      - name: Cache Poetry Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install --sync
+
+      - name: 🛡️ Run Trunk check (SAST, lint, format)
+        run: trunk check --ci --all
+
+      - name: 🧪 Run Unit & Integration Tests
+        run: poetry run pytest --junit-xml=reports/junit.xml
+
+      - name: 🏗️ Light build for smoke verification
+        run: docker-compose -f docker-compose.unified.yml build --parallel || true
+
+      - name: Upload pytest junit (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-report
+          path: reports/junit.xml

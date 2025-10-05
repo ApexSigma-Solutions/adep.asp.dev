@@ -1,0 +1,98 @@
+# Command: session-complete
+# Description: Finalize and document a development session
+# Category: development
+# Version: 1
+# Author: iFlow CLI
+
+description = "Finalize and document a development session"
+
+prompt = """
+AI Agent Instructions: ApexSigma Development Session Completer
+
+## Objective
+Your goal is to help the developer finalize an active development session by capturing final outcomes, lessons learned, and next steps. This creates a comprehensive record of the development work and prepares it for documentation.
+
+## Session Completion Process
+
+### Phase 1: Session Validation and Summary
+
+1.  **Active Session Check:**
+    -   Verify that there is an active development session
+    -   If no active session exists, inform the user there's no session to complete
+    -   If multiple sessions are active, ask which one to complete
+
+2.  **Session Summary Display:**
+    -   Show the session ID, goals, and duration
+    -   Display a summary of progress updates logged during the session
+    -   Present key technical areas worked on
+
+### Phase 2: Final Information Gathering
+
+1.  **Session Outcomes:**
+    -   Ask the developer to describe the key outcomes and achievements of the session
+    -   Inquire about completed tasks, implemented features, or resolved issues
+    -   Example prompt: "What were the key outcomes and achievements of this session?"
+
+2.  **Lessons Learned:**
+    -   Ask about technical insights, challenges overcome, or discoveries made
+    -   Inquire about process improvements or best practices identified
+    -   Example prompt: "What lessons learned or insights emerged from this work?"
+
+3.  **Problems Resolved:**
+    -   Ask about any significant problems or blockers that were resolved
+    -   Inquire about solutions implemented and their effectiveness
+    -   Example prompt: "What problems or blockers were resolved during this session?"
+
+4.  **Remaining Work and Next Steps:**
+    -   Ask about any unfinished work that needs to continue in future sessions
+    -   Inquire about next steps or follow-up actions needed
+    -   Example prompt: "What remaining work needs to continue, and what are the next steps?"
+
+### Phase 3: Session Documentation Generation
+
+1.  **Comprehensive Session Report:**
+    -   Compile all session information into a structured documentation format
+    -   Include:
+        - Session metadata (ID, start/end times, duration)
+        - Original goals and context
+        - Chronological progress updates
+        - Final outcomes and achievements
+        - Lessons learned and insights
+        - Problems resolved and solutions
+        - Remaining work and next steps
+
+2.  **Documentation Storage:**
+    -   Save the complete session documentation in the appropriate location
+    -   Follow the project's documentation structure (e.g., `docs/Plans/` or similar)
+    -   Use a consistent naming convention with timestamp and session ID
+
+3.  **Session State Finalization:**
+    -   Mark the session as completed in the tracking system
+    -   Update any time tracking or metrics
+    -   Archive session metadata
+
+### Phase 4: Integration and Notification
+
+1.  **Knowledge Management Integration:**
+    -   If configured, send session documentation to:
+        - Memos knowledge management system
+        - InGest-LLM content processing for analysis
+        - DevEnviro agent orchestration (if applicable)
+
+2.  **Completion Confirmation:**
+    -   Present a summary of the completed session
+    -   Confirm that documentation has been generated and stored
+    -   Provide the location of the session documentation file
+
+3.  **Next Steps Guidance:**
+    -   Suggest reviewing the session documentation for accuracy
+    -   Recommend committing the documentation to version control
+    -   Provide information about viewing past sessions with `session-list`
+
+## Output Format
+Provide a clear, structured output that includes:
+- Session ID and completion confirmation
+- Summary of key outcomes and achievements
+- Location of generated session documentation
+- Next steps for the developer
+"""

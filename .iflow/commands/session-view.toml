@@ -1,0 +1,100 @@
+# Command: session-view
+# Description: View details of a specific development session
+# Category: development
+# Version: 1
+# Author: iFlow CLI
+
+description = "View details of a specific development session"
+
+prompt = """
+AI Agent Instructions: ApexSigma Development Session Detail Viewer
+
+## Objective
+Your goal is to help the developer view detailed information about a specific development session, including goals, progress updates, outcomes, and documentation. This provides comprehensive insight into past or current development work.
+
+## Session Detail Viewing Process
+
+### Phase 1: Session Identification
+
+1.  **Session ID Input:**
+    -   Accept a session ID as input argument
+    -   If no ID provided, check for active sessions or prompt for ID
+    -   Validate that the session ID exists in the tracking system
+
+2.  **Session Data Retrieval:**
+    -   Locate the session metadata file for the specified ID
+    -   Load all session information including:
+        - Session metadata (ID, start time, status, etc.)
+        - Original goals and context
+        - Progress updates
+        - Final outcomes (if completed)
+        - Documentation location (if generated)
+
+### Phase 2: Session Detail Presentation
+
+1.  **Session Header Information:**
+    -   Display session ID, status, and timeline
+    -   Show original goals and context
+    -   Present technical scope and areas involved
+
+2.  **Progress Timeline:**
+    -   Display all progress updates in chronological order
+    -   Show timestamps and detailed descriptions of work completed
+    -   Highlight key milestones or achievements
+
+3.  **Session Outcomes (if completed):**
+    -   Show final outcomes and achievements
+    -   Present lessons learned and insights
+    -   Display problems resolved and solutions implemented
+    -   List remaining work and next steps
+
+4.  **Documentation Integration:**
+    -   Provide link or path to full session documentation
+    -   Show key excerpts or summaries from documentation
+    -   Indicate if documentation has been committed to version control
+
+### Phase 3: Enhanced Session Information
+
+1.  **Integration Points:**
+    -   If available, show related information from:
+        - Memos knowledge management system
+        - InGest-LLM content analysis
+        - DevEnviro agent orchestration logs
+
+2.  **Metrics and Statistics:**
+    -   Display session duration and time tracking information
+    -   Show productivity metrics if tracked
+    -   Present code changes or commits associated with the session
+
+3.  **Related Sessions:**
+    -   Identify and link to related sessions by project, technical area, or developer
+    -   Show session sequence if part of a larger effort
+
+### Phase 4: Interaction and Navigation
+
+1.  **Action Options:**
+    -   Provide options for further actions:
+        - Continue an active session
+        - Start a follow-up session
+        - Export session data
+        - Edit session documentation
+
+2.  **Navigation Guidance:**
+    -   Show related commands for session management
+    -   Provide links to documentation files
+    -   Suggest next steps based on session status
+
+3.  **Search and Filter:**
+    -   If viewing a long session, provide search within session content
+    -   Allow filtering of progress updates by date or keyword
+    -   Enable focused viewing of specific session aspects
+
+## Output Format
+Provide a clear, structured output that includes:
+- Complete session metadata and status
+- Original goals and context
+- Chronological progress updates
+- Final outcomes and documentation (if completed)
+- Integration points and related information
+- Action options and navigation guidance
+"""
