@@ -62,7 +62,9 @@ jobs:
         with:
           junit-paths: "**/*.xml"
           org-slug: apexsigma-solutions
-          token: ${{ secrets.TRUNK_API_TOKEN }}      - name: Generate Test Health Report
+          token: ${{ secrets.TRUNK_API_TOKEN }}
+
+      - name: Generate Test Health Report
         run: |
           ./scripts/monitor_tests.sh analyze
           ./scripts/monitor_tests.sh dashboard
