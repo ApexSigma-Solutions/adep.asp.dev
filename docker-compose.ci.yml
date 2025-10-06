@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: apexsigma_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-apexsigma_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-apexsigma_password}
+      POSTGRES_DB: ${POSTGRES_DB:-apexsigma_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - apexsigma_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-apexsigma_user} -d ${POSTGRES_DB:-apexsigma_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: apexsigma_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - apexsigma_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  qdrant:
+    image: qdrant/qdrant:v1.1.0
+    container_name: apexsigma_qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - apexsigma_network
+
+  neo4j:
+    image: neo4j:4.4
+    container_name: apexsigma_neo4j
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-apexsigma_neo4j_password}
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - apexsigma_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  qdrant_data:
+  neo4j_data:
+
+networks:
+  apexsigma_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.26.0.0/16

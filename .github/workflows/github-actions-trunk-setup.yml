@@ -56,7 +56,7 @@ jobs:
           EOF
           
           # Start essential services for testing
-          docker compose -f docker-compose.yml up -d postgres redis neo4j qdrant
+          docker compose -f docker-compose.ci.yml up -d postgres redis neo4j qdrant
           # Wait for services to be ready
           sleep 60
           docker ps
@@ -97,7 +97,7 @@ jobs:
           AGENT_PROJECT_MANAGER_TOKEN=test_project_token
           EOF
           
-          docker compose -f docker-compose.yml down
+          docker compose -f docker-compose.ci.yml down
         
       - name: Upload Test Results to Trunk.io
         if: always() # Upload even if tests fail
