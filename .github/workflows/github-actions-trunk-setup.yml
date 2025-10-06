@@ -109,6 +109,7 @@ jobs:
           token: ${{ secrets.TRUNK_API_TOKEN }}
 
       - name: Generate Test Health Report
+        working-directory: ${{ github.workspace }}
         run: |
           # Install required dependencies
           sudo apt-get update
@@ -185,12 +186,14 @@ jobs:
           sudo apt-get install -y jq bc
 
       - name: Run Health Analysis
+        working-directory: ${{ github.workspace }}
         run: |
           chmod +x ./scripts/monitor_tests.sh
           ./scripts/monitor_tests.sh analyze
           ./scripts/monitor_tests.sh status
 
       - name: Generate Monitoring Dashboard
+        working-directory: ${{ github.workspace }}
         run: |
           chmod +x ./scripts/monitor_tests.sh
           ./scripts/monitor_tests.sh dashboard
