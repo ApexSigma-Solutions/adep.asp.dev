@@ -33,25 +33,29 @@ jobs:
       
       - name: Start Required Services (Docker Compose)
         run: |
+          # Create a minimal .env file for CI
+          cat > .env << EOF
+          POSTGRES_DB=apexsigma_test_db
+          POSTGRES_USER=apexsigma_test_user
+          POSTGRES_PASSWORD=Apexsigma123_
+          RABBITMQ_USER=apexsigma_test_user
+          RABBITMQ_PASSWORD=Apexsigma123_
+          CLICKHOUSE_USER=clickhouse_test_user
+          CLICKHOUSE_PASSWORD=Apexsigma123_
+          CLICKHOUSE_DB=apexsigma_test_observability
+          LANGFUSE_SALT=test-salt-ci-environment
+          AGENT_ORCHESTRATOR_TOKEN=test_orchestrator_token
+          AGENT_BACKEND_SPECIALIST_TOKEN=test_backend_token
+          AGENT_CODE_REFACTORING_SPECIALIST_TOKEN=test_refactoring_token
+          AGENT_DEVOPS_ENGINEER_TOKEN=test_devops_token
+          AGENT_ENGINEERING_MANAGER_TOKEN=test_manager_token
+          AGENT_ENTERPRISE_CTO_TOKEN=test_cto_token
+          AGENT_FRONTEND_SPECIALIST_TOKEN=test_frontend_token
+          AGENT_PRODUCT_OWNER_TOKEN=test_product_token
+          AGENT_PROJECT_MANAGER_TOKEN=test_project_token
+          EOF
+          
           # Start essential services for testing
-          POSTGRES_DB=apexsigma_test_db \
-          POSTGRES_USER=apexsigma_test_user \
-          POSTGRES_PASSWORD=Apexsigma123_ \
-          RABBITMQ_USER=apexsigma_test_user \
-          RABBITMQ_PASSWORD=Apexsigma123_ \
-          CLICKHOUSE_USER=clickhouse_test_user \
-          CLICKHOUSE_PASSWORD=Apexsigma123_ \
-          CLICKHOUSE_DB=apexsigma_test_observability \
-          LANGFUSE_SALT=test-salt-ci-environment \
-          AGENT_ORCHESTRATOR_TOKEN=test_orchestrator_token \
-          AGENT_BACKEND_SPECIALIST_TOKEN=test_backend_token \
-          AGENT_CODE_REFACTORING_SPECIALIST_TOKEN=test_refactoring_token \
-          AGENT_DEVOPS_ENGINEER_TOKEN=test_devops_token \
-          AGENT_ENGINEERING_MANAGER_TOKEN=test_manager_token \
-          AGENT_ENTERPRISE_CTO_TOKEN=test_cto_token \
-          AGENT_FRONTEND_SPECIALIST_TOKEN=test_frontend_token \
-          AGENT_PRODUCT_OWNER_TOKEN=test_product_token \
-          AGENT_PROJECT_MANAGER_TOKEN=test_project_token \
           docker compose -f docker-compose.unified.yml up -d postgres redis neo4j qdrant
           # Wait for services to be ready
           sleep 30
@@ -71,24 +75,28 @@ jobs:
       - name: Cleanup Services
         if: always()
         run: |
-          POSTGRES_DB=apexsigma_test_db \
-          POSTGRES_USER=apexsigma_test_user \
-          POSTGRES_PASSWORD=Apexsigma123_ \
-          RABBITMQ_USER=apexsigma_test_user \
-          RABBITMQ_PASSWORD=Apexsigma123_ \
-          CLICKHOUSE_USER=clickhouse_test_user \
-          CLICKHOUSE_PASSWORD=Apexsigma123_ \
-          CLICKHOUSE_DB=apexsigma_test_observability \
-          LANGFUSE_SALT=test-salt-ci-environment \
-          AGENT_ORCHESTRATOR_TOKEN=test_orchestrator_token \
-          AGENT_BACKEND_SPECIALIST_TOKEN=test_backend_token \
-          AGENT_CODE_REFACTORING_SPECIALIST_TOKEN=test_refactoring_token \
-          AGENT_DEVOPS_ENGINEER_TOKEN=test_devops_token \
-          AGENT_ENGINEERING_MANAGER_TOKEN=test_manager_token \
-          AGENT_ENTERPRISE_CTO_TOKEN=test_cto_token \
-          AGENT_FRONTEND_SPECIALIST_TOKEN=test_frontend_token \
-          AGENT_PRODUCT_OWNER_TOKEN=test_product_token \
-          AGENT_PROJECT_MANAGER_TOKEN=test_project_token \
+          # Create a minimal .env file for CI
+          cat > .env << EOF
+          POSTGRES_DB=apexsigma_test_db
+          POSTGRES_USER=apexsigma_test_user
+          POSTGRES_PASSWORD=Apexsigma123_
+          RABBITMQ_USER=apexsigma_test_user
+          RABBITMQ_PASSWORD=Apexsigma123_
+          CLICKHOUSE_USER=clickhouse_test_user
+          CLICKHOUSE_PASSWORD=Apexsigma123_
+          CLICKHOUSE_DB=apexsigma_test_observability
+          LANGFUSE_SALT=test-salt-ci-environment
+          AGENT_ORCHESTRATOR_TOKEN=test_orchestrator_token
+          AGENT_BACKEND_SPECIALIST_TOKEN=test_backend_token
+          AGENT_CODE_REFACTORING_SPECIALIST_TOKEN=test_refactoring_token
+          AGENT_DEVOPS_ENGINEER_TOKEN=test_devops_token
+          AGENT_ENGINEERING_MANAGER_TOKEN=test_manager_token
+          AGENT_ENTERPRISE_CTO_TOKEN=test_cto_token
+          AGENT_FRONTEND_SPECIALIST_TOKEN=test_frontend_token
+          AGENT_PRODUCT_OWNER_TOKEN=test_product_token
+          AGENT_PROJECT_MANAGER_TOKEN=test_project_token
+          EOF
+          
           docker compose -f docker-compose.unified.yml down
         
       - name: Upload Test Results to Trunk.io
