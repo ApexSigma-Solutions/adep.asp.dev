@@ -56,9 +56,9 @@ jobs:
           EOF
           
           # Start essential services for testing
-          docker compose -f docker-compose.unified.yml up -d postgres redis neo4j qdrant
+          docker compose -f docker-compose.yml up -d postgres redis neo4j qdrant
           # Wait for services to be ready
-          sleep 30
+          sleep 60
           docker ps
       
       - name: Run Unit Tests with JUnit Output
@@ -97,7 +97,7 @@ jobs:
           AGENT_PROJECT_MANAGER_TOKEN=test_project_token
           EOF
           
-          docker compose -f docker-compose.unified.yml down
+          docker compose -f docker-compose.yml down
         
       - name: Upload Test Results to Trunk.io
         if: always() # Upload even if tests fail
@@ -110,6 +110,10 @@ jobs:
 
       - name: Generate Test Health Report
         run: |
+          # Install required dependencies
+          sudo apt-get update
+          sudo apt-get install -y jq bc
+
           chmod +x ./scripts/monitor_tests.sh
           ./scripts/monitor_tests.sh analyze
           ./scripts/monitor_tests.sh dashboard
@@ -177,8 +181,8 @@ jobs:
 
       - name: Install Monitoring Dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install jq  # For JSON processing
+          sudo apt-get update
+          sudo apt-get install -y jq bc
 
       - name: Run Health Analysis
         run: |
