@@ -18,6 +18,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Apexsigma123_}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/init-langfuse.sql:/docker-entrypoint-initdb.d/init-langfuse.sql:ro
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -212,6 +213,8 @@ services:
       - clickhouse_logs:/var/log/clickhouse-server
       - ./config/clickhouse/config.xml:/etc/clickhouse-server/config.d/custom.xml:ro
       - ./config/clickhouse/users.xml:/etc/clickhouse-server/users.d/custom.xml:ro
+      - ./config/clickhouse/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./config/clickhouse/init-langfuse.sql:/docker-entrypoint-initdb.d/init-langfuse.sql:ro
     networks:
       apexsigma_net:
         ipv4_address: 172.26.0.50
@@ -256,23 +259,23 @@ services:
     container_name: apexsigma_langfuse
     hostname: langfuse
     environment:
-      # Primary PostgreSQL storage
-      DATABASE_URL: "postgresql://${POSTGRES_USER:-apexsigma_user}:${POSTGRES_PASSWORD:-Apexsigma123_}@postgres:5432/${POSTGRES_DB:-apexsigma_db}"
+      # Primary PostgreSQL storage - Dedicated database
+      DATABASE_URL: "postgresql://langfuse_user:Apexsigma123_@postgres:5432/langfuse_db"
 
-      # ClickHouse analytics (native protocol - REQUIRED for v3)
-      CLICKHOUSE_URL: "clickhouse://${CLICKHOUSE_USER:-clickhouse_user}:${CLICKHOUSE_PASSWORD:-Apexsigma123_}@clickhouse:9000/${CLICKHOUSE_DB:-apexsigma_observability}"
+      # ClickHouse analytics - Dedicated database
+      CLICKHOUSE_URL: "clickhouse://langfuse_user:Apexsigma123_@clickhouse:9000/langfuse_analytics"
       LANGFUSE_CLICKHOUSE_ENABLED: "true"
       LANGFUSE_CLICKHOUSE_MIGRATION_TARGET: "latest"
 
       # Feature flags
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
       NEXTAUTH_URL: "http://localhost:3001"
-      NEXTAUTH_SECRET: "REDACTED_FOR_COMMIT"
+      NEXTAUTH_SECRET: "${LANGFUSE_NEXTAUTH_SECRET:-REDACTED_FOR_COMMIT}"
 
       # API keys
-      LANGFUSE_PUBLIC_KEY: "pk-lf-REDACTED_FOR_COMMIT"
-      LANGFUSE_SECRET_KEY: "REDACTED_FOR_COMMIT"
-      SALT: "${LANGFUSE_SALT:-your-secure-salt-here-change-this-in-production}"
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-pk-lf-REDACTED_FOR_COMMIT}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-REDACTED_FOR_COMMIT}
+      SALT: ${LANGFUSE_SALT:-your-secure-salt-here-change-this-in-production}
     ports:
       - "3001:3000"
     volumes:
@@ -287,11 +290,11 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=2); conn.request('GET','/api/public/health'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://172.26.0.52:3000/api/public/health || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 5
-      start_period: 60s
+      retries: 3
+      start_period: 40s
 
   promtail:
     image: grafana/promtail:3.0.0

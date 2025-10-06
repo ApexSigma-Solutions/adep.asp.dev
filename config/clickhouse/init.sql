@@ -149,16 +149,24 @@ ALTER TABLE langfuse_traces ADD INDEX IF NOT EXISTS idx_project_id project_id TY
 -- ==================================================
 
 -- Test data insertion (will be removed in production)
-INSERT INTO logs (timestamp, level, service, message) VALUES 
-    (now(), 'INFO', 'test-service', 'ClickHouse initialization complete'),
-    (now(), 'INFO', 'clickhouse', 'Database schema created successfully');
+-- Temporarily disabled due to database context issues
+-- INSERT INTO logs (timestamp, level, service, message) VALUES
+--     (now64(), 'INFO', 'test-service', 'ClickHouse initialization complete'),
+--     (now64(), 'INFO', 'clickhouse', 'Database schema created successfully');
 
 -- Validate table creation
-SELECT 
+SELECT
     name,
     engine,
     total_rows,
     total_bytes
-FROM system.tables 
+FROM system.tables
 WHERE database = 'apexsigma_observability'
 ORDER BY name;
+
+-- ==================================================
+-- LANGFUSE ANALYTICS DATABASE INITIALIZATION
+-- ==================================================
+
+-- Execute Langfuse-specific initialization
+SOURCE /docker-entrypoint-initdb.d/init-langfuse.sql;

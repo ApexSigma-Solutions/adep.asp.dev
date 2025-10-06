@@ -1,0 +1,90 @@
+Keploy Test Automation Setup
+Overview
+Keploy is an API testing toolkit that can automatically generate test cases and mocks by recording API interactions. It's ideal for testing REST APIs in the ApexSigma ecosystem.
+
+Installation
+Method 1: Direct Installation (Linux/macOS)
+bash
+curl --silent -O -L https://github.com/keploy/keploy/releases/latest/download/keploy_linux_amd64.tar.gz
+tar --extract --gzip --file keploy_linux_amd64.tar.gz
+sudo mkdir -p /usr/local/bin && sudo mv keploy /usr/local/bin && keploy
+Method 2: Docker Installation (Recommended for Windows)
+bash
+docker run --name keploy-api -p 16789:16789 -v $(pwd):$(pwd) -w $(pwd) keploy/keploy
+Method 3: GitHub Actions Integration
+text
+- name: Setup Keploy
+  run: |
+    curl --silent -O -L https://github.com/keploy/keploy/releases/latest/download/keploy_linux_amd64.tar.gz
+    tar --extract --gzip --file keploy_linux_amd64.tar.gz
+    chmod +x keploy
+    sudo mv keploy /usr/local/bin/
+Configuration for ApexSigma Services
+1. Tools API (Port 8000)
+text
+# keploy-tools.yml
+version: api/v1beta1
+kind: config
+metadata:
+  name: keploy-config
+spec:
+  path: "./tools-tests"
+  command: "python -m uvicorn services.tools.as.app.main:app --host 0.0.0.0 --port 8000"
+  network:
+    filterNoise: true
+    delay: 10
+  test:
+    path: "./tools-tests/tests"
+    command: "python -m pytest tools-tests/ -v"
+    delay: 5
+2. Memos API (Port 8090)
+text
+# keploy-memos.yml
+version: api/v1beta1
+kind: config
+metadata:
+  name: keploy-memos-config
+spec:
+  path: "./memos-tests"
+  command: "python -m uvicorn services.memos.as.app.main:app --host 0.0.0.0 --port 8090"
+  network:
+    filterNoise: true
+    delay: 10
+  test:
+    path: "./memos-tests/tests"
+    command: "python -m pytest memos-tests/ -v"
+    delay: 5
+3. DevEnviro API (Port 3001)
+text
+# keploy-devenviro.yml
+version: api/v1beta1
+kind: config
+metadata:
+  name: keploy-devenviro-config
+spec:
+  path: "./devenviro-tests"
+  command: "python -m uvicorn services.devenviro.as.app.main:app --host 0.0.0.0 --port 3001"
+  network:
+    filterNoise: true
+    delay: 10
+  test:
+    path: "./devenviro-tests/tests"
+    command: "python -m pytest devenviro-tests/ -v"
+    delay: 5
+4. InGest-LLM API (Port 3002)
+text
+# keploy-ingest-llm.yml
+version: api/v1beta1
+kind: config
+metadata:
+  name: keploy-ingest-ll-config
+spec:
+  path: "./ingest-llm-tests"
+  command: "python -m uvicorn services.ingest_llm.as.app.main:app --host 0.0.0.0 --port 3002"
+  network:
+    filterNoise: true
+    delay: 10
+  test:
+    path: "./ingest-llm-tests/tests"
+    command: "python -m pytest ingest-llm-tests/ -v"
+    delay: 5

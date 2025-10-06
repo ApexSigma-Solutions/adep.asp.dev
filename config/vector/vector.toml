@@ -1,18 +1,18 @@
 # Minimal Vector Configuration for ApexSigma
-# Basic log collection and forwarding
+# Docker logs source disabled on Windows - Docker socket not accessible
+# Using internal metrics to keep Vector running
 
-[sources.docker_logs]
-type = "docker_logs"
-include_containers = ["apexsigma_*"]
+# Internal metrics source - continuously generates metrics
+[sources.internal_metrics]
+type = "internal_metrics"
 
-[sinks.clickhouse_logs]
-type = "clickhouse"
-inputs = ["docker_logs"]
-endpoint = "http://clickhouse:8123"
-database = "apexsigma_observability"
-table = "logs"
-auth = { strategy = "basic", user = "clickhouse_user", password = "change_me_securely" }
+# Console sink for metrics (discards data but keeps pipeline running)
+[sinks.console]
+type = "console"
+inputs = ["internal_metrics"]
+encoding.codec = "json"
 
+# API endpoint for health checks
 [api]
 enabled = true
 address = "0.0.0.0:8686"

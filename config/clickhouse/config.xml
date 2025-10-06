@@ -25,6 +25,5 @@
     <path>/var/lib/clickhouse/</path>
     <tmp_path>/var/lib/clickhouse/tmp/</tmp_path>
     
-    <!-- Users configuration will be loaded from users.xml -->
-    <users_config>users.xml</users_config>
+    <!-- Users configuration loaded from users.d directory -->
 </yandex>
