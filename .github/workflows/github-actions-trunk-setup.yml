@@ -34,7 +34,7 @@ jobs:
       - name: Start Required Services (Docker Compose)
         run: |
           # Start essential services for testing
-          docker-compose -f docker-compose.unified.yml up -d postgres redis neo4j qdrant
+          docker compose -f docker-compose.unified.yml up -d postgres redis neo4j qdrant
           # Wait for services to be ready
           sleep 30
           docker ps
@@ -53,7 +53,7 @@ jobs:
       - name: Cleanup Services
         if: always()
         run: |
-          docker-compose -f docker-compose.unified.yml down
+          docker compose -f docker-compose.unified.yml down
         
       - name: Upload Test Results to Trunk.io
         if: always() # Upload even if tests fail
