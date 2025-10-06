@@ -83,21 +83,27 @@ analyze_test_results() {
     log "${BLUE}Analyzing JUnit results...${NC}"
 
     # Parse JUnit XML (simplified parsing)
-    local total_tests=$(grep -c "<testcase" "$junit_file" 2>/dev/null || echo "0")
-    local failed_tests=$(grep -c "<failure>" "$junit_file" 2>/dev/null || echo "0")
-    local error_tests=$(grep -c "<error>" "$junit_file" 2>/dev/null || echo "0")
-    local skipped_tests=$(grep -c "<skipped>" "$junit_file" 2>/dev/null || echo "0")
+    local total_tests=$(grep -c "<testcase" "$junit_file" 2>/dev/null || echo 0)
+    local failed_tests=$(grep -c "<failure>" "$junit_file" 2>/dev/null || echo 0)
+    local error_tests=$(grep -c "<error>" "$junit_file" 2>/dev/null || echo 0)
+    local skipped_tests=$(grep -c "<skipped>" "$junit_file" 2>/dev/null || echo 0)
+
+    # Ensure all values are numeric
+    total_tests=${total_tests:-0}
+    failed_tests=${failed_tests:-0}
+    error_tests=${error_tests:-0}
+    skipped_tests=${skipped_tests:-0}
 
     local passed_tests=$((total_tests - failed_tests - error_tests - skipped_tests))
     # Ensure passed_tests is not negative
-    if [ "$passed_tests" -lt 0 ]; then
+    if [ $passed_tests -lt 0 ]; then
         passed_tests=0
     fi
 
     # Calculate pass ratio
     local pass_ratio="0.0"
-    if [ "$total_tests" -gt 0 ]; then
-        pass_ratio=$(printf "%.2f" $(echo "scale=2; $passed_tests * 100 / $total_tests" | bc 2>/dev/null) 2>/dev/null || echo "0.0")
+    if [ $total_tests -gt 0 ]; then
+        pass_ratio=$(echo "scale=2; $passed_tests * 100 / $total_tests" | bc 2>/dev/null || echo 0.0)
     fi
 
     # Create health data
