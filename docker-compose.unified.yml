@@ -73,6 +73,12 @@ services:
     networks:
       - apexsigma_net
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:6333/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   neo4j:
     image: neo4j:5.15-community
@@ -101,6 +107,35 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  # ===========================================
+  # SECRETS MANAGEMENT - HashiCorp Vault
+  # ===========================================
+
+  vault:
+    image: hashicorp/vault:1.15
+    container_name: apexsigma_vault
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=apexsigma-root-token-2025
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+      - VAULT_ADDR=http://0.0.0.0:8200
+    ports:
+      - "8200:8200"  # Vault web UI and API
+    volumes:
+      - vault_data:/vault/data
+      - vault_logs:/vault/logs
+      - vault_config:/vault/config
+    networks:
+      - apexsigma_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "vault status -address=http://localhost:8200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    cap_add:
+      - IPC_LOCK
 
   # ===========================================
   # SSL/TLS SECURITY LAYER (Phase 2)
@@ -145,6 +180,12 @@ services:
     networks:
       - apexsigma_net
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:16686/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   prometheus:
     image: prom/prometheus:v2.50.1
@@ -164,14 +205,18 @@ services:
     networks:
       - apexsigma_net
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   grafana:
     image: grafana/grafana:10.4.1
     container_name: apexsigma_grafana
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=Apexsigma123_
-    ports:
-      - "3000:3000"  # Grafana web UI
     volumes:
       - grafana_data:/var/lib/grafana
       - ./services/devenviro.as/config/grafana.ini:/etc/grafana/grafana.ini
@@ -193,6 +238,12 @@ services:
     networks:
       - apexsigma_net
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   clickhouse:
     image: clickhouse/clickhouse-server:24.3-alpine
@@ -269,15 +320,15 @@ services:
 
       # Feature flags
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
-      NEXTAUTH_URL: "http://localhost:3001"
+      NEXTAUTH_URL: "http://langfuse:3000"
       NEXTAUTH_SECRET: "${LANGFUSE_NEXTAUTH_SECRET:-REDACTED_FOR_COMMIT}"
 
       # API keys
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-pk-lf-REDACTED_FOR_COMMIT}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-REDACTED_FOR_COMMIT}
       SALT: ${LANGFUSE_SALT:-your-secure-salt-here-change-this-in-production}
-    ports:
-      - "3001:3000"
+    # ports:
+    #   - "3002:3000"
     volumes:
       - langfuse_data:/app/data
     networks:
@@ -693,6 +744,12 @@ volumes:
     name: apexsigma_clickhouse_logs
   vector_data:
     name: apexsigma_vector_data
+  vault_data:
+    name: apexsigma_vault_data
+  vault_logs:
+    name: apexsigma_vault_logs
+  vault_config:
+    name: apexsigma_vault_config
 
 # ===========================================
 # NETWORKS
