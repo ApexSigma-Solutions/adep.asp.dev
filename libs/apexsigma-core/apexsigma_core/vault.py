@@ -3,10 +3,10 @@ HashiCorp Vault client for ApexSigma ecosystem.
 Provides secure secrets management across all services.
 """
 
-import os
 import logging
-from typing import Optional, Dict, Any
+import os
 from functools import lru_cache
+from typing import Any, Dict, Optional
 
 import hvac
 
@@ -17,10 +17,7 @@ class VaultClient:
     """HashiCorp Vault client for secrets management."""
 
     def __init__(
-        self,
-        url: str = None,
-        token: Optional[str] = None,
-        mount_point: str = "secret"
+        self, url: str = None, token: Optional[str] = None, mount_point: str = "secret"
     ):
         """
         Initialize Vault client.
@@ -35,9 +32,10 @@ class VaultClient:
             # If running inside Docker network, use container name
             # If running on host, use localhost
             import socket
+
             try:
                 # Try to resolve container name (works inside Docker network)
-                socket.gethostbyname('apexsigma_vault')
+                socket.gethostbyname("apexsigma_vault")
                 url = "http://apexsigma_vault:8200"
             except socket.gaierror:
                 # Fallback to localhost (works on host machine)
@@ -76,10 +74,9 @@ class VaultClient:
         """
         try:
             response = self.client.secrets.kv.v2.read_secret_version(
-                path=path,
-                mount_point=self.mount_point
+                path=path, mount_point=self.mount_point
             )
-            data = response['data']['data']
+            data = response["data"]["data"]
             return data.get(key)
         except Exception as e:
             logger.warning(f"Failed to retrieve secret {path}/{key}: {e}")
@@ -98,9 +95,7 @@ class VaultClient:
         """
         try:
             self.client.secrets.kv.v2.create_or_update_secret(
-                path=path,
-                secret=data,
-                mount_point=self.mount_point
+                path=path, secret=data, mount_point=self.mount_point
             )
             logger.info(f"Successfully stored secret at {path}")
             return True
@@ -128,6 +123,37 @@ def get_secret(path: str, key: str) -> Optional[str]:
     """
     client = get_vault_client()
     return client.get_secret(path, key)
+
+
+def get_api_key(service_name: str) -> Optional[str]:
+    """
+    Convenience function to retrieve API key for a specific service.
+
+    Args:
+        service_name: Name of the service (e.g., 'gemini', 'openrouter', 'serper')
+
+    Returns:
+        API key value
+    """
+    key_name = f"{service_name.lower()}_api_key"
+    return get_secret("monorepo/api_keys", key_name)
+
+
+def get_service_api_key(service: str, key_name: str = "api") -> Optional[str]:
+    """
+    Convenience function to retrieve service-specific API keys.
+
+    Args:
+        service: Service name (e.g., 'tools', 'ingest')
+        key_name: Name of the key (e.g., 'serper', 'api')
+
+    Returns:
+        API key value
+    """
+    if key_name == "api":
+        return get_secret(f"services/{service}/api", "api_key")
+    else:
+        return get_secret(f"services/{service}/api", f"{key_name}_api_key")
 
 
 def set_secret(path: str, data: Dict[str, Any]) -> bool:
