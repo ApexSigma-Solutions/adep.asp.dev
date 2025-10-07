@@ -129,7 +129,8 @@ jobs:
     name: Keploy API Testing
     runs-on: ubuntu-latest
     needs: test
-    if: github.event_name == 'pull_request' # Only run on PRs for now
+    # Run Keploy on pull requests and on pushes to alpha branch
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/alpha')) }}
 
     steps:
       - name: Checkout
