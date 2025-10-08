@@ -26,6 +26,86 @@ opentelemetry-api = "^1.24"
 opentelemetry-sdk = "^1.24"
 opentelemetry-exporter-jaeger = "1.37.0"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+  "--strict-markers",
+  "--strict-config",
+  "--cov=libs",
+  "--cov=services",
+  "--cov=scripts",
+  "--cov-report=term-missing:skip-covered",
+  "--cov-report=html:htmlcov",
+  "--cov-report=xml:coverage.xml",
+  "--cov-report=json:coverage.json",
+  "--cov-branch",
+  "--cov-fail-under=80",
+  "-v",
+  "--tb=short",
+  "--color=yes",
+]
+markers = [
+  "unit: Unit tests",
+  "integration: Integration tests requiring external services",
+  "e2e: End-to-end tests requiring full service stack",
+  "slow: Slow running tests",
+  "asyncio: Async tests requiring asyncio support",
+]
+asyncio_mode = "strict"
+
+[tool.coverage.run]
+source = ["libs", "services", "scripts"]
+omit = [
+  "*/tests/*",
+  "*/test_*.py",
+  "*/__pycache__/*",
+  "*/migrations/*",
+  "*/__init__.py",
+  "*/conftest.py",
+  "*/.venv/*",
+  "*/venv/*",
+  "*/node_modules/*",
+  "*/.trunk/*",
+  "*/.git/*",
+]
+branch = true
+parallel = false
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+skip_empty = true
+sort = "Cover"
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "def __str__",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "@(abc\\.)?abstractmethod",
+  "@(typing\\.)?overload",
+  "class .*\\bProtocol\\):",
+  "except ImportError:",
+  "\\.\\.\\.",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+show_contexts = true
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[tool.coverage.json]
+output = "coverage.json"
+pretty_print = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

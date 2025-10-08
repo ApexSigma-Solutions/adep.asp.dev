@@ -1,0 +1,89 @@
+name: Update Status Badges
+
+on:
+  workflow_run:
+    workflows: ["Test Suite", "Lint & Code Quality", "Docker Build & Test", "Security Scanning"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  update-badges:
+    name: Update README Badges
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'cancelled'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Get workflow statuses
+        id: statuses
+        run: |
+          # Get latest run status for each workflow
+          TEST_STATUS=$(gh api /repos/${{ github.repository }}/actions/workflows/test.yml/runs --jq '.workflow_runs[0].conclusion')
+          LINT_STATUS=$(gh api /repos/${{ github.repository }}/actions/workflows/lint.yml/runs --jq '.workflow_runs[0].conclusion')
+          DOCKER_STATUS=$(gh api /repos/${{ github.repository }}/actions/workflows/docker-build.yml/runs --jq '.workflow_runs[0].conclusion')
+          SECURITY_STATUS=$(gh api /repos/${{ github.repository }}/actions/workflows/security-scan.yml/runs --jq '.workflow_runs[0].conclusion')
+          
+          echo "test_status=$TEST_STATUS" >> $GITHUB_OUTPUT
+          echo "lint_status=$LINT_STATUS" >> $GITHUB_OUTPUT
+          echo "docker_status=$DOCKER_STATUS" >> $GITHUB_OUTPUT
+          echo "security_status=$SECURITY_STATUS" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create status summary
+        run: |
+          echo "## CI/CD Status Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Workflow | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | ${{ steps.statuses.outputs.test_status == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint & Code Quality | ${{ steps.statuses.outputs.lint_status == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Docker Build & Test | ${{ steps.statuses.outputs.docker_status == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Scanning | ${{ steps.statuses.outputs.security_status == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR if applicable
+        if: github.event.workflow_run.event == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pullRequests } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: context.payload.workflow_run.head_branch
+            });
+            
+            if (pullRequests.length > 0) {
+              const pr = pullRequests[0];
+              const testStatus = '${{ steps.statuses.outputs.test_status }}';
+              const lintStatus = '${{ steps.statuses.outputs.lint_status }}';
+              const dockerStatus = '${{ steps.statuses.outputs.docker_status }}';
+              const securityStatus = '${{ steps.statuses.outputs.security_status }}';
+              
+              const statusEmoji = (status) => status === 'success' ? '✅' : '❌';
+              
+              const comment = `## 🤖 CI/CD Status Update
+              
+              | Workflow | Status |
+              |----------|--------|
+              | Test Suite | ${statusEmoji(testStatus)} ${testStatus} |
+              | Lint & Code Quality | ${statusEmoji(lintStatus)} ${lintStatus} |
+              | Docker Build & Test | ${statusEmoji(dockerStatus)} ${dockerStatus} |
+              | Security Scanning | ${statusEmoji(securityStatus)} ${securityStatus} |
+              
+              ---
+              *Updated automatically by CI/CD pipeline*`;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: comment
+              });
+            }

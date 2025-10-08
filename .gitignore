@@ -44,3 +44,13 @@ venv.bak/
 # Docker
 docker-compose.override.yml
 node_modules
+
+# Test coverage
+.coverage
+.coverage.*
+coverage.xml
+coverage.json
+htmlcov/
+.pytest_cache/
+junit.xml
+.tox/

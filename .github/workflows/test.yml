@@ -1,0 +1,105 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ alpha, main, feat/**, fix/** ]
+  pull_request:
+    branches: [ alpha, main ]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.13"
+  POETRY_VERSION: "1.8.2"
+
+jobs:
+  test:
+    name: Run Tests with Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better coverage analysis
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache Poetry installation
+        uses: actions/cache@v4
+        with:
+          path: ~/.local
+          key: poetry-${{ env.POETRY_VERSION }}-${{ runner.os }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            venv-${{ runner.os }}-${{ env.PYTHON_VERSION }}-
+
+      - name: Install dependencies
+        run: |
+          poetry install --with dev --no-interaction
+
+      - name: Run pytest with coverage
+        run: |
+          poetry run pytest --cov --cov-report=xml --cov-report=html --cov-report=term-missing
+        env:
+          # Add any required environment variables for tests
+          ENVIRONMENT: test
+          LOG_LEVEL: DEBUG
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-apexsigma
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage.xml
+            coverage.json
+            htmlcov/
+          retention-days: 30
+
+      - name: Check coverage threshold
+        run: |
+          poetry run python -c "
+          import json
+          with open('coverage.json') as f:
+              data = json.load(f)
+              coverage = data['totals']['percent_covered']
+              print(f'Total coverage: {coverage}%')
+              if coverage < 80:
+                  print('❌ Coverage below 80% threshold')
+                  exit(1)
+              else:
+                  print('✅ Coverage meets 80% threshold')
+          "
+
+      - name: Comment PR with coverage
+        if: github.event_name == 'pull_request'
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          MINIMUM_GREEN: 80
+          MINIMUM_ORANGE: 70
