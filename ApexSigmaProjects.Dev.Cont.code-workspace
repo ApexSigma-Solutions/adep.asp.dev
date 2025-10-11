@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.scrollback": 10000,
+		"git.confirmSync": false,
+		"git.ignoreRebaseWarning": true
+	}
+}

@@ -1,5 +1,16 @@
 # GitHub Copilot Instructions for ApexSigma Ecosystem
 
+## ⚠️ CRITICAL: Omega Ingest Protocol
+
+**BEFORE ANY CODE CHANGES**, you MUST understand the governance model:
+
+1. **Query Context APIs**: Check InGest-LLM (`http://172.26.0.12:8000/query_context`) and memOS (`http://172.26.0.13:8090/memory/query`) for existing verified knowledge
+2. **Validate Against Immutable Truth**: Omega Ingest (memOS + Neo4j) is the ONLY authoritative source
+3. **Dual Verification**: Infrastructure changes require verification from 2 AI assistants OR 1 AI + 1 human
+4. **Protected Services**: Never modify without verification: memOS API (172.26.0.13), Neo4j (172.26.0.14), PostgreSQL (172.26.0.2), InGest-LLM (172.26.0.12)
+
+**Reference**: `docs/protocols/The_Laws_of_Asgard_A_Primer_for_Agents_of_the_ApexSigma_Ecosystem.md`
+
 ## 🏗️ Architecture Overview
 
 **Society of Agents Architecture**: Multi-agent AI system with specialized roles orchestrated through DevEnviro.as. Four core microservices communicate via RabbitMQ and REST APIs.
@@ -26,7 +37,7 @@ Content → InGest-LLM → Qdrant (vectors) → Neo4j (knowledge graphs) → Pos
 
 ## 🔧 Critical Developer Workflows
 
-### Daily Development Cycle
+### Daily Development Cycle (SOD/EOD Protocol)
 
 ```powershell
 # Start of Day (SOD) - Deploy full ecosystem
@@ -40,24 +51,28 @@ Content → InGest-LLM → Qdrant (vectors) → Neo4j (knowledge graphs) → Pos
 .\eod.ps1 --project memos.as # Target specific project
 ```
 
+**Why SOD/EOD**: These scripts maintain knowledge graph continuity by automatically ingesting development progress into memOS. Bypassing this cycle breaks the Omega Ingest audit trail.
+
 ### Infrastructure Management
 
 ```bash
-# Start complete ecosystem
+# Start complete ecosystem (17+ services)
 docker-compose -f docker-compose.unified.yml up -d
 
-# Check service health
+# Check service health (all services have health checks)
 docker-compose -f docker-compose.unified.yml ps
 
-# View logs for specific service
+# View logs for specific service (use container names from docker-compose.unified.yml)
 docker-compose -f docker-compose.unified.yml logs apexsigma_memos_api
 
 # Access service dashboards
 # Grafana:    http://localhost:8080 (admin/apexsigma123)
 # Prometheus: http://localhost:9090
 # Jaeger:     http://localhost:16686
-# RabbitMQ:   http://localhost:15672
+# RabbitMQ:   http://localhost:15672 (apexsigma_user/Apexsigma123_)
 ```
+
+**Critical**: Use `docker-compose.unified.yml` NOT individual compose files. Services depend on shared network infrastructure.
 
 ### Quality Gates (MANDATORY)
 
@@ -69,28 +84,58 @@ trunk check --ci
 trunk check --fix
 
 # Custom actions defined in trunk.yaml
-trunk run run-tests  # Run pytest with JUnit XML output
+trunk run run-tests          # Run all service test suites
+trunk run run-memos-tests    # Run specific service tests
+trunk run run-integration-tests  # Integration tests (starts docker-compose.ci.yml)
 ```
 
-### Development Setup
+**Why trunk check is mandatory**:
+
+- Enforces 85% test coverage (Valhalla Shield standard)
+- Validates JUnit XML format (`junit_family = xunit1`)
+- Runs linters: ruff, black, isort, mypy, flake8
+- Outputs to `reports/junit-*.xml` for CI/CD
+
+### Development Setup (Per-Service)
 
 ```bash
-# Individual service development
+# Individual service development (all services use Poetry, NOT pip)
 cd services/memos.as
 poetry install && poetry shell
 
-# Run service locally
+# Run service locally (FastAPI with uvicorn)
 poetry run uvicorn app.main:app --reload --host 0.0.0.0 --port 8090
 
-# Run tests with coverage
+# Run tests with coverage (outputs JUnit XML)
 poetry run pytest --junit-xml=reports/junit.xml --cov=app --cov-report=html
+
+# Quality checks (use ruff, not pylint/flake8 standalone)
+poetry run ruff check . && poetry run ruff format .
+poetry run mypy app/
 ```
+
+**Service ports** (from docker-compose.unified.yml):
+
+- devenviro.as: 8001 (API), 8002 (Gemini listener)
+- memos.as: 8090
+- InGest-LLM.as: 8000
+- tools.as: 8003
+- PostgreSQL: 5432
+- Redis: 6379
+- RabbitMQ: 5672 (AMQP), 15672 (Management UI)
+- Qdrant: 6333
+- Neo4j: 7474 (HTTP), 7687 (Bolt)
+- Prometheus: 9090
+- Grafana: 3000 (default login: admin/apexsigma123)
+- Jaeger: 16686
 
 ### Database Migrations (Alembic)
 
 ```bash
-# Generate migration after model changes
+# Only memos.as currently uses Alembic
 cd services/memos.as
+
+# Generate migration after model changes
 poetry run alembic revision --autogenerate -m "Description of changes"
 
 # Apply migrations
@@ -102,6 +147,41 @@ poetry run alembic downgrade -1
 # View migration history
 poetry run alembic history
 ```
+
+**Why Alembic**: Manual SQL changes bypass the immutable audit trail. Alembic migrations are version-controlled and verifiable.
+
+### DevContainer Setup (VS Code Remote Development)
+
+The project supports DevContainer development for consistent, isolated environments:
+
+```bash
+# Prerequisites: Docker Desktop + VS Code Remote-Containers extension
+
+# Open in DevContainer (VS Code Command Palette)
+# > Dev Containers: Reopen in Container
+
+# DevContainer configuration features:
+# - Python 3.13 with Poetry pre-installed
+# - Docker-in-Docker for running docker-compose.unified.yml
+# - All services auto-forwarded (8000, 8090, 5432, 6379, 5672, 9090, 3000)
+# - Pre-commit hooks automatically installed
+# - Environment variables passed from host (.env)
+```
+
+**DevContainer benefits**:
+
+- **Consistency**: Same Python 3.13, Poetry, and tool versions across all developers
+- **Isolation**: Doesn't pollute host system with dependencies
+- **Integration**: Direct access to `docker-compose.unified.yml` services via Docker-in-Docker
+- **Automation**: `setup.sh` installs all service dependencies and starts infrastructure
+
+**Configuration files** (see `.devcontainer/`):
+
+- `devcontainer.json`: VS Code extensions, port forwarding, environment setup
+- `setup.sh`: Post-create automation script
+- `Dockerfile`: Custom Python 3.13 image with Poetry and pre-commit
+
+**Why DevContainer**: Eliminates "works on my machine" issues - all developers and AI agents share identical environment setup.
 
 ## 📋 Project-Specific Conventions
 
@@ -126,26 +206,34 @@ poetry run alembic history
 ### Dependency Management
 
 ```toml
-# pyproject.toml pattern - use Poetry, not pip
+# pyproject.toml pattern - ALL services use Poetry, NEVER pip
 [tool.poetry.dependencies]
 python = ">=3.13,<4.0"
-# Local path dependencies for shared libs
+
+# Local path dependencies for shared libs (see libs/apexsigma-core)
 apexsigma-core = {path = "../../libs/apexsigma-core", develop = true}
 
-# Example service dependencies
+# Standard service dependencies
 fastapi = ">=0.100.0,<1.0.0"
 pydantic = ">=2.0.0,<3.0.0"
 pydantic-settings = ">=2.10.1,<3.0.0"
 ```
 
-**Critical**: All services use Python 3.13+. Services share the `apexsigma-core` library via local path dependencies.
+**Critical**:
 
-### Service Communication
+- **Python 3.13+ only** - entire ecosystem standardized
+- **Never use pip directly** - always `poetry add <package>`
+- **Shared models**: All services import from `apexsigma_core.models` (StoreRequest, QueryRequest, AgentPersona, Task)
+- **Local dependencies**: Use `develop = true` so changes to `libs/apexsigma-core` reflect immediately
+
+**Common pattern violation**: Running `pip install -r requirements.txt` - this breaks Poetry's lock file integrity.
+
+### Service Communication Patterns
 
 ```python
 # FastAPI pattern with Pydantic models (see services/*/app/main.py)
 from fastapi import FastAPI, Depends
-from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 from apexsigma_core.models import StoreRequest, QueryRequest
 
 app = FastAPI(
@@ -154,25 +242,33 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration for cross-service communication
-from fastapi.middleware.cors import CORSMiddleware
+# CORS is REQUIRED for cross-service communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Locked-down in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Health check endpoint (required for Docker healthcheck)
 @app.get("/health", tags=["Health"])
 async def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "service": "service-name"}
 
+# Prometheus metrics endpoint (required for observability)
 @app.get("/metrics", tags=["Metrics"])
 async def metrics():
-    # Prometheus metrics endpoint
+    # Implementation in app/services/observability.py
     pass
 ```
+
+**Why these patterns**:
+
+- **CORS middleware**: Services run in separate containers, cross-origin requests are default
+- **/health endpoint**: Docker healthchecks use this (see docker-compose.unified.yml `healthcheck` sections)
+- **/metrics endpoint**: Prometheus scrapes this for monitoring (Grafana dashboards depend on it)
+- **Shared models**: Prevents drift between service contracts
 
 ### Container Build Pattern
 
@@ -182,22 +278,31 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-# Install Poetry
-RUN pip install --no-cache-dir poetry
+# Install Poetry (version-pinned for reproducibility)
+RUN pip install --no-cache-dir poetry==1.7.1
 
-# Configure Poetry to not create virtual env (we're in container)
+# Configure Poetry to NOT create virtual env (we're in container)
 RUN poetry config virtualenvs.create false
 
-# Copy dependencies first (better layer caching)
+# Copy dependencies FIRST (better layer caching)
 COPY pyproject.toml poetry.lock* ./
-RUN poetry install --without dev
+RUN poetry install --without dev --no-interaction --no-ansi
 
-# Copy application code
+# Copy application code AFTER dependencies
 COPY app/ ./app/
 
 # Run FastAPI with uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8090"]
 ```
+
+**Why this pattern**:
+
+- **Poetry in containers**: `virtualenvs.create false` prevents nested venvs
+- **Layer caching**: Dependencies change less than code, so copy `pyproject.toml` first
+- **No dev dependencies**: `--without dev` reduces image size
+- **Port binding**: `0.0.0.0` required for Docker network access (not `127.0.0.1`)
+
+**Common mistake**: Copying entire codebase before `poetry install` - invalidates Docker cache on every code change.
 
 ## 🔍 Key Integration Points
 
@@ -323,12 +428,14 @@ libs/apexsigma-core/         # Shared Pydantic models and utilities
 **Current Phase**: 🎊 **Operation Valhalla Shield - Phase 0 COMPLETE** 🎊
 
 **Phase 0 Final Status** (October 4, 2025):
+
 - 🎉 **OVS-T02**: tools-api Restart Loop - ✅ RESOLVED (12+ min uptime, healthy)
 - 🎉 **OVS-T03**: dagster_webserver Unhealthy - ✅ RESOLVED (58s uptime, healthy)
 - 🎉 **OVS-T04**: memos-api Neo4j - ✅ VERIFIED (38 hours stable)
 - ✅ **OVS-T01**: Dev Container Setup - ✅ IMPLEMENTED (functional test deferred to Phase 1)
 
 **Mission Status**: ✅ **MISSION ACCOMPLISHED**
+
 - Critical Incidents Resolved: 3/3 (100%)
 - Container Health: 20+/24 healthy (83-100%)
 - Infrastructure Stability: 100% (0 restart loops)
@@ -337,17 +444,20 @@ libs/apexsigma-core/         # Shared Pydantic models and utilities
 **Phase 1 Status**: 🟢 **UNBLOCKED - READY TO PROCEED**
 
 **Next Steps**:
+
 1. Execute git commits (see `docs/Phase0_Completion_Report.md`)
 2. Push to `feat/ci-security-pipelines` branch
 3. Create PR to `alpha` for MAR protocol review
 4. Begin Phase 1: Production Container ("Valhalla Forge")
 
 **Phase 0 Documentation**:
+
 - `docs/Phase0_Completion_Report.md` - Final status report
 - `docs/Phase0_Stabilization_Report.md` - Implementation details
 - `PHASE0_QUICKREF.md` - Quick reference guide
 
 **Recent Achievements (Oct 2025)**:
+
 - ✅ Phase 0 Stabilization COMPLETE (< 4 hours)
 - ✅ Phase 2 Infrastructure Hardening COMPLETE
 - ✅ ClickHouse integration operational

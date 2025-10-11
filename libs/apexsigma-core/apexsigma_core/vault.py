@@ -8,8 +8,6 @@ import os
 from functools import lru_cache
 from typing import Any, Dict, Optional
 
-import hvac
-
 logger = logging.getLogger(__name__)
 
 
@@ -44,19 +42,28 @@ class VaultClient:
         self.url = url
         self.token = token or os.getenv("VAULT_TOKEN") or "apexsigma-root-token-2025"
         self.mount_point = mount_point
-        self._client: Optional[hvac.Client] = None
+        self._client: Optional[Any] = None
 
     @property
-    def client(self) -> hvac.Client:
+    def client(self) -> Any:
         """Lazy-loaded Vault client."""
         if self._client is None:
-            self._client = hvac.Client(url=self.url, token=self.token)
+            # Lazy import hvac only when needed
+            try:
+                import hvac
+                self._client = hvac.Client(url=self.url, token=self.token)
+            except ImportError:
+                logger.error("hvac package not installed. Vault integration unavailable.")
+                raise ImportError("hvac package is required for Vault integration")
         return self._client
 
     def is_authenticated(self) -> bool:
         """Check if client is authenticated with Vault."""
         try:
             return self.client.is_authenticated()
+        except ImportError:
+            logger.warning("hvac package not installed. Vault authentication unavailable.")
+            return False
         except Exception as e:
             logger.warning(f"Vault authentication check failed: {e}")
             return False
@@ -78,6 +85,9 @@ class VaultClient:
             )
             data = response["data"]["data"]
             return data.get(key)
+        except ImportError:
+            logger.warning("hvac package not installed. Vault integration unavailable.")
+            return None
         except Exception as e:
             logger.warning(f"Failed to retrieve secret {path}/{key}: {e}")
             return None
@@ -99,6 +109,9 @@ class VaultClient:
             )
             logger.info(f"Successfully stored secret at {path}")
             return True
+        except ImportError:
+            logger.warning("hvac package not installed. Vault integration unavailable.")
+            return False
         except Exception as e:
             logger.error(f"Failed to store secret at {path}: {e}")
             return False

@@ -19,6 +19,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./config/postgres/init-langfuse.sql:/docker-entrypoint-initdb.d/init-langfuse.sql:ro
+      - ./config/postgres/init-memos.sql:/docker-entrypoint-initdb.d/init-memos.sql:ro
+      - ./config/postgres/init-dagster.sql:/docker-entrypoint-initdb.d/init-dagster.sql:ro
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -35,15 +37,14 @@ services:
   redis:
     image: redis:7-alpine
     container_name: apexsigma_redis
-    environment:
-      - REDIS_PASSWORD=Apexsigma123_
+    command: redis-server --requirepass Apexsigma123_
     volumes:
       - redis_data:/data
     networks:
       - apexsigma_net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "Apexsigma123_", "ping"]
       interval: 10s
       timeout: 3s
       retries: 3
@@ -98,11 +99,7 @@ services:
       - apexsigma_net
     restart: unless-stopped
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "cypher-shell -u neo4j -p Apexsigma123_ 'RETURN 1'",
-        ]
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p Apexsigma123_ 'RETURN 1'"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -120,7 +117,7 @@ services:
       - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
       - VAULT_ADDR=http://0.0.0.0:8200
     ports:
-      - "8200:8200"  # Vault web UI and API
+      - "8200:8200" # Vault web UI and API
     volumes:
       - vault_data:/vault/data
       - vault_logs:/vault/logs
@@ -147,8 +144,8 @@ services:
       dockerfile: Dockerfile.nginx
     container_name: apexsigma_nginx_ssl_proxy
     ports:
-      - "443:443"  # HTTPS
-      - "80:80"    # HTTP (redirects to HTTPS)
+      - "443:443" # HTTPS
+      - "80:80" # HTTP (redirects to HTTPS)
     depends_on:
       - grafana
       - prometheus
@@ -175,13 +172,17 @@ services:
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     ports:
-      - "16686:16686"  # Jaeger web UI
-      - "14268:14268"  # HTTP collector
+      - "16686:16686" # Jaeger web UI
+      - "14268:14268" # HTTP collector
     networks:
       - apexsigma_net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:16686/ || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:16686/ || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -198,7 +199,7 @@ services:
       - "--storage.tsdb.retention.time=200h"
       - "--web.enable-lifecycle"
     ports:
-      - "9090:9090"  # Prometheus web UI
+      - "9090:9090" # Prometheus web UI
     volumes:
       - ./services/devenviro.as/config/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -206,7 +207,11 @@ services:
       - apexsigma_net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -239,7 +244,11 @@ services:
       - apexsigma_net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -254,11 +263,11 @@ services:
       - CLICKHOUSE_USER=${CLICKHOUSE_USER:-clickhouse_user}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-Apexsigma123_}
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
-      - CLICKHOUSE_MAX_MEMORY_USAGE=4294967296  # 4GB
+      - CLICKHOUSE_MAX_MEMORY_USAGE=4294967296 # 4GB
       - CLICKHOUSE_MAX_CONCURRENT_QUERIES=100
     ports:
-      - "9123:8123"  # HTTP interface (mapped to avoid conflicts)
-      - "9000:9000"  # Native TCP protocol
+      - "9123:8123" # HTTP interface (mapped to avoid conflicts)
+      - "9000:9000" # Native TCP protocol
     volumes:
       - clickhouse_data:/var/lib/clickhouse
       - clickhouse_logs:/var/log/clickhouse-server
@@ -288,7 +297,7 @@ services:
     environment:
       - VECTOR_CONFIG=/etc/vector/vector.toml
     ports:
-      - "8686:8686"  # Vector admin interface
+      - "8686:8686" # Vector admin interface
     volumes:
       - ./config/vector/vector.toml:/etc/vector/vector.toml:ro
       - vector_data:/var/lib/vector
@@ -306,7 +315,7 @@ services:
       start_period: 30s
 
   langfuse:
-    image: langfuse/langfuse:2.56.1  # Use stable version with native ClickHouse support
+    image: langfuse/langfuse:2.56.1 # Use stable version with native ClickHouse support
     container_name: apexsigma_langfuse
     hostname: langfuse
     environment:
@@ -341,7 +350,11 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://172.26.0.52:3000/api/public/health || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://172.26.0.52:3000/api/public/health || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -626,16 +639,17 @@ services:
       - SERVICE_NAME=tools.as
       - DATABASE_URL=postgresql://tools_user:tools_pass@tools-postgres:5432/tools_db
       - ENVIRONMENT=production
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app:/app/libs
     depends_on:
       - tools-postgres
     volumes:
       - ./services/tools.as:/app
+      - ./libs/apexsigma-core:/app/libs/apexsigma-core
     networks:
       - apexsigma_net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -659,7 +673,7 @@ services:
       - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
       - DAGSTER_POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
     ports:
-      - "3080:3000"  # Changed from 8080 to avoid Grafana conflict
+      - "3080:3000" # Changed from 8080 to avoid Grafana conflict
     volumes:
       - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro
       - ./services/dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
@@ -674,11 +688,17 @@ services:
     restart: unless-stopped
     healthcheck:
       # OVS-T03 FIX: Improved healthcheck with longer intervals and timeout
-      test: ["CMD", "python", "-c", "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=5); conn.request('GET','/server_info'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)"]
-      interval: 60s       # Increase from 30s to reduce check frequency
-      timeout: 20s        # Increase from 10s to allow more response time
-      retries: 5          # Increase from 3 for better resilience
-      start_period: 120s  # Increase from 60s to allow full startup
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import http.client,sys; conn=http.client.HTTPConnection('localhost',3000,timeout=5); conn.request('GET','/server_info'); r=conn.getresponse(); sys.exit(0) if r.status==200 else sys.exit(1)",
+        ]
+      interval: 60s # Increase from 30s to reduce check frequency
+      timeout: 20s # Increase from 10s to allow more response time
+      retries: 5 # Increase from 3 for better resilience
+      start_period: 120s # Increase from 60s to allow full startup
 
   dagster-daemon:
     build:
@@ -707,7 +727,64 @@ services:
       dagster-webserver:
         condition: service_started
     restart: unless-stopped
-    command: ["dagster-daemon", "run", "-w", "/opt/dagster/dagster_home/workspace.yaml"]
+    command:
+      [
+        "dagster-daemon",
+        "run",
+        "-w",
+        "/opt/dagster/dagster_home/workspace.yaml",
+      ]
+
+  workspace:
+    build:
+      context: .devcontainer
+      dockerfile: Dockerfile
+    container_name: apexsigma_workspace
+    working_dir: /workspace
+    volumes:
+      - ..:/workspace:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: sleep infinity
+    networks:
+      - apexsigma_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      vault:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - POETRY_VIRTUALENVS_IN_PROJECT=true
+      - POETRY_NO_INTERACTION=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONPATH=/workspace
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LANGFUSE_HOST=https://cloud.langfuse.com
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY}
+      - POSTGRES_HOST=apexsigma_postgres
+      - REDIS_HOST=apexsigma_redis
+      - RABBITMQ_HOST=apexsigma_rabbitmq
+      - QDRANT_HOST=apexsigma_qdrant
+      - NEO4J_HOST=apexsigma_neo4j
+      - INGEST_LLM_HOST=172.26.0.12
+      - MEMOS_HOST=172.26.0.13
+      - CLICKHOUSE_HOST=apexsigma_clickhouse
+      - VAULT_HOST=apexsigma_vault
+    restart: unless-stopped
 
 # ===========================================
 # VOLUMES

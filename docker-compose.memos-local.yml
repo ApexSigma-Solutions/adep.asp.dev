@@ -3,3 +3,25 @@ services:
     build:
       context: .
       dockerfile: services/memos.as/Dockerfile
+    environment:
+      POSTGRES_HOST: apexsigma_postgres
+      POSTGRES_DB: memos
+      POSTGRES_USER: apexsigma_user
+      POSTGRES_PASSWORD: Apexsigma123_
+      DATABASE_URL: postgresql://apexsigma_user:Apexsigma123_@apexsigma_postgres:5432/memos
+      REDIS_HOST: apexsigma_redis
+      REDIS_PASSWORD: Apexsigma123_
+      QDRANT_HOST: apexsigma_qdrant
+      NEO4J_HOST: apexsigma_neo4j
+      NEO4J_AUTH: neo4j/Apexsigma123_
+      RABBITMQ_HOST: apexsigma_rabbitmq
+      RABBITMQ_USER: apexsigma_user
+      RABBITMQ_PASSWORD: Apexsigma123_
+    networks:
+      - apexsigma_net
+    ports:
+      - "8090:8000"
+
+networks:
+  apexsigma_net:
+    external: true
