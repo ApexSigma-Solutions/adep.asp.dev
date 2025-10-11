@@ -51,9 +51,12 @@ class VaultClient:
             # Lazy import hvac only when needed
             try:
                 import hvac
+
                 self._client = hvac.Client(url=self.url, token=self.token)
             except ImportError:
-                logger.error("hvac package not installed. Vault integration unavailable.")
+                logger.error(
+                    "hvac package not installed. Vault integration unavailable."
+                )
                 raise ImportError("hvac package is required for Vault integration")
         return self._client
 
@@ -62,7 +65,9 @@ class VaultClient:
         try:
             return self.client.is_authenticated()
         except ImportError:
-            logger.warning("hvac package not installed. Vault authentication unavailable.")
+            logger.warning(
+                "hvac package not installed. Vault authentication unavailable."
+            )
             return False
         except Exception as e:
             logger.warning(f"Vault authentication check failed: {e}")

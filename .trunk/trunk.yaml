@@ -7,7 +7,7 @@ plugins:
   sources:
     - id: trunk
       uri: https://github.com/trunk-io/plugins
-      ref: v1.7.2
+      ref: v1.7.3
 
 actions:
   enabled:
@@ -30,7 +30,7 @@ lint:
     - isort@6.1.0
     - hadolint@2.14.0
     - git-diff-check
-    - checkov@3.2.475
+    - checkov@3.2.477
     - black@25.9.0
     - bandit@1.8.6
     - actionlint@1.7.7
