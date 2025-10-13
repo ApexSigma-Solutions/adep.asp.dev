@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+.gitmodules
+
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+
+# Node.js
+**/node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs & Temporary Files
+*.log
+*.tmp
+*.bak

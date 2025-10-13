@@ -737,8 +737,8 @@ services:
 
   workspace:
     build:
-      context: .devcontainer
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: .devcontainer/Dockerfile
     container_name: apexsigma_workspace
     working_dir: /workspace
     volumes:
