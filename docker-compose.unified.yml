@@ -75,7 +75,13 @@ services:
       - apexsigma_net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:6333/healthz || exit 1"]
+      test:
+        [
+          "CMD",
+          "/bin/sh",
+          "-c",
+          "timeout 5 bash -c '</dev/tcp/localhost/6333' && exit 0 || exit 1",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -172,8 +178,8 @@ services:
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     ports:
-      - "16686:16686" # Jaeger web UI
-      - "14268:14268" # HTTP collector
+      - "16686:16686" # Jaeger UI
+      - "14300:14268" # HTTP collector (changed from 14268 to avoid Windows conflict)
     networks:
       - apexsigma_net
     restart: unless-stopped
@@ -386,8 +392,9 @@ services:
     working_dir: /app/app
     command:
       [
-        "poetry",
+        "dotenvx",
         "run",
+        "--",
         "uvicorn",
         "src.main:app",
         "--host",
@@ -438,42 +445,32 @@ services:
       context: ./services/devenviro.as
       dockerfile: Dockerfile
     container_name: apexsigma_devenviro_gemini_cli_listener
-    working_dir: /app/app
-    command: ["poetry", "run", "python", "src/listeners/gemini_cli_listener.py"]
-    env_file:
-      - ./services/devenviro.as/.env
+    working_dir: /app
+    command:
+      [
+        "dotenvx",
+        "run",
+        "--",
+        "python",
+        "-u",
+        "src/listeners/gemini_cli_listener.py",
+      ]
     environment:
-      - PYTHONPATH=/app/app
-      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@apexsigma_rabbitmq:5672/
-      - AGENT_GEMINI_CLI_TOKEN=${AGENT_GEMINI_CLI_TOKEN:-supersecrettoken_gemini_cli}
-      - GEMINI_COMMAND=echo "Gemini CLI simulation:"
-      - POSTGRES_HOST=apexsigma_postgres
-      - POSTGRES_DB=${POSTGRES_DB:-apexsigma-memtank}
-      - POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
+      - PYTHONPATH=/app
+      - POSTGRES_DB=${POSTGRES_DB:-devenviro_db}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@rabbitmq:5672/
     depends_on:
       - postgres
       - rabbitmq
-      - devenviro-api
-    volumes:
-      - ./services/devenviro.as:/app
     networks:
       - apexsigma_net
     restart: unless-stopped
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "poetry",
-          "run",
-          "python",
-          "-c",
-          "import sys; import os; sys.path.append('/app/app'); from src.listeners.gemini_cli_listener import GeminiCLIListener; sys.exit(0)",
-        ]
-      interval: 60s
-      timeout: 10s
-      retries: 3
-      start_period: 120s
+    env_file:
+      - ./services/devenviro.as/.env
 
   devenviro-docs:
     image: python:3.11-slim
@@ -500,8 +497,9 @@ services:
     working_dir: /app/app
     command:
       [
-        "poetry",
+        "dotenvx",
         "run",
+        "--",
         "uvicorn",
         "bridge.bridge_service:app",
         "--host",
@@ -540,16 +538,34 @@ services:
       context: .
       dockerfile: ./services/memos.as/Dockerfile
     container_name: apexsigma_memos_api
+    ports:
+      - "8090:8090"
     env_file:
       - .env
     environment:
       - SERVICE_NAME=memos.as
       - PYTHONPATH=/code
+      - NEO4J_AUTH=neo4j/Apexsigma123_
+    command:
+      [
+        "poetry",
+        "run",
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8090",
+      ]
     depends_on:
-      - postgres
-      - redis
-      - qdrant
-      - neo4j
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
     volumes:
       - ./services/memos.as:/code
       - ./libs/apexsigma-core:/code/libs/apexsigma-core
@@ -581,7 +597,7 @@ services:
       - INGEST_LM_STUDIO_BASE_URL=http://host.docker.internal:1234/v1
       - INGEST_LM_STUDIO_ENABLED=true
       - INGEST_EMBEDDING_ENABLED=true
-      - JAEGER_ENDPOINT=http://jaeger:14268/api/traces
+      - JAEGER_ENDPOINT=http://jaeger:14300/api/traces
       - PROMETHEUS_GATEWAY=http://prometheus:9090
       - INGEST_APP_NAME=InGest-LLM.as
       - INGEST_DEBUG=false
@@ -649,7 +665,7 @@ services:
       - apexsigma_net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -672,8 +688,8 @@ services:
       - DAGSTER_POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
       - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
       - DAGSTER_POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
-    ports:
-      - "3080:3000" # Changed from 8080 to avoid Grafana conflict
+    # ports:
+    #   - "3081:3000" # Temporarily disabled due to Windows port binding issues
     volumes:
       - ./services/dagster/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml:ro
       - ./services/dagster/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
@@ -739,6 +755,10 @@ services:
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
+      cache_from:
+        - type=registry,ref=ghcr.io/apexsigma-solutions/workspace:cache
+      cache_to:
+        - type=registry,ref=ghcr.io/apexsigma-solutions/workspace:cache,mode=max
     container_name: apexsigma_workspace
     working_dir: /workspace
     volumes:
