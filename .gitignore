@@ -57,3 +57,51 @@ htmlcov/
 .pytest_cache/
 junit.xml
 .tox/
+
+# ============================================
+# Development Artifacts (DO NOT COMMIT)
+# ============================================
+
+# DevContainer (use host-based development)
+.devcontainer/
+
+# Development sessions and logs
+sessions/
+*_session*.md
+conversation-*.txt
+
+# Temporary documentation
+*Troubleshooting*.md
+*DevContainer*.md
+*SNAPSHOT.md
+*_HANDOVER.md
+
+# Development scripts
+scripts/commit_*.sh
+scripts/log_*progress*.py
+
+# Task tracking and planning (keep in local .apexsigma)
+.apexsigma/.taskmaster/
+.apexsigma/secrets/
+.apexsigma/*.bak/
+.apexsigma/**/memos.as.bak/
+docs/Tasks/
+docs/Operations/
+docs/Plans/execution_orders/
+docs/Review_Report/MAR/
+
+# Build artifacts
+*.log
+*.tmp
+*.bak
+temp-artifacts/
+reports/
+
+# Test artifacts
+junit*.xml
+.mypy_cache/
+.ruff_cache/
+
+# Keep but don't track
+.vscode/launch.json
+HOST_DEV_GUIDE.md
