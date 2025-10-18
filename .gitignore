@@ -97,10 +97,25 @@ docs/Review_Report/MAR/
 temp-artifacts/
 reports/
 
+# Dagster temporary directories
+.tmp_dagster_home_*/
+
+# Legacy artifacts (should not exist)
+${workspaceFolder}/
+context_portal/
+memorybank/
+
 # Test artifacts
 junit*.xml
 .mypy_cache/
 .ruff_cache/
+
+# Root-level test scripts (belong in tests/ or scripts/)
+test_*.py
+test_*.json
+check_*.py
+validate_*.py
+move_*.py
 
 # Keep but don't track
 .vscode/launch.json

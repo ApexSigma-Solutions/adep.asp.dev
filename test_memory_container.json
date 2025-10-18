@@ -1,7 +1,0 @@
-{
-  "content": "Test memory for database initialization verification",
-  "agent_id": "test_agent",
-  "metadata": {
-    "test": true
-  }
-}
