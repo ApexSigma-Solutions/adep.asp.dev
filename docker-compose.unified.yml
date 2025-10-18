@@ -312,7 +312,7 @@ services:
     depends_on:
       - clickhouse
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8686/health"]
+      test: ["CMD", "sh", "-c", "pgrep vector || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -335,6 +335,7 @@ services:
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
       NEXTAUTH_URL: "http://langfuse:3000"
       NEXTAUTH_SECRET: "${LANGFUSE_NEXTAUTH_SECRET:-REDACTED_FOR_COMMIT}"
+      HOSTNAME: "0.0.0.0"  # Bind to all interfaces for healthcheck
 
       # API keys
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-pk-lf-REDACTED_FOR_COMMIT}
@@ -356,7 +357,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "wget --no-verbose --tries=1 --spider http://localhost:3000/api/public/health || exit 1",
+          "wget --no-verbose --tries=1 --spider http://0.0.0.0:3000/api/public/health || exit 1",
         ]
       interval: 30s
       timeout: 10s
@@ -404,6 +405,13 @@ services:
       - .env
     environment:
       - PYTHONPATH=/app/app
+      - POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
+      - POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - RABBITMQ_USER=${RABBITMQ_USER:-apexsigma_user}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-Apexsigma123_}
       - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@rabbitmq:5672/
       - AGENT_ORCHESTRATOR_TOKEN=${AGENT_ORCHESTRATOR_TOKEN:-supersecrettoken_orchestrator}
       - AGENT_BACKEND_SPECIALIST_TOKEN=${AGENT_BACKEND_SPECIALIST_TOKEN:-supersecrettoken_backend}
@@ -454,9 +462,9 @@ services:
       ]
     environment:
       - PYTHONPATH=/app
-      - POSTGRES_DB=${POSTGRES_DB:-devenviro_db}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-apexsigma_db}
+      - POSTGRES_USER=${POSTGRES_USER:-apexsigma_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-Apexsigma123_}
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - RABBITMQ_URL=amqp://${RABBITMQ_USER:-apexsigma_user}:${RABBITMQ_PASSWORD:-Apexsigma123_}@rabbitmq:5672/
