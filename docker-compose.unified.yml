@@ -282,8 +282,7 @@ services:
       - ./config/clickhouse/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - ./config/clickhouse/init-langfuse.sql:/docker-entrypoint-initdb.d/init-langfuse.sql:ro
     networks:
-      apexsigma_net:
-        ipv4_address: 172.26.0.50
+      - apexsigma_net
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
@@ -308,8 +307,7 @@ services:
       - ./config/vector/vector.toml:/etc/vector/vector.toml:ro
       - vector_data:/var/lib/vector
     networks:
-      apexsigma_net:
-        ipv4_address: 172.26.0.54
+      - apexsigma_net
     restart: unless-stopped
     depends_on:
       - clickhouse
@@ -347,8 +345,7 @@ services:
     volumes:
       - langfuse_data:/app/data
     networks:
-      apexsigma_net:
-        ipv4_address: 172.26.0.52
+      - apexsigma_net
     depends_on:
       postgres:
         condition: service_healthy
@@ -359,7 +356,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "wget --no-verbose --tries=1 --spider http://172.26.0.52:3000/api/public/health || exit 1",
+          "wget --no-verbose --tries=1 --spider http://localhost:3000/api/public/health || exit 1",
         ]
       interval: 30s
       timeout: 10s
@@ -698,8 +695,7 @@ services:
       - ./services/dagster/definitions.py:/opt/dagster/dagster_home/definitions.py:ro
       - dagster_home:/opt/dagster/dagster_home
     networks:
-      apexsigma_net:
-        ipv4_address: 172.26.0.51
+      - apexsigma_net
     depends_on:
       postgres:
         condition: service_healthy
@@ -737,8 +733,7 @@ services:
       - ./services/dagster/definitions.py:/opt/dagster/dagster_home/definitions.py:ro
       - dagster_home:/opt/dagster/dagster_home
     networks:
-      apexsigma_net:
-        ipv4_address: 172.26.0.53
+      - apexsigma_net
     depends_on:
       postgres:
         condition: service_healthy
