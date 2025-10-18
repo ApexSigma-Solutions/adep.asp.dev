@@ -128,3 +128,23 @@ Docker builds not completing
 Continue ro stabilize intital build
 
 ---
+
+## EOD Log - 20251018-134835
+
+**Project:** adep.asp.dev  
+**Branch:** alpha  
+**Commit:** f6b40d75
+
+### Tasks Completed
+Nothing Specific
+
+### Key Decisions/Insights
+Dont trust AI
+
+### Blockers Encountered
+Docker builds
+
+### Next Steps
+USe Claude
+
+---
