@@ -148,3 +148,23 @@ Docker builds
 USe Claude
 
 ---
+
+## EOD Log - 20251018-135613
+
+**Project:** adep.asp.dev  
+**Branch:** alpha  
+**Commit:** b79b3925
+
+### Tasks Completed
+Not much
+
+### Key Decisions/Insights
+777
+
+### Blockers Encountered
+Docker
+
+### Next Steps
+Claude
+
+---
