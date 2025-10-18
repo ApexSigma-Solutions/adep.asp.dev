@@ -72,7 +72,7 @@ class EODCommand:
         self.timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         
         # Service endpoints
-        self.ingest_llm_endpoint = "http://localhost:8000"
+        self.ingest_llm_endpoint = "http://localhost:8005"
         self.changelog_file = project_root / "changelog.md"
         
     def log_info(self, message: str):
@@ -450,7 +450,7 @@ class EODCommand:
                 return False, f"Knowledge Graph ingestion failed: {submit_response.status_code} - {submit_response.text}"
                 
         except requests.exceptions.ConnectionError:
-            return False, "Could not connect to InGest-LLM service. Is it running on port 8000?"
+            return False, "Could not connect to InGest-LLM service. Is it running on port 8005?"
         except Exception as e:
             return False, f"Knowledge Graph submission error: {e}"
     

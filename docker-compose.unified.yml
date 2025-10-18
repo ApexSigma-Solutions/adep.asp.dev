@@ -610,7 +610,7 @@ services:
     volumes:
       - ./services/InGest-LLM.as:/app
     ports:
-      - "8000:8000"
+      - "8005:8000"
     networks:
       - apexsigma_net
     restart: unless-stopped
