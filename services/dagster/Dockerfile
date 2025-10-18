@@ -12,9 +12,9 @@ WORKDIR /opt/dagster/app
 RUN pip install dagster dagster-webserver dagster-postgres psycopg2-binary
 
 # Copy application files
-COPY ./services/dagster/definitions.py /opt/dagster/app/
-COPY ./services/dagster/workspace.yaml /opt/dagster/dagster_home/
-COPY ./services/dagster/dagster.yaml /opt/dagster/dagster_home/
+COPY definitions.py /opt/dagster/app/
+COPY workspace.yaml /opt/dagster/dagster_home/
+COPY dagster.yaml /opt/dagster/dagster_home/
 
 # Create dagster user
 RUN useradd -m -s /bin/bash dagster

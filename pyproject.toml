@@ -25,6 +25,7 @@ redis = "^5.0"
 opentelemetry-api = "^1.24"
 opentelemetry-sdk = "^1.24"
 opentelemetry-exporter-jaeger = "^1.21.0"
+pyyaml = "^6.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -31,7 +31,7 @@ try {
     if ($Help) { $args += "--help" }
     
     # Run the EOD command script (let output pass through directly)
-    & python eod.py @args
+    & python scripts/eod.py @args
     $exitCode = $LASTEXITCODE
     
     Write-Host ""

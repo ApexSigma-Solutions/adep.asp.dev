@@ -28,7 +28,7 @@ try {
     if ($Help) { $args += "--help" }
     
     # Run the SOD deployment script
-    $result = & python sod.py @args
+    $result = & poetry run python scripts/sod.py @args
     $exitCode = $LASTEXITCODE
     
     Write-Host ""
