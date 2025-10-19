@@ -1,0 +1,189 @@
+# Pre-commit hooks for ApexSigma Ecosystem
+# See https://pre-commit.com for more information
+
+default_language_version:
+  python: python3.13
+
+repos:
+  # =============================================================================
+  # Built-in Pre-commit Hooks (File Quality Checks)
+  # =============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # Prevent large files from being committed
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+
+      # Ensure files end with a newline
+      - id: end-of-file-fixer
+        exclude: \.lock$
+
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+      # Check YAML syntax
+      - id: check-yaml
+        args: ['--unsafe']  # Allow custom YAML tags
+        exclude: docker-compose.*\.yml$
+
+      # Check TOML syntax
+      - id: check-toml
+
+      # Check JSON syntax
+      - id: check-json
+
+      # Prevent commits to main/alpha without proper process
+      - id: no-commit-to-branch
+        args: ['--branch=main', '--branch=alpha']
+        stages: [pre-commit]
+
+      # Check for merge conflict markers
+      - id: check-merge-conflict
+
+      # Check for debug statements
+      - id: debug-statements
+
+      # Check Python AST
+      - id: check-ast
+
+  # =============================================================================
+  # Python Code Quality (Ruff - Fast Python Linter & Formatter)
+  # =============================================================================
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.1
+    hooks:
+      # Ruff linter
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ^(_archive/|\.venv/|venv/|\.cache/)
+
+      # Ruff formatter (replaces black)
+      - id: ruff-format
+        exclude: ^(_archive/|\.venv/|venv/|\.cache/)
+
+  # =============================================================================
+  # Python Type Checking (MyPy)
+  # =============================================================================
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.18.2
+    hooks:
+      - id: mypy
+        exclude: ^(_archive/|tests/|\.venv/|venv/)
+        args: [--ignore-missing-imports, --python-version=3.13]
+        additional_dependencies:
+          - types-PyYAML
+          - types-requests
+          - types-redis
+          - pydantic>=2.0
+
+  # =============================================================================
+  # Security Scanning (Bandit)
+  # =============================================================================
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        args: [-r, --ini, setup.cfg]
+        exclude: ^(_archive/|tests/|\.venv/|venv/)
+
+  # =============================================================================
+  # CUSTOM HOOKS: ApexSigma-Specific Quality Checks
+  # =============================================================================
+  - repo: local
+    hooks:
+      # Prevent Python bytecode files (__pycache__, .pyc)
+      - id: check-python-bytecode
+        name: Check for Python bytecode files
+        entry: Python bytecode detected! Clean with find . -type d -name __pycache__ -exec rm -rf {} +
+        language: fail
+        files: (__pycache__|\.pyc$|\.pyo$)
+
+      # Prevent temporary Dagster directories
+      - id: check-dagster-temp
+        name: Check for temporary Dagster directories
+        entry: Temporary Dagster directories detected! Run rm -rf tmps_* tmp*_dagster_*
+        language: fail
+        files: ^(tmps_|tmp.*_dagster_|dagster_home/storage/)
+
+      # Prevent root-level test scripts
+      - id: check-root-test-scripts
+        name: Check for root-level test scripts
+        entry: Root-level test scripts detected! Move to tests/ or scripts/ directory
+        language: fail
+        files: ^(test_[^/]+\.py|[^/]+_test\.py)$
+
+      # Prevent .env files with actual secrets
+      - id: check-env-secrets
+        name: Check for .env files with potential secrets
+        entry: ERROR .env files should not be committed (use .env.example instead)
+        language: fail
+        files: ^\.env$
+        exclude: \.env\.example$
+
+      # Ensure poetry.lock is in sync with pyproject.toml
+      - id: check-poetry-lock
+        name: Check poetry.lock is in sync with pyproject.toml
+        entry: poetry
+        args: [check, --lock]
+        language: system
+        files: (pyproject\.toml|poetry\.lock)$
+        pass_filenames: false
+
+      # Prevent large log files
+      - id: check-large-logs
+        name: Check for large log files
+        entry: Large log files detected! These should be .gitignored or removed
+        language: fail
+        files: \.log$
+        exclude: ^(logs/\.gitkeep|\.gitignore)$
+
+      # Prevent DS_Store files (macOS)
+      - id: check-ds-store
+        name: Check for .DS_Store files
+        entry: .DS_Store files detected! Run find . -name .DS_Store -delete
+        language: fail
+        files: \.DS_Store$
+
+      # Prevent Thumbs.db files (Windows)
+      - id: check-thumbs-db
+        name: Check for Thumbs.db files
+        entry: Thumbs.db files detected! Run find . -name Thumbs.db -delete
+        language: fail
+        files: Thumbs\.db$
+
+  # =============================================================================
+  # Docker & Infrastructure Checks
+  # =============================================================================
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.14.0
+    hooks:
+      - id: hadolint-docker
+        name: Lint Dockerfiles
+        exclude: ^_archive/
+
+  # =============================================================================
+  # Markdown & Documentation Checks
+  # =============================================================================
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        types_or: [markdown, yaml, json]
+        exclude: ^(_archive/|poetry\.lock|\.venv/)
+        args: [--prose-wrap=always, --print-width=100]
+
+# =============================================================================
+# CI Configuration
+# =============================================================================
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [check-poetry-lock, mypy, bandit]  # Skip expensive checks in CI
+  submodules: true
