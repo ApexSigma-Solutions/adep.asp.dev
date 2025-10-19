@@ -478,6 +478,32 @@ class EODCommand:
         else:
             return True, f"Push failed (non-blocking): {stderr}"  # Make push failure non-blocking
     
+    def run_final_integrity_check(self) -> bool:
+        """Run integrity check as final validation"""
+        self.log_info("Running final integrity check...")
+        
+        try:
+            # Import the wrapper
+            sys.path.insert(0, str(Path(__file__).parent))
+            from integrity_check_wrapper import run_integrity_check
+            
+            success, output = run_integrity_check(verbose=False)
+            
+            if success:
+                self.log_success("Final integrity check PASSED")
+                return True
+            else:
+                self.log_error("Final integrity check FAILED")
+                print(output)
+                return False
+                
+        except ImportError:
+            self.log_info("Integrity check wrapper not found - skipping")
+            return True  # Don't block EOD if wrapper missing
+        except Exception as e:
+            self.log_error(f"Integrity check error: {e}")
+            return False
+    
     def execute_eod_protocol(self) -> bool:
         """Execute the complete EOD protocol"""
         self.log_info("Starting EOD (End of Day) Protocol...")
@@ -526,6 +552,12 @@ class EODCommand:
         # Step 7: Final Confirmation
         if kg_success and push_success:
             self.log_success("EOD procedure complete.")
+            
+            # Step 8: Final Integrity Check
+            if not self.run_final_integrity_check():
+                self.log_error("Post-EOD integrity check failed - review issues")
+                # Don't fail EOD, just warn
+            
             return True
         else:
             self.log_error("EOD procedure completed with errors.")

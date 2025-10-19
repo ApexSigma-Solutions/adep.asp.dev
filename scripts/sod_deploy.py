@@ -129,6 +129,32 @@ class SODDeployer:
                 
         return all_good
     
+    def run_integrity_check(self) -> bool:
+        """Run repository integrity check before deployment"""
+        self.log("Running integrity check...")
+        
+        try:
+            # Import the wrapper
+            from integrity_check_wrapper import run_integrity_check
+            
+            success, output = run_integrity_check(verbose=self.verbose)
+            
+            if success:
+                self.log("Integrity check PASSED", "SUCCESS")
+                return True
+            else:
+                self.log("Integrity check FAILED", "ERROR")
+                if self.verbose:
+                    print(output)
+                return False
+                
+        except ImportError:
+            self.log("Integrity check wrapper not found - skipping", "WARN")
+            return True  # Don't block deployment if wrapper missing
+        except Exception as e:
+            self.log(f"Integrity check error: {e}", "ERROR")
+            return False
+    
     def create_network(self) -> bool:
         """Ensure the ApexSigma network exists"""
         self.log("Creating Docker network...")
@@ -390,7 +416,12 @@ SYSTEM READY FOR SOCIETY OF AGENTS OPERATIONS
         try:
             self.log("Starting Society of Agents Deployment (SOD)...")
             
-            # Phase 0: Prerequisites
+            # Phase 0: Integrity Check
+            if not self.run_integrity_check():
+                self.log("Integrity check failed - fix issues before deploying", "ERROR")
+                return False
+            
+            # Phase 1: Prerequisites
             if not self.check_prerequisites():
                 return False
                 
