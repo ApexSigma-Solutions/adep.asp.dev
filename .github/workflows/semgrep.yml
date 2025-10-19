@@ -37,6 +37,10 @@ jobs:
       # Scan code using project's configuration on https://semgrep.dev/manage
       - uses: returntocorp/semgrep-action@v1
         with:
+          # To use the following secrets, you must:
+          # 1) Create a Semgrep.dev account (https://semgrep.dev/)
+          # 2) Set up a deployment in Semgrep.dev to obtain your App Token and Deployment ID
+          # 3) Add SEMGREP_APP_TOKEN and SEMGREP_DEPLOYMENT_ID as secrets in your GitHub repository settings
           publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
           publishDeployment: ${{ secrets.SEMGREP_DEPLOYMENT_ID }}
           generateSarif: "1"
