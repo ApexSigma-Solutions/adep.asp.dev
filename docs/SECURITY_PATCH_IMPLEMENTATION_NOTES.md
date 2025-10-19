@@ -67,7 +67,7 @@ All commits pushed to `origin/alpha`:
 ### Poetry Lock File Updates ❌ BLOCKED
 
 **Issue:** `poetry update` commands fail with Rust compiler dependency error:
-```
+```json
 PEP517 build of pydantic-core (2.33.2) failed
 FileNotFoundError: [WinError 2] The system cannot find the file specified
 Cause: pydantic-core requires Rust/Cargo for compilation
