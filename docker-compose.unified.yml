@@ -377,6 +377,12 @@ services:
     networks:
       - apexsigma_net
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pgrep promtail || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   # ===========================================
   # DEVENVIRO.AS - AI SOCIETY ORCHESTRATOR
@@ -476,6 +482,12 @@ services:
     restart: unless-stopped
     env_file:
       - ./services/devenviro.as/.env
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pgrep -f gemini_cli_listener || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   devenviro-docs:
     image: python:3.11-slim
@@ -755,6 +767,12 @@ services:
         "-w",
         "/opt/dagster/dagster_home/workspace.yaml",
       ]
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pgrep -f dagster-daemon || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   workspace:
     build:
